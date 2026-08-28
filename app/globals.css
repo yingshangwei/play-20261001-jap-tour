@@ -1,0 +1,226 @@
+@import "tailwindcss";
+
+:root {
+  --ink: #16231e;
+  --paper: #f5f1e8;
+  --cream: #fffdf8;
+  --moss: #355c45;
+  --deep-moss: #243f31;
+  --orange: #ef6a39;
+  --gold: #f5b94c;
+  --muted: #657169;
+  --line: rgba(22, 35, 30, 0.18);
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+  text-rendering: optimizeLegibility;
+}
+a { color: inherit; text-decoration: none; }
+a:focus-visible { outline: 3px solid var(--gold); outline-offset: 5px; border-radius: 2px; }
+.shell { width: min(1160px, calc(100% - 40px)); margin-inline: auto; }
+
+.hero {
+  position: relative;
+  min-height: 760px;
+  overflow: hidden;
+  color: #fffaf0;
+  background: var(--moss);
+}
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: .16;
+  background-image: radial-gradient(rgba(255,255,255,.8) .7px, transparent .7px);
+  background-size: 12px 12px;
+}
+.nav {
+  position: relative;
+  z-index: 3;
+  height: 92px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255,255,255,.22);
+}
+.brand { display: flex; align-items: center; gap: 12px; font-size: 12px; letter-spacing: .18em; font-weight: 700; }
+.brand-mark { display: grid; place-items: center; width: 34px; height: 34px; border: 1px solid rgba(255,255,255,.6); border-radius: 50%; font-family: serif; font-size: 17px; }
+.nav-menu { display: flex; gap: 28px; font-size: 13px; }
+.nav-menu a { padding-block: 8px; color: rgba(255,250,240,.78); transition: color .2s ease; }
+.nav-menu a:hover { color: #fff; }
+.hero-content { position: relative; z-index: 2; padding-top: 126px; }
+.eyebrow { margin: 0 0 25px; font-size: 12px; letter-spacing: .22em; text-transform: uppercase; font-weight: 800; }
+.hero h1 { margin: 0; max-width: 850px; font-family: Georgia, "Noto Serif SC", serif; font-size: clamp(62px, 8.2vw, 118px); font-weight: 500; line-height: .98; letter-spacing: -.045em; }
+.hero-copy { max-width: 610px; margin: 35px 0 0; color: rgba(255,250,240,.78); font-size: 17px; line-height: 1.9; }
+.hero-actions { display: flex; align-items: center; gap: 30px; margin-top: 42px; }
+.primary-button { padding: 15px 25px; border-radius: 999px; color: var(--ink); background: var(--gold); font-size: 14px; font-weight: 800; transition: transform .2s ease, box-shadow .2s ease; }
+.primary-button:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(0,0,0,.14); }
+.trip-date { font: 14px Georgia, serif; letter-spacing: .13em; }
+.sun-disc { position: absolute; z-index: 1; right: -62px; bottom: -85px; width: 390px; height: 390px; border-radius: 50%; display: grid; place-items: center; color: rgba(22,35,30,.32); background: var(--orange); font: 62px Georgia, "Noto Serif SC", serif; }
+.hero-orbit { position: absolute; z-index: 1; border: 1px solid rgba(255,255,255,.19); border-radius: 50%; }
+.orbit-one { width: 610px; height: 610px; right: -170px; top: 85px; }
+.orbit-two { width: 770px; height: 770px; right: -250px; top: 2px; }
+
+.overview { position: relative; z-index: 4; display: grid; grid-template-columns: repeat(3, 1fr); margin-top: -38px; background: var(--cream); box-shadow: 0 22px 60px rgba(22,35,30,.1); }
+.overview article { min-height: 145px; padding: 32px; border-right: 1px solid var(--line); display: flex; flex-direction: column; justify-content: space-between; }
+.overview article:last-child { border-right: 0; }
+.overview span { color: #7d887f; font-size: 12px; letter-spacing: .08em; }
+.overview strong { font-family: Georgia, "Noto Serif SC", serif; font-size: 20px; font-weight: 500; }
+
+.route { padding: 120px 0 130px; scroll-margin-top: 20px; }
+.section-heading { display: flex; justify-content: space-between; gap: 40px; align-items: flex-start; margin-bottom: 66px; }
+.eyebrow.dark { color: var(--orange); }
+.section-note { display: block; color: #7d887f; font-size: 13px; }
+.section-heading h2 { width: 70%; margin: 0; font: 500 clamp(42px, 5.4vw, 74px)/1.08 Georgia, "Noto Serif SC", serif; letter-spacing: -.035em; }
+.section-heading.compact { margin-bottom: 48px; }
+.section-heading.compact h2 { font-size: clamp(38px, 4.6vw, 62px); }
+.timeline { border-top: 1px solid var(--line); }
+.timeline-card { position: relative; display: grid; grid-template-columns: 70px 190px 1fr; gap: 32px; align-items: center; min-height: 184px; border-bottom: 1px solid var(--line); }
+.timeline-card::after { content: ""; position: absolute; right: 0; top: 34px; width: 8px; height: 8px; border-radius: 50%; background: #9aaba0; }
+.timeline-card.tone-special::after { width: 14px; height: 14px; background: var(--orange); box-shadow: 0 0 0 8px rgba(239,106,57,.12); }
+.timeline-card.tone-nature::after { background: var(--moss); }
+.timeline-index { color: var(--orange); font: italic 18px Georgia, serif; }
+.timeline-date { display: flex; flex-direction: column; gap: 7px; }
+.timeline-date strong { font: 28px Georgia, serif; }
+.timeline-date span { color: #78847c; font-size: 12px; }
+.timeline-date em { margin-top: 5px; color: #9a8170; font-size: 11px; font-style: normal; }
+.timeline-copy { padding: 30px 36px 30px 0; }
+.timeline-copy h3 { margin: 0 0 12px; font: 500 25px Georgia, "Noto Serif SC", serif; }
+.timeline-copy p { margin: 0; max-width: 720px; color: var(--muted); font-size: 14px; line-height: 1.75; }
+.timeline-copy .route-line { margin-bottom: 9px; color: var(--ink); font-weight: 700; }
+
+.feature { overflow: hidden; padding: 125px 0; color: #fff8ec; background: var(--deep-moss); }
+.feature-grid { display: grid; grid-template-columns: .9fr 1.1fr; gap: 90px; align-items: center; }
+.feature-visual { position: relative; min-height: 510px; border-radius: 50% 50% 8px 8px; overflow: hidden; background: #172a25; border: 1px solid rgba(255,255,255,.14); }
+.feature-visual::before { content: ""; position: absolute; inset: 0; opacity: .24; background-image: radial-gradient(rgba(255,255,255,.7) .6px, transparent .6px); background-size: 15px 15px; }
+.feature-visual::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 38%; background: linear-gradient(150deg, transparent 48%, rgba(239,106,57,.65) 49% 56%, transparent 57%), linear-gradient(30deg, transparent 48%, rgba(245,185,76,.38) 49% 55%, transparent 56%); opacity: .75; }
+.firework { position: absolute; border-radius: 50%; background: repeating-conic-gradient(from 0deg, transparent 0deg 8deg, var(--gold) 9deg 10deg, transparent 11deg 18deg); }
+.firework::after { content: ""; position: absolute; inset: 27%; border-radius: 50%; background: repeating-conic-gradient(from 5deg, transparent 0deg 12deg, var(--orange) 13deg 15deg, transparent 16deg 25deg); }
+.firework-a { width: 280px; height: 280px; left: 34px; top: 42px; }
+.firework-b { width: 160px; height: 160px; right: 18px; top: 190px; transform: rotate(12deg); }
+.feature-date { position: absolute; z-index: 2; left: 36px; bottom: 30px; font: 62px Georgia, serif; letter-spacing: -.04em; }
+.feature-copy h2, .dining-heading h2, .detours-copy h2, .practical-title h2, .sources h2 { margin: 0; font: 500 clamp(42px, 5vw, 68px)/1.08 Georgia, "Noto Serif SC", serif; letter-spacing: -.04em; }
+.feature-copy > p:not(.eyebrow) { max-width: 610px; margin: 30px 0; color: rgba(255,248,236,.7); line-height: 1.9; }
+.feature-stats { display: flex; gap: 38px; padding: 28px 0; margin-bottom: 24px; border-block: 1px solid rgba(255,255,255,.16); }
+.feature-stats span { display: flex; flex-direction: column; gap: 6px; color: rgba(255,248,236,.58); font-size: 12px; }
+.feature-stats strong { color: var(--gold); font: 28px Georgia, serif; }
+
+.text-link { display: inline-flex; justify-content: space-between; align-items: center; min-width: 170px; padding: 13px 0; border-bottom: 1px solid var(--ink); font-size: 13px; font-weight: 800; }
+.text-link span { margin-left: 18px; transition: transform .2s ease; }
+.text-link:hover span { transform: translate(3px, -3px); }
+.text-link.light { color: #fff8ec; border-color: rgba(255,255,255,.55); }
+
+.booking { padding: 125px 0 140px; scroll-margin-top: 20px; }
+.booking-grid { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+.booking-card { min-height: 470px; padding: 34px; display: flex; flex-direction: column; background: rgba(255,253,248,.35); border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.booking-top { display: flex; align-items: center; justify-content: space-between; }
+.booking-number { color: var(--orange); font: italic 21px Georgia, serif; }
+.urgency { padding: 7px 11px; border-radius: 999px; color: #8d3f22; background: rgba(239,106,57,.11); font-size: 11px; font-weight: 800; }
+.booking-card h3 { margin: 80px 0 18px; font: 500 31px Georgia, "Noto Serif SC", serif; }
+.booking-card p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.85; }
+.booking-card small { display: block; margin-top: 20px; color: #94887f; font-size: 11px; line-height: 1.6; }
+.booking-card .text-link { margin-top: auto; }
+
+.dining { padding: 130px 0 120px; color: #fff8ec; background: #9f482b; scroll-margin-top: 20px; }
+.dining-heading { display: grid; grid-template-columns: .5fr .85fr .65fr; gap: 48px; align-items: start; margin-bottom: 82px; }
+.dining-heading > p:last-child { margin: 0; color: rgba(255,248,236,.72); line-height: 1.85; }
+.restaurant { display: grid; grid-template-columns: .72fr 1.28fr; gap: 60px; padding: 50px 0; border-top: 1px solid rgba(255,255,255,.22); }
+.restaurant:last-child { border-bottom: 1px solid rgba(255,255,255,.22); }
+.restaurant-city { color: var(--gold); font-size: 11px; letter-spacing: .13em; }
+.restaurant h3 { margin: 16px 0 12px; font: 500 42px Georgia, "Noto Serif SC", serif; }
+.restaurant > div:first-child strong { font-size: 11px; letter-spacing: .12em; }
+.restaurant-detail { display: grid; grid-template-columns: 1fr 1fr; column-gap: 28px; align-content: start; }
+.restaurant-detail > span { padding-bottom: 17px; border-bottom: 1px solid rgba(255,255,255,.17); color: rgba(255,248,236,.78); font-size: 12px; }
+.restaurant-detail p { grid-column: 1 / -1; max-width: 620px; margin: 28px 0; color: rgba(255,248,236,.72); line-height: 1.8; }
+.restaurant-detail .text-link { grid-column: 1 / -1; justify-self: start; }
+
+.detours { display: grid; grid-template-columns: .72fr 1.28fr; gap: 90px; padding: 135px 0; }
+.detours-copy { position: sticky; top: 50px; align-self: start; }
+.detours-copy > p:last-child { max-width: 350px; color: var(--muted); line-height: 1.8; }
+.detour-list { border-top: 1px solid var(--line); }
+.detour-list article { display: grid; grid-template-columns: 100px .9fr 1.1fr; gap: 24px; align-items: start; padding: 34px 0; border-bottom: 1px solid var(--line); }
+.detour-list span { color: var(--orange); font-size: 12px; font-weight: 800; }
+.detour-list h3 { margin: 0; font: 500 21px Georgia, "Noto Serif SC", serif; }
+.detour-list p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.75; }
+
+.practical { display: grid; grid-template-columns: .65fr 1.35fr; gap: 90px; padding: 70px 0 130px; }
+.practical-title h2 { font-size: clamp(40px, 4.5vw, 61px); }
+.practical-list { border-top: 1px solid var(--line); }
+.practical-list article { display: grid; grid-template-columns: 48px 90px 1fr; gap: 22px; padding: 28px 0; border-bottom: 1px solid var(--line); }
+.practical-list article > span { color: var(--orange); font: italic 16px Georgia, serif; }
+.practical-list h3 { margin: 0; font-size: 14px; }
+.practical-list p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.75; }
+
+.sources { padding: 100px 0; border-top: 1px solid var(--line); }
+.sources h2 { max-width: 680px; font-size: clamp(38px, 4.4vw, 60px); }
+.source-links { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 45px; }
+.source-links a { padding: 12px 15px; border: 1px solid var(--line); border-radius: 999px; font-size: 12px; transition: color .2s ease, background .2s ease; }
+.source-links a:hover { color: #fff; background: var(--moss); }
+
+footer { padding: 75px 0; color: #fffaf0; background: var(--ink); }
+.footer-inner { display: flex; align-items: flex-end; justify-content: space-between; }
+.footer-brand .brand-mark { border-color: rgba(255,255,255,.55); }
+.footer-inner p { margin: 24px 0 0; color: rgba(255,250,240,.58); font: 20px Georgia, "Noto Serif SC", serif; }
+.footer-inner > a { color: rgba(255,250,240,.72); font-size: 12px; border-bottom: 1px solid rgba(255,255,255,.35); padding-bottom: 5px; }
+
+@media (max-width: 900px) {
+  .feature-grid, .detours, .practical { grid-template-columns: 1fr; gap: 55px; }
+  .booking-grid { grid-template-columns: 1fr; }
+  .booking-card { min-height: 370px; }
+  .booking-card h3 { margin-top: 50px; }
+  .dining-heading { grid-template-columns: 1fr; gap: 24px; }
+  .restaurant { grid-template-columns: 1fr; gap: 35px; }
+  .detours-copy { position: static; }
+}
+
+@media (max-width: 760px) {
+  .shell { width: min(100% - 28px, 1160px); }
+  .hero { min-height: 700px; }
+  .nav { height: 74px; }
+  .nav-menu a:not(:first-child) { display: none; }
+  .hero-content { padding-top: 90px; }
+  .hero h1 { font-size: clamp(53px, 16.7vw, 76px); }
+  .hero-copy { max-width: 86%; font-size: 15px; line-height: 1.8; }
+  .hero-actions { align-items: flex-start; flex-direction: column; gap: 20px; }
+  .sun-disc { right: -120px; bottom: -70px; width: 300px; height: 300px; font-size: 43px; }
+  .overview { grid-template-columns: 1fr; margin-top: -28px; }
+  .overview article { min-height: 108px; padding: 25px; border-right: 0; border-bottom: 1px solid var(--line); }
+  .route, .booking, .detours { padding: 90px 0; }
+  .section-heading { display: block; }
+  .section-heading h2 { width: 100%; margin-top: 38px; font-size: 42px; }
+  .timeline-card { grid-template-columns: 42px 1fr; gap: 18px; padding: 28px 0; }
+  .timeline-card::after { display: none; }
+  .timeline-copy { grid-column: 2; padding: 0 0 8px; }
+  .timeline-copy h3 { font-size: 22px; }
+  .feature { padding: 90px 0; }
+  .feature-grid { gap: 50px; }
+  .feature-visual { min-height: 390px; }
+  .firework-a { width: 220px; height: 220px; }
+  .firework-b { width: 120px; height: 120px; }
+  .feature-copy h2, .dining-heading h2, .detours-copy h2, .practical-title h2, .sources h2 { font-size: 43px; }
+  .feature-stats { gap: 18px; }
+  .feature-stats strong { font-size: 22px; }
+  .booking-card { min-height: 400px; padding: 27px; }
+  .dining { padding: 95px 0; }
+  .restaurant-detail { grid-template-columns: 1fr; }
+  .restaurant-detail > span { padding-block: 12px; }
+  .restaurant-detail p, .restaurant-detail .text-link { grid-column: 1; }
+  .detour-list article { grid-template-columns: 75px 1fr; }
+  .detour-list p { grid-column: 2; }
+  .practical { gap: 45px; padding: 20px 0 100px; }
+  .practical-list article { grid-template-columns: 38px 68px 1fr; gap: 14px; }
+  .sources { padding: 80px 0; }
+  .footer-inner { align-items: flex-start; flex-direction: column; gap: 45px; }
+  .footer-inner p { font-size: 17px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+}
