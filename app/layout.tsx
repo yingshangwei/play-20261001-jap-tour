@@ -13,9 +13,9 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const title = "十日关西｜2026 国庆旅行攻略";
+const title = "九日关西｜2026 国庆旅行攻略";
 const description =
-  "大阪、京都、神户与奈良十日旅行路线：USJ、任天堂博物馆、贵船神社与城阳秋花火。";
+  "9 月 29 日至 10 月 7 日大阪、京都与奈良九日路线：USJ、任天堂博物馆、贵船神社与城阳秋花火。";
 
 export async function generateMetadata(): Promise<Metadata> {
   const requestHeaders = await headers();
@@ -40,7 +40,7 @@ export async function generateMetadata(): Promise<Metadata> {
           url: imageUrl,
           width: 1731,
           height: 909,
-          alt: "十日关西 2026 国庆旅行攻略",
+          alt: "九日关西 2026 国庆旅行攻略",
         },
       ],
     },

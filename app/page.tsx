@@ -1,33 +1,25 @@
 const days = [
   {
-    date: "09.28",
-    day: "周一",
+    date: "09.29",
+    day: "周二",
     city: "大阪",
     stay: "难波 / 心斋桥",
     title: "抵达关西，先去感受大阪的夜",
     route: "KIX → 难波入住 → 心斋桥筋 → 道顿堀 → 法善寺横丁",
     note: "按 14:00 落地计算，第一晚不安排长套餐。心斋桥是必到项，也适合处理药妆和基础购物。",
+    transit: "机场进城约 35–45 分钟；预计 16:00–16:30 到酒店",
     tone: "city",
   },
   {
-    date: "09.29",
-    day: "周二",
+    date: "09.30",
+    day: "周三",
     city: "大阪",
     stay: "难波 / 心斋桥",
     title: "USJ 全天：从任天堂世界玩到惊魂夜",
     route: "超级任天堂世界 → 哈利波特 → 主力项目 → 万圣节惊魂夜",
     note: "开园前 60–90 分钟抵达。购买含超级任天堂世界指定入场的 Express Pass，晚上保留体力看街头僵尸和限定内容。",
+    transit: "难波 → 环球城约 30–40 分钟；建议 7:00–7:30 离店",
     tone: "special",
-  },
-  {
-    date: "09.30",
-    day: "周三",
-    city: "神户",
-    stay: "难波 / 心斋桥",
-    title: "山、瀑布与港口夜景",
-    route: "新神户 → 布引缆车 → 香草园 → 布引瀑布 → 北野 → 美利坚公园",
-    note: "推荐缆车上山、徒步下山。雨后山路湿滑时改成缆车往返，下午再去港口和旧居留地。",
-    tone: "nature",
   },
   {
     date: "10.01",
@@ -37,6 +29,7 @@ const days = [
     title: "古寺之后，走进千年原始林",
     route: "东大寺 → 二月堂 → 春日大社 → 春日山原始林 → 奈良町",
     note: "不只停留在奈良公园。体力正常可走 2–3 小时林间短线；想轻松就缩短徒步，把傍晚留给奈良町。",
+    transit: "近铁大阪难波 ↔ 近铁奈良，单程约 40 分钟",
     tone: "nature",
   },
   {
@@ -46,7 +39,8 @@ const days = [
     stay: "京都站附近",
     title: "换城入住，沿东山慢慢散步",
     route: "银阁寺 → 哲学之道 → 南禅寺 → 圆山公园 → 八坂神社 → 祇园",
-    note: "上午将行李送至京都酒店后再出发。路线以步行为主，晚上适合安排菊乃井本店。",
+    note: "上午退房后直接到京都站附近酒店寄存行李。下午路线以步行为主，晚上适合安排菊乃井本店。",
+    transit: "难波 → 京都站约 50–60 分钟；京都站 → 银阁寺约 30–40 分钟",
     tone: "culture",
   },
   {
@@ -57,6 +51,7 @@ const days = [
     title: "岚山早行，避开周末人潮",
     route: "竹林 → 天龙寺 → 大河内山庄 → 常寂光寺 / 祇王寺 → 嵯峨野",
     note: "7:00 左右抵达竹林。以寺院庭园和嵯峨野小路为主，有余力再加金阁寺，不必硬塞保津川游船。",
+    transit: "JR 京都 → 嵯峨岚山约 17 分钟；当地步行 4–6 小时",
     tone: "nature",
   },
   {
@@ -67,6 +62,7 @@ const days = [
     title: "任天堂、宇治川与秋日烟火",
     route: "任天堂博物馆 → 平等院 → 宇治川 → JR 长池 → 城阳秋花火",
     note: "最理想是 10:00 左右入馆，14:00 后逛宇治，16:30 前到烟火会场。三处都在京都南部，几乎不折返。",
+    transit: "京都 → 小仓约 25–30 分钟；宇治 → 长池约 20 分钟；长池 → 京都约 35 分钟",
     tone: "special",
   },
   {
@@ -77,6 +73,7 @@ const days = [
     title: "翻过鞍马山，抵达贵船",
     route: "出町柳 → 鞍马寺 → 木根道 → 贵船神社三社 → 出町柳",
     note: "晴天从鞍马走到贵船约需半天；雨天取消山路，直接由贵船口搭巴士去神社。返程加入出町桝形商店街和鸭川跳石。",
+    transit: "京都 → 鞍马约 60–75 分钟；翻山 2.5–3 小时；贵船 → 京都约 70 分钟",
     tone: "nature",
   },
   {
@@ -87,6 +84,7 @@ const days = [
     title: "回到大阪，城市与购物收尾",
     route: "大阪城公园 → 中之岛 / 梅田 → 日本桥电电城 → 心斋桥",
     note: "上午从京都回大阪，先寄存行李。晚餐可订 La Cime，结束后回难波打包行李。",
+    transit: "京都站 → 难波约 50–60 分钟；大阪市内以地铁和步行为主",
     tone: "city",
   },
   {
@@ -97,6 +95,7 @@ const days = [
     title: "留足时间，舒服返沪",
     route: "难波 → 南海电铁 → 关西机场",
     note: "12:00 国际航班建议 7:45–8:00 离开酒店，约 9:00 抵达机场。",
+    transit: "南海 Rapi:t / 机场急行约 35–45 分钟，另留值机与安检时间",
     tone: "city",
   },
 ];
@@ -124,7 +123,7 @@ const bookingCards = [
     number: "03",
     urgency: "尽快锁定",
     title: "USJ",
-    body: "购买 9 月 29 日日期指定 Studio Pass，并选择含超级任天堂世界指定入场的 Express Pass。2026 万圣节惊魂夜正在举办。",
+    body: "购买 9 月 30 日日期指定 Studio Pass，并选择含超级任天堂世界指定入场的 Express Pass。当天仍在 2026 万圣节惊魂夜活动期内。",
     meta: "当天可能早于标示时间开园",
     href: "https://www.usj.co.jp/web/en/us/tickets/express-pass",
     cta: "查看 Express Pass",
@@ -153,10 +152,11 @@ const restaurants = [
 ];
 
 const practical = [
-  ["住宿", "9.28–10.02 大阪难波／心斋桥；10.02–10.06 京都站；10.06 最后一晚回难波。"],
-  ["行李", "10 月 1 日请大阪酒店协助把大箱子宅配到京都，去任天堂和烟火当天只带随身包。"],
+  ["住宿", "9.29–10.02 大阪难波／心斋桥 3 晚；10.02–10.06 京都站 4 晚；10.06 最后一晚回难波。"],
+  ["行李", "10 月 2 日退房后带行李直接去京都站附近酒店寄存；10 月 6 日同样先回难波寄存，再开始大阪市内行程。"],
   ["交通", "关西内部使用 ICOCA 加单独购票即可，一般不需要全国 JR Pass；京都优先坐铁路而不是挤巴士。"],
-  ["天气", "9 月末仍可能受台风和阵雨影响。神户、奈良两天可互换；贵船下雨则保留神社、取消翻山。"],
+  ["取舍", "出发改为 9 月 29 日后少了一整天，主线保留奈良、删去神户；若更想看神户，可用神户布引＋港口替换 10 月 1 日奈良。"],
+  ["天气", "9 月末仍可能受台风和阵雨影响。奈良与岚山可视天气微调；贵船下雨则保留神社、取消翻山。"],
 ];
 
 export default function Home() {
@@ -178,14 +178,14 @@ export default function Home() {
 
         <div className="hero-content shell">
           <p className="eyebrow">2026 · 国庆关西旅行手册</p>
-          <h1>十日关西，<br />沿山海与烟火前行。</h1>
+          <h1>九日关西，<br />沿山林与烟火前行。</h1>
           <p className="hero-copy">
-            从大阪的霓虹出发，穿过神户山海、奈良古林和京都北山，
+            从大阪的霓虹出发，穿过奈良古林、岚山嵯峨野和京都北山，
             把任天堂、贵船、USJ 与一场秋日烟火串成一条舒服的路线。
           </p>
           <div className="hero-actions">
             <a className="primary-button" href="#route">开始阅读</a>
-            <span className="trip-date">09.28 — 10.07</span>
+            <span className="trip-date">09.29 — 10.07</span>
           </div>
         </div>
 
@@ -197,7 +197,7 @@ export default function Home() {
       <section className="overview shell" aria-label="行程概览">
         <article>
           <span>住宿节奏</span>
-          <strong>大阪 4晚 · 京都 4晚 · 大阪 1晚</strong>
+          <strong>大阪 3晚 · 京都 4晚 · 大阪 1晚</strong>
         </article>
         <article>
           <span>路线基调</span>
@@ -224,6 +224,7 @@ export default function Home() {
               <span><i className="legend-line main-line" />换住宿地</span>
               <span><i className="legend-line day-line" />当天往返</span>
               <span><i className="legend-dot" />住宿据点</span>
+              <span><i className="legend-label">约</i>预计交通时间</span>
             </div>
             <span className="map-hint">手机端可左右滑动查看</span>
           </div>
@@ -238,72 +239,77 @@ export default function Home() {
               <i className="map-line main map-line-kix-osaka" aria-hidden="true" />
               <i className="map-line main map-line-osaka-kyoto" aria-hidden="true" />
               <i className="map-line day map-line-osaka-usj" aria-hidden="true" />
-              <i className="map-line day map-line-osaka-kobe" aria-hidden="true" />
               <i className="map-line day map-line-osaka-nara" aria-hidden="true" />
               <i className="map-line day map-line-kyoto-arashiyama" aria-hidden="true" />
               <i className="map-line day map-line-kyoto-kifune" aria-hidden="true" />
               <i className="map-line day map-line-kyoto-uji" aria-hidden="true" />
               <i className="map-line event map-line-uji-joyo" aria-hidden="true" />
 
+              <span className="map-route-label label-kix"><strong>南海 Rapi:t / 机场急行</strong>约 35–45 分</span>
+              <span className="map-route-label label-usj"><strong>JR 换乘</strong>约 30–40 分</span>
+              <span className="map-route-label label-nara"><strong>近铁奈良线</strong>单程约 40 分</span>
+              <span className="map-route-label label-osaka-kyoto"><strong>地铁＋JR 新快速</strong>约 50–60 分</span>
+              <span className="map-route-label label-arashiyama"><strong>JR 嵯峨野线</strong>约 17 分</span>
+              <span className="map-route-label label-kifune"><strong>JR＋京阪＋叡山电铁</strong>约 60–75 分</span>
+              <span className="map-route-label label-uji"><strong>近铁京都线</strong>约 25–30 分</span>
+              <span className="map-route-label label-joyo"><strong>JR 奈良线</strong>约 20 分</span>
+
               <a className="map-node node-kix" href="https://www.google.com/maps/search/?api=1&query=Kansai+International+Airport" target="_blank" rel="noreferrer">
                 <span className="node-marker airport">✦</span>
                 <strong>关西机场</strong>
-                <small>09.28 / 10.07</small>
+                <small>09.29 抵达 / 10.07 返程</small>
               </a>
-              <a className="map-node hub node-osaka" href="https://www.google.com/maps/search/?api=1&query=Namba+Osaka" target="_blank" rel="noreferrer">
+              <a className="map-node hub stay-node node-osaka" href="https://www.google.com/maps/search/?api=1&query=Namba+Osaka" target="_blank" rel="noreferrer">
+                <span className="stay-badge">住宿</span>
                 <span className="node-marker">1</span>
-                <strong>大阪</strong>
-                <small>难波 · 两段住宿</small>
+                <strong>大阪 · 难波 / 心斋桥</strong>
+                <small>09.29–10.02 · 3晚<br />10.06 · 1晚</small>
               </a>
               <a className="map-node node-usj" href="https://www.google.com/maps/search/?api=1&query=Universal+Studios+Japan" target="_blank" rel="noreferrer">
                 <span className="node-marker">2</span>
                 <strong>USJ</strong>
-                <small>09.29</small>
-              </a>
-              <a className="map-node node-kobe" href="https://www.google.com/maps/search/?api=1&query=Shin-Kobe+Station" target="_blank" rel="noreferrer">
-                <span className="node-marker">3</span>
-                <strong>神户</strong>
-                <small>09.30</small>
+                <small>09.30 · 全天</small>
               </a>
               <a className="map-node node-nara" href="https://www.google.com/maps/search/?api=1&query=Nara+Park" target="_blank" rel="noreferrer">
-                <span className="node-marker">4</span>
+                <span className="node-marker">3</span>
                 <strong>奈良</strong>
                 <small>10.01</small>
               </a>
-              <a className="map-node hub node-kyoto" href="https://www.google.com/maps/search/?api=1&query=Kyoto+Station" target="_blank" rel="noreferrer">
-                <span className="node-marker">5</span>
-                <strong>京都</strong>
-                <small>京都站 · 四晚</small>
+              <a className="map-node hub stay-node node-kyoto" href="https://www.google.com/maps/search/?api=1&query=Kyoto+Station" target="_blank" rel="noreferrer">
+                <span className="stay-badge">住宿</span>
+                <span className="node-marker">4</span>
+                <strong>京都 · 京都站附近</strong>
+                <small>10.02–10.06 · 4晚</small>
               </a>
               <a className="map-node node-arashiyama" href="https://www.google.com/maps/search/?api=1&query=Arashiyama+Kyoto" target="_blank" rel="noreferrer">
-                <span className="node-marker">6</span>
+                <span className="node-marker">5</span>
                 <strong>岚山</strong>
                 <small>10.03</small>
               </a>
               <a className="map-node node-kifune" href="https://www.google.com/maps/search/?api=1&query=Kifune+Shrine+Kyoto" target="_blank" rel="noreferrer">
                 <span className="node-marker">8</span>
                 <strong>贵船 · 鞍马</strong>
-                <small>10.05</small>
+                <small>10.05 · 徒步 2.5–3 小时</small>
               </a>
               <a className="map-node node-uji" href="https://www.google.com/maps/search/?api=1&query=Nintendo+Museum+Uji" target="_blank" rel="noreferrer">
-                <span className="node-marker">7</span>
-                <strong>宇治</strong>
-                <small>任天堂博物馆</small>
+                <span className="node-marker">6</span>
+                <strong>宇治 · 任天堂博物馆</strong>
+                <small>10.04 · 预约入馆</small>
               </a>
               <a className="map-node event-node node-joyo" href="https://www.google.com/maps/search/?api=1&query=Kyoto+Prefectural+Kizugawa+Sports+Park" target="_blank" rel="noreferrer">
-                <span className="node-marker">✺</span>
-                <strong>城阳</strong>
-                <small>10.04 烟火</small>
+                <span className="node-marker">7</span>
+                <strong>城阳 · 长池</strong>
+                <small>10.04 · 19:00 烟火</small>
               </a>
             </div>
           </div>
 
           <ol className="route-sequence" aria-label="住宿和往返顺序">
-            <li><span>01</span><strong>KIX → 大阪</strong><small>入境后住难波 4 晚</small></li>
-            <li><span>02</span><strong>大阪放射往返</strong><small>USJ · 神户 · 奈良</small></li>
-            <li><span>03</span><strong>大阪 → 京都</strong><small>10.02 换住宿地</small></li>
-            <li><span>04</span><strong>京都放射往返</strong><small>岚山 · 贵船 · 宇治城阳</small></li>
-            <li><span>05</span><strong>京都 → 大阪 → KIX</strong><small>最后一晚回难波</small></li>
+            <li><span>01</span><strong>09.29 · KIX → 大阪</strong><small>约 35–45 分 · 难波住 3 晚</small></li>
+            <li><span>02</span><strong>09.30–10.01 · 往返</strong><small>USJ 约 30–40 分 · 奈良约 40 分</small></li>
+            <li><span>03</span><strong>10.02 · 大阪 → 京都</strong><small>约 50–60 分 · 京都站住 4 晚</small></li>
+            <li><span>04</span><strong>10.03–10.05 · 往返</strong><small>岚山 · 宇治城阳 · 贵船鞍马</small></li>
+            <li><span>05</span><strong>10.06–10.07 · 大阪返程</strong><small>回难波住 1 晚 · 次晨去 KIX</small></li>
           </ol>
         </div>
       </section>
@@ -328,6 +334,7 @@ export default function Home() {
               <div className="timeline-copy">
                 <h3>{item.title}</h3>
                 <p className="route-line">{item.route}</p>
+                <p className="transit-line"><span>交通耗时</span>{item.transit}</p>
                 <p>{item.note}</p>
               </div>
             </article>
@@ -449,7 +456,7 @@ export default function Home() {
       <section className="practical shell" aria-labelledby="practical-title">
         <div className="practical-title">
           <p className="eyebrow dark">GOOD TO KNOW</p>
-          <h2 id="practical-title">让路线保持松弛的四件事。</h2>
+          <h2 id="practical-title">让路线保持松弛的五件事。</h2>
         </div>
         <div className="practical-list">
           {practical.map(([title, body], index) => (

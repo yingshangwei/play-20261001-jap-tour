@@ -19,11 +19,20 @@ test("server-renders the Kansai travel guide", async () => {
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
 
   const html = await response.text();
-  assert.match(html, /十日关西/);
+  assert.match(html, /九日关西/);
+  assert.match(html, /09\.29 — 10\.07/);
   assert.match(html, /任天堂博物馆/);
   assert.match(html, /城阳秋花火/);
   assert.match(html, /两座驻地/);
-  assert.match(html, /大阪放射往返/);
+  assert.match(html, /09\.29–10\.02 · 3晚/);
+  assert.match(html, /10\.02–10\.06 · 4晚/);
+  assert.match(html, /南海 Rapi:t \/ 机场急行/);
+  assert.match(html, /近铁奈良线/);
+  assert.match(html, /近铁京都线/);
+  assert.match(html, /JR 奈良线/);
+  assert.match(html, /JR＋京阪＋叡山电铁/);
+  assert.match(html, /交通耗时/);
   assert.match(html, /菊乃井本店/);
+  assert.doesNotMatch(html, /09\.28|十日关西/);
   assert.doesNotMatch(html, /codex-preview|SkeletonPreview/);
 });
