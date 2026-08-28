@@ -73,6 +73,69 @@ a:focus-visible { outline: 3px solid var(--gold); outline-offset: 5px; border-ra
 .overview span { color: #7d887f; font-size: 12px; letter-spacing: .08em; }
 .overview strong { font-family: Georgia, "Noto Serif SC", serif; font-size: 20px; font-weight: 500; }
 
+.map-section { padding: 128px 0 50px; scroll-margin-top: 20px; }
+.map-heading { display: grid; grid-template-columns: .42fr 1fr; gap: 50px; align-items: start; margin-bottom: 55px; }
+.map-heading h2 { margin: 0; font: 500 clamp(42px, 5.4vw, 74px)/1.08 Georgia, "Noto Serif SC", serif; letter-spacing: -.04em; }
+.route-map-panel { overflow: hidden; background: var(--cream); border: 1px solid var(--line); box-shadow: 0 24px 70px rgba(22,35,30,.08); }
+.map-toolbar { min-height: 72px; padding: 18px 24px; display: flex; align-items: center; justify-content: space-between; gap: 20px; border-bottom: 1px solid var(--line); }
+.map-legend { display: flex; flex-wrap: wrap; gap: 22px; }
+.map-legend > span { display: inline-flex; align-items: center; gap: 8px; color: var(--muted); font-size: 11px; }
+.legend-line { display: inline-block; width: 27px; height: 3px; border-radius: 99px; }
+.legend-line.main-line { background: var(--orange); }
+.legend-line.day-line { height: 0; border-top: 2px dashed var(--moss); }
+.legend-dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: var(--ink); box-shadow: 0 0 0 4px rgba(22,35,30,.1); }
+.map-hint { color: #918980; font-size: 11px; }
+.map-scroller { overflow-x: auto; overscroll-behavior-inline: contain; background: #dfe9e5; scrollbar-color: var(--orange) rgba(22,35,30,.08); scrollbar-width: thin; }
+.map-scroller::-webkit-scrollbar { height: 8px; }
+.map-scroller::-webkit-scrollbar-thumb { border-radius: 999px; background: var(--orange); }
+.map-scroller::-webkit-scrollbar-track { background: rgba(22,35,30,.08); }
+.route-map-canvas { position: relative; width: 900px; min-width: 900px; height: 620px; margin: 0 auto; overflow: hidden; }
+.route-map-canvas::before { content: ""; position: absolute; inset: 0; opacity: .25; background-image: radial-gradient(rgba(22,35,30,.35) .65px, transparent .65px); background-size: 15px 15px; }
+.map-land { position: absolute; pointer-events: none; }
+.land-kansai { left: 30px; top: 25px; width: 820px; height: 560px; background: #f3efe5; clip-path: polygon(31% 0, 67% 4%, 87% 15%, 100% 34%, 95% 62%, 82% 79%, 58% 90%, 45% 100%, 19% 94%, 7% 79%, 0 55%, 8% 33%, 20% 19%); box-shadow: inset 0 0 0 1px rgba(22,35,30,.14); }
+.land-kansai::after { content: ""; position: absolute; left: 0; bottom: 0; width: 49%; height: 52%; background: #dfe9e5; clip-path: polygon(0 0, 48% 15%, 78% 42%, 100% 100%, 0 100%); }
+.land-bay { left: 200px; top: 320px; width: 220px; height: 170px; border: 1px solid rgba(53,92,69,.18); border-radius: 58% 42% 48% 52%; transform: rotate(-14deg); }
+.sea-label { position: absolute; left: 178px; top: 430px; color: rgba(53,92,69,.52); font: italic 14px Georgia, serif; letter-spacing: .12em; transform: rotate(-16deg); }
+.north-label { position: absolute; right: 28px; top: 24px; color: rgba(22,35,30,.58); font: 12px Georgia, serif; letter-spacing: .12em; }
+.map-line { position: absolute; z-index: 2; display: block; height: 0; transform-origin: left center; }
+.map-line.main { border-top: 5px solid var(--orange); }
+.map-line.main::after { content: ""; position: absolute; right: -3px; top: -8px; width: 10px; height: 10px; border-top: 3px solid var(--orange); border-right: 3px solid var(--orange); transform: rotate(45deg); }
+.map-line.day { border-top: 3px dashed var(--moss); opacity: .85; }
+.map-line.event { border-top: 4px dotted #d59d2f; }
+.map-line-kix-osaka { left: 190px; top: 520px; width: 269px; transform: rotate(-42deg); }
+.map-line-osaka-kyoto { left: 390px; top: 340px; width: 302px; transform: rotate(-26.6deg); }
+.map-line-osaka-usj { left: 270px; top: 365px; width: 122px; transform: rotate(-12deg); }
+.map-line-osaka-kobe { left: 105px; top: 300px; width: 288px; transform: rotate(8deg); }
+.map-line-osaka-nara { left: 390px; top: 340px; width: 275px; transform: rotate(19deg); }
+.map-line-kyoto-arashiyama { left: 520px; top: 165px; width: 146px; transform: rotate(16deg); }
+.map-line-kyoto-kifune { left: 660px; top: 205px; width: 146px; transform: rotate(-68deg); }
+.map-line-kyoto-uji { left: 660px; top: 205px; width: 112px; transform: rotate(69deg); }
+.map-line-uji-joyo { left: 700px; top: 310px; width: 87px; transform: rotate(59deg); }
+.map-node { position: absolute; z-index: 3; width: 150px; min-height: 78px; display: grid; justify-items: center; align-content: start; text-align: center; transform: translate(-50%, -50%); }
+.map-node:hover .node-marker { transform: translateY(-3px) scale(1.06); box-shadow: 0 9px 22px rgba(22,35,30,.2); }
+.node-marker { display: grid; place-items: center; width: 34px; height: 34px; margin-bottom: 7px; border: 3px solid #f3efe5; border-radius: 50%; color: #fff; background: var(--moss); box-shadow: 0 4px 14px rgba(22,35,30,.16); font: 700 12px Georgia, serif; transition: transform .2s ease, box-shadow .2s ease; }
+.map-node.hub .node-marker { width: 45px; height: 45px; color: var(--ink); background: var(--gold); box-shadow: 0 0 0 7px rgba(245,185,76,.2), 0 8px 20px rgba(22,35,30,.18); font-size: 14px; }
+.map-node.event-node .node-marker { color: #fff; background: var(--orange); box-shadow: 0 0 0 7px rgba(239,106,57,.16); font-size: 18px; }
+.node-marker.airport { color: var(--ink); background: #fff; border-color: var(--orange); font-size: 17px; }
+.map-node strong { padding: 3px 6px; color: var(--ink); background: rgba(243,239,229,.88); border-radius: 4px; font: 600 15px Georgia, "Noto Serif SC", serif; }
+.map-node small { margin-top: 3px; padding: 2px 5px; color: var(--muted); background: rgba(243,239,229,.78); border-radius: 3px; font-size: 9px; letter-spacing: .04em; }
+.node-kix { left: 190px; top: 520px; }
+.node-osaka { left: 390px; top: 340px; }
+.node-usj { left: 270px; top: 365px; }
+.node-kobe { left: 105px; top: 300px; }
+.node-nara { left: 650px; top: 430px; }
+.node-kyoto { left: 660px; top: 205px; }
+.node-arashiyama { left: 520px; top: 165px; }
+.node-kifune { left: 715px; top: 70px; }
+.node-uji { left: 700px; top: 310px; }
+.node-joyo { left: 745px; top: 385px; }
+.route-sequence { display: grid; grid-template-columns: repeat(5, 1fr); margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--line); }
+.route-sequence li { min-height: 125px; padding: 23px 19px; display: flex; flex-direction: column; border-right: 1px solid var(--line); }
+.route-sequence li:last-child { border-right: 0; }
+.route-sequence span { color: var(--orange); font: italic 15px Georgia, serif; }
+.route-sequence strong { margin-top: 20px; font: 600 13px Georgia, "Noto Serif SC", serif; }
+.route-sequence small { margin-top: 6px; color: var(--muted); font-size: 10px; line-height: 1.5; }
+
 .route { padding: 120px 0 130px; scroll-margin-top: 20px; }
 .section-heading { display: flex; justify-content: space-between; gap: 40px; align-items: flex-start; margin-bottom: 66px; }
 .eyebrow.dark { color: var(--orange); }
@@ -170,6 +233,14 @@ footer { padding: 75px 0; color: #fffaf0; background: var(--ink); }
 .footer-inner > a { color: rgba(255,250,240,.72); font-size: 12px; border-bottom: 1px solid rgba(255,255,255,.35); padding-bottom: 5px; }
 
 @media (max-width: 900px) {
+  .map-heading { grid-template-columns: 1fr; gap: 30px; }
+  .map-heading h2 { font-size: 52px; }
+  .route-map-canvas { margin: 0; }
+  .route-sequence { grid-template-columns: 1fr; }
+  .route-sequence li { min-height: 85px; display: grid; grid-template-columns: 40px 1fr; column-gap: 14px; align-content: center; border-right: 0; border-bottom: 1px solid var(--line); }
+  .route-sequence li:last-child { border-bottom: 0; }
+  .route-sequence strong { margin: 0; }
+  .route-sequence small { grid-column: 2; }
   .feature-grid, .detours, .practical { grid-template-columns: 1fr; gap: 55px; }
   .booking-grid { grid-template-columns: 1fr; }
   .booking-card { min-height: 370px; }
@@ -191,6 +262,13 @@ footer { padding: 75px 0; color: #fffaf0; background: var(--ink); }
   .sun-disc { right: -120px; bottom: -70px; width: 300px; height: 300px; font-size: 43px; }
   .overview { grid-template-columns: 1fr; margin-top: -28px; }
   .overview article { min-height: 108px; padding: 25px; border-right: 0; border-bottom: 1px solid var(--line); }
+  .map-section { width: 100%; padding: 90px 0 20px; }
+  .map-heading { width: min(100% - 28px, 1160px); margin-inline: auto; }
+  .map-heading h2 { font-size: 43px; }
+  .route-map-panel { border-inline: 0; }
+  .map-toolbar { align-items: flex-start; flex-direction: column; padding-inline: 14px; }
+  .map-legend { gap: 13px; }
+  .map-hint { color: var(--orange); }
   .route, .booking, .detours { padding: 90px 0; }
   .section-heading { display: block; }
   .section-heading h2 { width: 100%; margin-top: 38px; font-size: 42px; }

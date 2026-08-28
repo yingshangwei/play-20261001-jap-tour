@@ -169,6 +169,7 @@ export default function Home() {
             <span>KANSAI 2026</span>
           </a>
           <div className="nav-menu">
+            <a href="#map">线路地图</a>
             <a href="#route">逐日路线</a>
             <a href="#book">订票</a>
             <a href="#eat">餐厅</a>
@@ -206,6 +207,105 @@ export default function Home() {
           <span>三项必抢</span>
           <strong>任天堂 · USJ · 城阳烟火</strong>
         </article>
+      </section>
+
+      <section className="map-section shell" id="map" aria-labelledby="map-title">
+        <div className="map-heading">
+          <div>
+            <p className="eyebrow dark">ROUTE MAP</p>
+            <span className="section-note">点击地点可在 Google Maps 中打开</span>
+          </div>
+          <h2 id="map-title">两座驻地，<br />向山海延伸。</h2>
+        </div>
+
+        <div className="route-map-panel">
+          <div className="map-toolbar">
+            <div className="map-legend" aria-label="线路图图例">
+              <span><i className="legend-line main-line" />换住宿地</span>
+              <span><i className="legend-line day-line" />当天往返</span>
+              <span><i className="legend-dot" />住宿据点</span>
+            </div>
+            <span className="map-hint">手机端可左右滑动查看</span>
+          </div>
+
+          <div className="map-scroller">
+            <div className="route-map-canvas">
+              <div className="map-land land-kansai" aria-hidden="true" />
+              <div className="map-land land-bay" aria-hidden="true" />
+              <span className="sea-label" aria-hidden="true">大阪湾</span>
+              <span className="north-label" aria-hidden="true">N ↑</span>
+
+              <i className="map-line main map-line-kix-osaka" aria-hidden="true" />
+              <i className="map-line main map-line-osaka-kyoto" aria-hidden="true" />
+              <i className="map-line day map-line-osaka-usj" aria-hidden="true" />
+              <i className="map-line day map-line-osaka-kobe" aria-hidden="true" />
+              <i className="map-line day map-line-osaka-nara" aria-hidden="true" />
+              <i className="map-line day map-line-kyoto-arashiyama" aria-hidden="true" />
+              <i className="map-line day map-line-kyoto-kifune" aria-hidden="true" />
+              <i className="map-line day map-line-kyoto-uji" aria-hidden="true" />
+              <i className="map-line event map-line-uji-joyo" aria-hidden="true" />
+
+              <a className="map-node node-kix" href="https://www.google.com/maps/search/?api=1&query=Kansai+International+Airport" target="_blank" rel="noreferrer">
+                <span className="node-marker airport">✦</span>
+                <strong>关西机场</strong>
+                <small>09.28 / 10.07</small>
+              </a>
+              <a className="map-node hub node-osaka" href="https://www.google.com/maps/search/?api=1&query=Namba+Osaka" target="_blank" rel="noreferrer">
+                <span className="node-marker">1</span>
+                <strong>大阪</strong>
+                <small>难波 · 两段住宿</small>
+              </a>
+              <a className="map-node node-usj" href="https://www.google.com/maps/search/?api=1&query=Universal+Studios+Japan" target="_blank" rel="noreferrer">
+                <span className="node-marker">2</span>
+                <strong>USJ</strong>
+                <small>09.29</small>
+              </a>
+              <a className="map-node node-kobe" href="https://www.google.com/maps/search/?api=1&query=Shin-Kobe+Station" target="_blank" rel="noreferrer">
+                <span className="node-marker">3</span>
+                <strong>神户</strong>
+                <small>09.30</small>
+              </a>
+              <a className="map-node node-nara" href="https://www.google.com/maps/search/?api=1&query=Nara+Park" target="_blank" rel="noreferrer">
+                <span className="node-marker">4</span>
+                <strong>奈良</strong>
+                <small>10.01</small>
+              </a>
+              <a className="map-node hub node-kyoto" href="https://www.google.com/maps/search/?api=1&query=Kyoto+Station" target="_blank" rel="noreferrer">
+                <span className="node-marker">5</span>
+                <strong>京都</strong>
+                <small>京都站 · 四晚</small>
+              </a>
+              <a className="map-node node-arashiyama" href="https://www.google.com/maps/search/?api=1&query=Arashiyama+Kyoto" target="_blank" rel="noreferrer">
+                <span className="node-marker">6</span>
+                <strong>岚山</strong>
+                <small>10.03</small>
+              </a>
+              <a className="map-node node-kifune" href="https://www.google.com/maps/search/?api=1&query=Kifune+Shrine+Kyoto" target="_blank" rel="noreferrer">
+                <span className="node-marker">8</span>
+                <strong>贵船 · 鞍马</strong>
+                <small>10.05</small>
+              </a>
+              <a className="map-node node-uji" href="https://www.google.com/maps/search/?api=1&query=Nintendo+Museum+Uji" target="_blank" rel="noreferrer">
+                <span className="node-marker">7</span>
+                <strong>宇治</strong>
+                <small>任天堂博物馆</small>
+              </a>
+              <a className="map-node event-node node-joyo" href="https://www.google.com/maps/search/?api=1&query=Kyoto+Prefectural+Kizugawa+Sports+Park" target="_blank" rel="noreferrer">
+                <span className="node-marker">✺</span>
+                <strong>城阳</strong>
+                <small>10.04 烟火</small>
+              </a>
+            </div>
+          </div>
+
+          <ol className="route-sequence" aria-label="住宿和往返顺序">
+            <li><span>01</span><strong>KIX → 大阪</strong><small>入境后住难波 4 晚</small></li>
+            <li><span>02</span><strong>大阪放射往返</strong><small>USJ · 神户 · 奈良</small></li>
+            <li><span>03</span><strong>大阪 → 京都</strong><small>10.02 换住宿地</small></li>
+            <li><span>04</span><strong>京都放射往返</strong><small>岚山 · 贵船 · 宇治城阳</small></li>
+            <li><span>05</span><strong>京都 → 大阪 → KIX</strong><small>最后一晚回难波</small></li>
+          </ol>
+        </div>
       </section>
 
       <section className="route shell" id="route">

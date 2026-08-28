@@ -22,6 +22,8 @@ test("server-renders the Kansai travel guide", async () => {
   assert.match(html, /十日关西/);
   assert.match(html, /任天堂博物馆/);
   assert.match(html, /城阳秋花火/);
+  assert.match(html, /两座驻地/);
+  assert.match(html, /大阪放射往返/);
   assert.match(html, /菊乃井本店/);
   assert.doesNotMatch(html, /codex-preview|SkeletonPreview/);
 });

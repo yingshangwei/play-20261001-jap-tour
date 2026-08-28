@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { headers } from "next/headers";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -12,10 +13,45 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "十日关西｜2026 国庆旅行攻略",
-  description: "大阪、京都、神户与奈良十日旅行路线：USJ、任天堂博物馆、贵船神社与城阳秋花火。",
-};
+const title = "十日关西｜2026 国庆旅行攻略";
+const description =
+  "大阪、京都、神户与奈良十日旅行路线：USJ、任天堂博物馆、贵船神社与城阳秋花火。";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const requestHeaders = await headers();
+  const host =
+    requestHeaders.get("x-forwarded-host") ??
+    requestHeaders.get("host") ??
+    "kansai-autumn-2026-guide.yingshangwei.chatgpt.site";
+  const protocol =
+    requestHeaders.get("x-forwarded-proto") ??
+    (host.startsWith("localhost") ? "http" : "https");
+  const imageUrl = `${protocol}://${host}/og.png`;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: "website",
+      images: [
+        {
+          url: imageUrl,
+          width: 1731,
+          height: 909,
+          alt: "十日关西 2026 国庆旅行攻略",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [imageUrl],
+    },
+  };
+}
 
 export default function RootLayout({
   children,
