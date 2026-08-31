@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
 
 :root {
   --ink: #16231e;
@@ -76,6 +77,54 @@ a:focus-visible { outline: 3px solid var(--gold); outline-offset: 5px; border-ra
 .map-section { padding: 128px 0 50px; scroll-margin-top: 20px; }
 .map-heading { display: grid; grid-template-columns: .42fr 1fr; gap: 50px; align-items: start; margin-bottom: 55px; }
 .map-heading h2 { margin: 0; font: 500 clamp(42px, 5.4vw, 74px)/1.08 Georgia, "Noto Serif SC", serif; letter-spacing: -.04em; }
+.real-map-panel { overflow: hidden; background: var(--cream); border: 1px solid var(--line); box-shadow: 0 24px 70px rgba(22,35,30,.08); }
+.real-map-toolbar { min-height: 72px; padding: 15px 18px; display: flex; align-items: center; justify-content: space-between; gap: 18px; border-bottom: 1px solid var(--line); }
+.map-control-group { display: flex; flex-wrap: wrap; gap: 7px; }
+.map-control-group button { min-height: 34px; padding: 7px 12px; border: 1px solid rgba(22,35,30,.16); border-radius: 999px; color: var(--muted); background: #fffdf8; font: inherit; font-size: 11px; font-weight: 700; cursor: pointer; transition: color .2s ease, background .2s ease, border-color .2s ease; }
+.map-control-group button:hover, .map-control-group button.active { color: #fff; background: var(--moss); border-color: var(--moss); }
+.category-controls button.active { color: var(--ink); background: var(--gold); border-color: var(--gold); }
+.real-legend { padding: 13px 18px; border-bottom: 1px solid var(--line); background: #faf7ef; }
+.real-legend-dot { display: inline-block; width: 10px; height: 10px; border: 2px solid #fff; border-radius: 50%; box-shadow: 0 0 0 1px rgba(22,35,30,.16); }
+.spot-dot { background: var(--moss); }
+.restaurant-dot { background: var(--orange); }
+.stay-dot { background: var(--gold); }
+.leaflet-map { z-index: 0; width: 100%; height: 650px; background: #dfe9e5; }
+.leaflet-map .leaflet-control-attribution { font-size: 9px; }
+.trip-marker-wrap { border: 0; background: transparent; }
+.trip-marker { display: grid; place-items: center; width: 34px; height: 34px; border: 3px solid rgba(255,253,248,.95); border-radius: 50%; color: #fff; background: var(--moss); box-shadow: 0 5px 16px rgba(22,35,30,.28); font-size: 11px; font-weight: 900; transition: transform .2s ease; }
+.trip-marker:hover { transform: translateY(-2px) scale(1.08); }
+.marker-restaurant { background: var(--orange); }
+.marker-stay { color: var(--ink); background: var(--gold); }
+.trip-popup { min-width: 205px; padding: 3px 2px; color: var(--ink); font-family: "Noto Sans SC", "PingFang SC", sans-serif; }
+.trip-popup strong, .trip-popup small, .trip-popup span { display: block; }
+.trip-popup strong { margin-bottom: 5px; font: 600 16px Georgia, "Noto Serif SC", serif; }
+.trip-popup small { color: var(--muted); font-size: 11px; line-height: 1.5; }
+.trip-popup .leaflet-popup-guide { margin-top: 7px; color: #9f482b; font-size: 10px; font-weight: 800; }
+.trip-popup p { margin: 8px 0; color: var(--muted); font-size: 11px; line-height: 1.55; }
+.trip-popup a { display: inline-block; margin-top: 7px; color: var(--orange); font-size: 11px; font-weight: 800; }
+.map-disclaimer { margin: 0; padding: 13px 18px; color: #7f877f; border-top: 1px solid var(--line); font-size: 10px; line-height: 1.6; }
+.google-route-strip { display: flex; gap: 8px; padding: 0 18px 18px; overflow-x: auto; scrollbar-width: thin; }
+.google-route-strip a { flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: space-between; gap: 14px; min-width: 155px; padding: 11px 12px; color: var(--ink); background: #f4efe4; border: 1px solid var(--line); border-radius: 7px; font-size: 10px; font-weight: 800; transition: transform .2s ease, border-color .2s ease; }
+.google-route-strip a:hover { transform: translateY(-2px); border-color: var(--orange); }
+.google-route-strip span { color: var(--orange); }
+.restaurant-map-heading { display: grid; grid-template-columns: 1fr .75fr; gap: 50px; align-items: end; padding: 58px 24px 30px; border-top: 1px solid var(--line); }
+.restaurant-map-heading .eyebrow { margin-bottom: 14px; }
+.restaurant-map-heading h3 { margin: 0; font: 500 34px/1.1 Georgia, "Noto Serif SC", serif; letter-spacing: -.025em; }
+.restaurant-map-heading > p { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.75; }
+.restaurant-pin-grid { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+.restaurant-pin-card { min-height: 265px; padding: 24px; display: flex; flex-direction: column; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.restaurant-pin-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.restaurant-pin-top > span { color: #887d73; font-size: 9px; line-height: 1.5; letter-spacing: .04em; }
+.restaurant-pin-top em { flex: 0 0 auto; padding: 5px 8px; border-radius: 999px; font-size: 9px; font-style: normal; font-weight: 900; }
+.fit-best { color: #29523b; background: #dceade; }
+.fit-swap { color: #825918; background: #f7e9c7; }
+.fit-detour { color: #8b4128; background: #f3ded5; }
+.restaurant-pin-card h4 { margin: 22px 0 9px; font: 600 20px/1.25 Georgia, "Noto Serif SC", serif; }
+.restaurant-pin-card > strong { color: var(--orange); font-size: 10px; letter-spacing: .05em; }
+.restaurant-pin-card > p { margin: 15px 0 20px; color: var(--muted); font-size: 11px; line-height: 1.7; }
+.restaurant-pin-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; }
+.restaurant-pin-links a { padding: 8px 10px; color: var(--ink); background: #f4efe4; border-radius: 5px; font-size: 10px; font-weight: 800; }
+.restaurant-pin-links a:hover { color: #fff; background: var(--moss); }
 .route-map-panel { overflow: hidden; background: var(--cream); border: 1px solid var(--line); box-shadow: 0 24px 70px rgba(22,35,30,.08); }
 .map-toolbar { min-height: 72px; padding: 18px 24px; display: flex; align-items: center; justify-content: space-between; gap: 20px; border-bottom: 1px solid var(--line); }
 .map-legend { display: flex; flex-wrap: wrap; gap: 22px; }
@@ -254,6 +303,7 @@ footer { padding: 75px 0; color: #fffaf0; background: var(--ink); }
   .route-sequence li:last-child { border-bottom: 0; }
   .route-sequence strong { margin: 0; }
   .route-sequence small { grid-column: 2; }
+  .restaurant-pin-grid { grid-template-columns: repeat(2, 1fr); }
   .feature-grid, .detours, .practical { grid-template-columns: 1fr; gap: 55px; }
   .booking-grid { grid-template-columns: 1fr; }
   .booking-card { min-height: 370px; }
@@ -278,6 +328,16 @@ footer { padding: 75px 0; color: #fffaf0; background: var(--ink); }
   .map-section { width: 100%; padding: 90px 0 20px; }
   .map-heading { width: min(100% - 28px, 1160px); margin-inline: auto; }
   .map-heading h2 { font-size: 43px; }
+  .real-map-panel { border-inline: 0; }
+  .real-map-toolbar { align-items: flex-start; flex-direction: column; padding-inline: 14px; }
+  .real-legend { gap: 13px; padding-inline: 14px; }
+  .leaflet-map { height: 560px; }
+  .map-disclaimer { padding-inline: 14px; }
+  .google-route-strip { padding-inline: 14px; }
+  .restaurant-map-heading { grid-template-columns: 1fr; gap: 20px; padding: 48px 18px 26px; }
+  .restaurant-map-heading h3 { font-size: 30px; }
+  .restaurant-pin-grid { grid-template-columns: 1fr; border-left: 0; }
+  .restaurant-pin-card { min-height: 230px; padding: 22px 18px; }
   .route-map-panel { border-inline: 0; }
   .map-toolbar { align-items: flex-start; flex-direction: column; padding-inline: 14px; }
   .map-legend { gap: 13px; }

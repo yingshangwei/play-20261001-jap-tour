@@ -1,3 +1,5 @@
+import TripMap from "./TripMap";
+
 const days = [
   {
     date: "09.29",
@@ -39,7 +41,7 @@ const days = [
     stay: "京都站附近",
     title: "换城入住，沿东山慢慢散步",
     route: "银阁寺 → 哲学之道 → 南禅寺 → 圆山公园 → 八坂神社 → 祇园",
-    note: "上午退房后直接到京都站附近酒店寄存行李。下午路线以步行为主，晚上适合安排菊乃井本店。",
+    note: "上午退房后直接到京都站附近酒店寄存行李。下午路线以步行为主，晚上适合安排东山、祇园或清水五条一带的正式餐。",
     transit: "难波 → 京都站约 50–60 分钟；京都站 → 银阁寺约 30–40 分钟",
     tone: "culture",
   },
@@ -133,6 +135,15 @@ const bookingCards = [
 const restaurants = [
   {
     city: "KYOTO · 日本料理",
+    name: "料理屋まえかわ",
+    stars: "MICHELIN ★",
+    when: "建议 10.02 晚餐或 10.03 午餐",
+    price: "午餐约 ¥10,000 · 晚餐约 ¥20,000",
+    description: "离清水五条站约 300 米，是截图候选里最贴合东山路线的一家。席位少，适合尽早通过官方页面或酒店礼宾确认。",
+    href: "https://ryouriya-maekawa.com/",
+  },
+  {
+    city: "KYOTO · 日本料理",
     name: "菊乃井本店",
     stars: "MICHELIN ★★★",
     when: "建议 10.02 或 10.03 晚餐",
@@ -213,105 +224,12 @@ export default function Home() {
         <div className="map-heading">
           <div>
             <p className="eyebrow dark">ROUTE MAP</p>
-            <span className="section-note">点击地点可在 Google Maps 中打开</span>
+            <span className="section-note">缩放、筛选，点击标记跳转 Google Maps</span>
           </div>
-          <h2 id="map-title">两座驻地，<br />向山海延伸。</h2>
+          <h2 id="map-title">真实地图，<br />一眼看清是否顺路。</h2>
         </div>
 
-        <div className="route-map-panel">
-          <div className="map-toolbar">
-            <div className="map-legend" aria-label="线路图图例">
-              <span><i className="legend-line main-line" />换住宿地</span>
-              <span><i className="legend-line day-line" />当天往返</span>
-              <span><i className="legend-dot" />住宿据点</span>
-              <span><i className="legend-label">约</i>预计交通时间</span>
-            </div>
-            <span className="map-hint">手机端可左右滑动查看</span>
-          </div>
-
-          <div className="map-scroller">
-            <div className="route-map-canvas">
-              <div className="map-land land-kansai" aria-hidden="true" />
-              <div className="map-land land-bay" aria-hidden="true" />
-              <span className="sea-label" aria-hidden="true">大阪湾</span>
-              <span className="north-label" aria-hidden="true">N ↑</span>
-
-              <i className="map-line main map-line-kix-osaka" aria-hidden="true" />
-              <i className="map-line main map-line-osaka-kyoto" aria-hidden="true" />
-              <i className="map-line day map-line-osaka-usj" aria-hidden="true" />
-              <i className="map-line day map-line-osaka-nara" aria-hidden="true" />
-              <i className="map-line day map-line-kyoto-arashiyama" aria-hidden="true" />
-              <i className="map-line day map-line-kyoto-kifune" aria-hidden="true" />
-              <i className="map-line day map-line-kyoto-uji" aria-hidden="true" />
-              <i className="map-line event map-line-uji-joyo" aria-hidden="true" />
-
-              <span className="map-route-label label-kix"><strong>南海 Rapi:t / 机场急行</strong>约 35–45 分</span>
-              <span className="map-route-label label-usj"><strong>JR 换乘</strong>约 30–40 分</span>
-              <span className="map-route-label label-nara"><strong>近铁奈良线</strong>单程约 40 分</span>
-              <span className="map-route-label label-osaka-kyoto"><strong>地铁＋JR 新快速</strong>约 50–60 分</span>
-              <span className="map-route-label label-arashiyama"><strong>JR 嵯峨野线</strong>约 17 分</span>
-              <span className="map-route-label label-kifune"><strong>JR＋京阪＋叡山电铁</strong>约 60–75 分</span>
-              <span className="map-route-label label-uji"><strong>近铁京都线</strong>约 25–30 分</span>
-              <span className="map-route-label label-joyo"><strong>JR 奈良线</strong>约 20 分</span>
-
-              <a className="map-node node-kix" href="https://www.google.com/maps/search/?api=1&query=Kansai+International+Airport" target="_blank" rel="noreferrer">
-                <span className="node-marker airport">✦</span>
-                <strong>关西机场</strong>
-                <small>09.29 抵达 / 10.07 返程</small>
-              </a>
-              <a className="map-node hub stay-node node-osaka" href="https://www.google.com/maps/search/?api=1&query=Namba+Osaka" target="_blank" rel="noreferrer">
-                <span className="stay-badge">住宿</span>
-                <span className="node-marker">1</span>
-                <strong>大阪 · 难波 / 心斋桥</strong>
-                <small>09.29–10.02 · 3晚<br />10.06 · 1晚</small>
-              </a>
-              <a className="map-node node-usj" href="https://www.google.com/maps/search/?api=1&query=Universal+Studios+Japan" target="_blank" rel="noreferrer">
-                <span className="node-marker">2</span>
-                <strong>USJ</strong>
-                <small>09.30 · 全天</small>
-              </a>
-              <a className="map-node node-nara" href="https://www.google.com/maps/search/?api=1&query=Nara+Park" target="_blank" rel="noreferrer">
-                <span className="node-marker">3</span>
-                <strong>奈良</strong>
-                <small>10.01</small>
-              </a>
-              <a className="map-node hub stay-node node-kyoto" href="https://www.google.com/maps/search/?api=1&query=Kyoto+Station" target="_blank" rel="noreferrer">
-                <span className="stay-badge">住宿</span>
-                <span className="node-marker">4</span>
-                <strong>京都 · 京都站附近</strong>
-                <small>10.02–10.06 · 4晚</small>
-              </a>
-              <a className="map-node node-arashiyama" href="https://www.google.com/maps/search/?api=1&query=Arashiyama+Kyoto" target="_blank" rel="noreferrer">
-                <span className="node-marker">5</span>
-                <strong>岚山</strong>
-                <small>10.03</small>
-              </a>
-              <a className="map-node node-kifune" href="https://www.google.com/maps/search/?api=1&query=Kifune+Shrine+Kyoto" target="_blank" rel="noreferrer">
-                <span className="node-marker">8</span>
-                <strong>贵船 · 鞍马</strong>
-                <small>10.05 · 徒步 2.5–3 小时</small>
-              </a>
-              <a className="map-node node-uji" href="https://www.google.com/maps/search/?api=1&query=Nintendo+Museum+Uji" target="_blank" rel="noreferrer">
-                <span className="node-marker">6</span>
-                <strong>宇治 · 任天堂博物馆</strong>
-                <small>10.04 · 预约入馆</small>
-              </a>
-              <a className="map-node event-node node-joyo" href="https://www.google.com/maps/search/?api=1&query=Kyoto+Prefectural+Kizugawa+Sports+Park" target="_blank" rel="noreferrer">
-                <span className="node-marker">7</span>
-                <strong>城阳 · 长池</strong>
-                <small>10.04 · 19:00 烟火</small>
-              </a>
-            </div>
-          </div>
-
-          <ol className="route-sequence" aria-label="住宿和往返顺序">
-            <li><span>01</span><strong>09.29 · KIX → 大阪</strong><small>约 35–45 分 · 难波住 3 晚</small></li>
-            <li><span>02</span><strong>09.30–10.01 · 往返</strong><small>USJ 约 30–40 分 · 奈良约 40 分</small></li>
-            <li><span>03</span><strong>10.02 · 大阪 → 京都</strong><small>约 50–60 分 · 京都站住 4 晚</small></li>
-            <li><span>04</span><strong>10.03–10.05 · 往返</strong><small>岚山 · 宇治城阳 · 贵船鞍马</small></li>
-            <li><span>05</span><strong>10.06–10.07 · 大阪返程</strong><small>回难波住 1 晚 · 次晨去 KIX</small></li>
-          </ol>
-        </div>
+        <TripMap />
       </section>
 
       <section className="route shell" id="route">
@@ -397,9 +315,9 @@ export default function Home() {
       <section className="dining" id="eat">
         <div className="shell">
           <div className="dining-heading">
-            <p className="eyebrow">TWO GOOD MEALS</p>
-            <h2>一席京都，<br />一席大阪。</h2>
-            <p>如果只选一顿，优先菊乃井；如果吃两顿，再用 La Cime 做旅行收尾。</p>
+            <p className="eyebrow">ONE OR TWO GOOD MEALS</p>
+            <h2>京都优先，<br />大阪收尾。</h2>
+            <p>最贴路线的是料理屋まえかわ；想要传统料亭选菊乃井；想用现代法餐收尾再选 La Cime。</p>
           </div>
           <div className="restaurant-list">
             {restaurants.map((restaurant) => (
@@ -478,6 +396,8 @@ export default function Home() {
           <a href="https://kifunejinja.jp/" target="_blank" rel="noreferrer">贵船神社 ↗</a>
           <a href="https://www.kobeherb.com/en/" target="_blank" rel="noreferrer">神户布引香草园 ↗</a>
           <a href="https://www.pref.nara.lg.jp/site/park/2587.html" target="_blank" rel="noreferrer">春日山原始林 ↗</a>
+          <a href="https://guide.michelin.com/jp/ja/kyoto-region/kyoto/restaurants" target="_blank" rel="noreferrer">MICHELIN 京都餐厅 ↗</a>
+          <a href="https://guide.michelin.com/jp/ja/osaka-region/osaka/restaurants" target="_blank" rel="noreferrer">MICHELIN 大阪餐厅 ↗</a>
         </div>
       </section>
 
