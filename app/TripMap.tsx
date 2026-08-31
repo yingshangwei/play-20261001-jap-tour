@@ -30,12 +30,15 @@ const spots: MapPoint[] = [
   { id: "nara", name: "奈良公园 · 春日山", area: "kansai", category: "spot", position: [34.6829, 135.8546], meta: "10.01 · 当天往返", googleQuery: "Nara Park" },
   { id: "kyoto-stay", name: "京都住宿 · 京都站附近", area: "kyoto", category: "stay", position: [34.9858, 135.7588], meta: "10.02–10.06 · 4晚", googleQuery: "Kyoto Station" },
   { id: "ginkakuji", name: "银阁寺 · 哲学之道", area: "kyoto", category: "spot", position: [35.027, 135.7982], meta: "10.02 · 东山步行线", googleQuery: "Ginkakuji Kyoto" },
+  { id: "eikando", name: "永观堂", area: "kyoto", category: "spot", position: [35.0144, 135.7919], meta: "10.02 · 16:00 前受付", googleQuery: "Eikando Temple Kyoto" },
+  { id: "nanzenji", name: "南禅寺", area: "kyoto", category: "spot", position: [35.0114, 135.793], meta: "10.02 · 永观堂之后", googleQuery: "Nanzenji Temple Kyoto" },
   { id: "arashiyama", name: "岚山竹林", area: "kyoto", category: "spot", position: [35.0168, 135.6713], meta: "10.03", googleQuery: "Arashiyama Bamboo Forest" },
   { id: "nintendo", name: "任天堂博物馆", area: "kyoto", category: "spot", position: [34.8926, 135.7842], meta: "10.04 · 预约入馆", googleQuery: "Nintendo Museum Uji" },
   { id: "byodoin", name: "平等院 · 宇治川", area: "kyoto", category: "spot", position: [34.8901, 135.8072], meta: "10.04 · 博物馆之后", googleQuery: "Byodoin Temple Uji" },
   { id: "joyo", name: "城阳秋花火", area: "kyoto", category: "spot", position: [34.8445, 135.7972], meta: "10.04 · 19:00", googleQuery: "Kizugawa Athletic Park Joyo Kyoto" },
   { id: "kurama", name: "鞍马寺", area: "kyoto", category: "spot", position: [35.1179, 135.7707], meta: "10.05 · 徒步起点", googleQuery: "Kurama-dera Kyoto" },
   { id: "kifune", name: "贵船神社", area: "kyoto", category: "spot", position: [35.1219, 135.7629], meta: "10.05 · 徒步终点", googleQuery: "Kifune Shrine Kyoto" },
+  { id: "fushimi-inari", name: "伏见稻荷大社", area: "kyoto", category: "spot", position: [34.9671, 135.7727], meta: "10.06 · 6:30 可选短线", googleQuery: "Fushimi Inari Taisha" },
 ];
 
 export const restaurantPoints: MapPoint[] = [
@@ -112,7 +115,7 @@ const routeLines = [
   { label: "09.29 抵达", color: "#ef6a39", points: [[34.4359, 135.2435], [34.6676, 135.5012], [34.6748, 135.5012]] as [number, number][] },
   { label: "09.30 USJ", color: "#355c45", points: [[34.6676, 135.5012], [34.6656, 135.4325], [34.6676, 135.5012]] as [number, number][] },
   { label: "10.01 奈良", color: "#567762", points: [[34.6676, 135.5012], [34.6829, 135.8546], [34.6676, 135.5012]] as [number, number][] },
-  { label: "10.02 换城", color: "#ef6a39", points: [[34.6676, 135.5012], [34.9858, 135.7588], [35.027, 135.7982]] as [number, number][] },
+  { label: "10.02 东山", color: "#ef6a39", points: [[34.6676, 135.5012], [34.9858, 135.7588], [35.027, 135.7982], [35.0144, 135.7919], [35.0114, 135.793], [35.0037, 135.778]] as [number, number][] },
   { label: "10.03 岚山", color: "#355c45", points: [[34.9858, 135.7588], [35.0168, 135.6713], [34.9858, 135.7588]] as [number, number][] },
   { label: "10.04 宇治烟火", color: "#d59d2f", points: [[34.9858, 135.7588], [34.8926, 135.7842], [34.8901, 135.8072], [34.8445, 135.7972], [34.9858, 135.7588]] as [number, number][] },
   { label: "10.05 贵船", color: "#355c45", points: [[34.9858, 135.7588], [35.1179, 135.7707], [35.1219, 135.7629], [34.9858, 135.7588]] as [number, number][] },
@@ -133,10 +136,11 @@ const routeButtons = [
   ["09.29 机场→难波", "Kansai International Airport", "Namba Osaka", ""],
   ["09.30 难波→USJ", "Namba Osaka", "Universal Studios Japan", ""],
   ["10.01 难波→奈良", "Namba Osaka", "Nara Park", ""],
-  ["10.02 大阪→京都东山", "Namba Osaka", "Ginkakuji Kyoto", "Kyoto Station"],
+  ["10.02 大阪→京都东山", "Namba Osaka", "Gion Kyoto", "Kyoto Station|Ginkakuji Kyoto|Eikando Temple Kyoto|Nanzenji Temple Kyoto"],
   ["10.03 京都→岚山", "Kyoto Station", "Arashiyama Bamboo Forest", ""],
   ["10.04 任天堂→宇治→烟火", "Kyoto Station", "Kizugawa Athletic Park Joyo", "Nintendo Museum Uji|Byodoin Temple Uji"],
   ["10.05 鞍马→贵船", "Kyoto Station", "Kifune Shrine Kyoto", "Kurama-dera Kyoto"],
+  ["10.06 可选伏见稻荷", "Kyoto Station", "Kyoto Station", "Fushimi Inari Taisha"],
   ["10.06 京都→大阪", "Kyoto Station", "Namba Osaka", "Osaka Castle|Shinsaibashi"],
   ["10.07 难波→KIX", "Namba Osaka", "Kansai International Airport", ""],
 ];

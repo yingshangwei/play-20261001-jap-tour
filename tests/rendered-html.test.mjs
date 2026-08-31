@@ -35,6 +35,11 @@ test("server-renders the Kansai travel guide", async () => {
   assert.match(html, /太庵 \/ Taian/);
   assert.match(html, /神户 \/ 西宫/);
   assert.match(html, /菊乃井本店/);
+  assert.match(html, /永观堂/);
+  assert.match(html, /参考旧行程/);
+  assert.match(html, /不安排清水寺夜游/);
+  assert.match(html, /伏见稻荷放在 10\.06 清晨/);
+  assert.match(html, /京懐石 吉泉/);
   assert.doesNotMatch(html, /09\.28|十日关西/);
   assert.doesNotMatch(html, /codex-preview|SkeletonPreview/);
 });

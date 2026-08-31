@@ -40,8 +40,8 @@ const days = [
     city: "京都",
     stay: "京都站附近",
     title: "换城入住，沿东山慢慢散步",
-    route: "银阁寺 → 哲学之道 → 南禅寺 → 圆山公园 → 八坂神社 → 祇园",
-    note: "上午退房后直接到京都站附近酒店寄存行李。下午路线以步行为主，晚上适合安排东山、祇园或清水五条一带的正式餐。",
+    route: "银阁寺 → 哲学之道 → 永观堂 → 南禅寺 → 八坂神社 → 祇园",
+    note: "参考旧行程补入永观堂：银阁寺一路向南，16:00 前完成入场，再去南禅寺与祇园。清水寺夜游不放在这天，国庆期间常规 18:00 闭门。",
     transit: "难波 → 京都站约 50–60 分钟；京都站 → 银阁寺约 30–40 分钟",
     tone: "culture",
   },
@@ -52,7 +52,7 @@ const days = [
     stay: "京都站附近",
     title: "岚山早行，避开周末人潮",
     route: "竹林 → 天龙寺 → 大河内山庄 → 常寂光寺 / 祇王寺 → 嵯峨野",
-    note: "7:00 左右抵达竹林。以寺院庭园和嵯峨野小路为主，有余力再加金阁寺，不必硬塞保津川游船。",
+    note: "参考文档中的常寂光寺、祇王寺值得保留，但仍维持 7:00 左右先到竹林；不照搬 10:00 才进岚山的节奏，也不硬塞保津川游船。",
     transit: "JR 京都 → 嵯峨岚山约 17 分钟；当地步行 4–6 小时",
     tone: "nature",
   },
@@ -73,8 +73,8 @@ const days = [
     city: "京都北山",
     stay: "京都站附近",
     title: "翻过鞍马山，抵达贵船",
-    route: "出町柳 → 鞍马寺 → 木根道 → 贵船神社三社 → 出町柳",
-    note: "晴天从鞍马走到贵船约需半天；雨天取消山路，直接由贵船口搭巴士去神社。返程加入出町桝形商店街和鸭川跳石。",
+    route: "出町柳 → 鞍马寺 → 木根道 → 贵船神社三社 → 出町柳 / 吉泉",
+    note: "晴天从鞍马走到贵船约需半天；雨天取消山路，直接由贵船口搭巴士去神社。若订吉泉，回到出町柳后步行约 10 分钟；需准备干净上衣并预留整理时间。",
     transit: "京都 → 鞍马约 60–75 分钟；翻山 2.5–3 小时；贵船 → 京都约 70 分钟",
     tone: "nature",
   },
@@ -85,8 +85,8 @@ const days = [
     stay: "难波 / 心斋桥",
     title: "回到大阪，城市与购物收尾",
     route: "大阪城公园 → 中之岛 / 梅田 → 日本桥电电城 → 心斋桥",
-    note: "上午从京都回大阪，先寄存行李。晚餐可订 La Cime，结束后回难波打包行李。",
-    transit: "京都站 → 难波约 50–60 分钟；大阪市内以地铁和步行为主",
+    note: "标准版上午从京都回大阪。若特别想补参考文档里的伏见稻荷，可 6:30 走到奥社奉拜所后折返，9:00 回酒店；这时删去中之岛 / 梅田，避免全天过满。",
+    transit: "京都站 → 难波约 50–60 分钟；伏见稻荷可选短线另计 2–2.5 小时",
     tone: "city",
   },
   {
@@ -160,6 +160,54 @@ const restaurants = [
     description: "以日本食材表现大阪与奄美文化的现代法餐，位置在本町，适合作为最后一晚的正式收尾。",
     href: "https://www.la-cime.com/reservation/",
   },
+  {
+    city: "KYOTO · 京怀石",
+    name: "京懐石 吉泉",
+    stars: "MICHELIN ★★",
+    when: "建议 10.05 晚餐",
+    price: "晚餐 ¥30,000 起 + 10% 服务费",
+    description: "参考文档里的正式餐选择可以保留，但顺移到贵船日：餐厅距出町柳站步行约 10 分钟，回程不绕路。官方以电话预约为主，可请京都酒店协助。",
+    href: "https://www.kichisen-kyoto.com/",
+  },
+];
+
+const referenceReview = [
+  {
+    status: "吸收",
+    tone: "adopt",
+    title: "10.02 加入永观堂",
+    body: "参考文档的东北京都步行线很合理。把永观堂放在哲学之道与南禅寺之间，按 16:00 前受付倒推时间，仍能在傍晚走到祇园。",
+  },
+  {
+    status: "保留",
+    tone: "keep",
+    title: "岚山仍然清晨出发",
+    body: "祇王寺与常寂光寺继续保留；但国庆周六的人流压力更高，所以维持 7:00 竹林先行，不采用参考文档 10:00 后才开始的节奏。",
+  },
+  {
+    status: "顺移",
+    tone: "move",
+    title: "吉泉放到贵船回程",
+    body: "餐厅就在下鸭、出町柳一带。安排在 10.05 比放进东山或岚山日更顺，徒步后换一件干净上衣即可衔接正式晚餐。",
+  },
+  {
+    status: "不照搬",
+    tone: "skip",
+    title: "不安排清水寺夜游",
+    body: "旧行程是 11 月末的夜间特别开放。2026 国庆落在常规时段，清水寺 18:00 闭门；想去只能改成清晨或白天，不能按 19:15 入场。",
+  },
+  {
+    status: "可选替换",
+    tone: "optional",
+    title: "伏见稻荷放在 10.06 清晨",
+    body: "如果它的优先级高，可 6:30 走千本鸟居短线后回酒店，再去大阪；代价是删掉中之岛 / 梅田。不要塞进任天堂、宇治与烟火的固定日。",
+  },
+  {
+    status: "不调整",
+    tone: "keep",
+    title: "京都继续住京都站",
+    body: "参考文档住四条适合纯市区观光；本行程还要频繁前往岚山、小仓、宇治和大阪，京都站仍是整体换乘更省力的基地。",
+  },
 ];
 
 const practical = [
@@ -182,6 +230,7 @@ export default function Home() {
           <div className="nav-menu">
             <a href="#map">线路地图</a>
             <a href="#route">逐日路线</a>
+            <a href="#reference">文档复盘</a>
             <a href="#book">订票</a>
             <a href="#eat">餐厅</a>
           </div>
@@ -260,6 +309,28 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="reference-review shell" id="reference" aria-labelledby="reference-title">
+        <div className="reference-intro">
+          <div>
+            <p className="eyebrow dark">REFERENCE REVIEW</p>
+            <span className="section-note">对照用户提供的 2025 京都行程</span>
+          </div>
+          <div>
+            <h2 id="reference-title">参考旧行程，<br />但不被它绑住。</h2>
+            <p>那份文档适合 11 月末的四日京都快走；这次是国庆九日、还有任天堂博物馆与烟火两项固定约束。结论是局部吸收，不需要重排全程。</p>
+          </div>
+        </div>
+        <div className="reference-grid">
+          {referenceReview.map((item) => (
+            <article className={`reference-card status-${item.tone}`} key={item.title}>
+              <span>{item.status}</span>
+              <h3>{item.title}</h3>
+              <p>{item.body}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
       <section className="feature" aria-labelledby="fireworks-title">
         <div className="feature-grid shell">
           <div className="feature-visual" aria-hidden="true">
@@ -317,7 +388,7 @@ export default function Home() {
           <div className="dining-heading">
             <p className="eyebrow">ONE OR TWO GOOD MEALS</p>
             <h2>京都优先，<br />大阪收尾。</h2>
-            <p>最贴路线的是料理屋まえかわ；想要传统料亭选菊乃井；想用现代法餐收尾再选 La Cime。</p>
+            <p>最贴东山的是料理屋まえかわ；想要传统料亭选菊乃井；贵船回程选吉泉；想用现代法餐收尾再选 La Cime。全程只订其中 1–2 家即可。</p>
           </div>
           <div className="restaurant-list">
             {restaurants.map((restaurant) => (
@@ -394,6 +465,9 @@ export default function Home() {
           <a href="https://museum.nintendo.com/en/guide/index.html" target="_blank" rel="noreferrer">任天堂博物馆参观指南 ↗</a>
           <a href="https://www.usj.co.jp/web/en/us/park-guide/schedule/park-hour" target="_blank" rel="noreferrer">USJ 营业时间 ↗</a>
           <a href="https://kifunejinja.jp/" target="_blank" rel="noreferrer">贵船神社 ↗</a>
+          <a href="https://www.eikando.or.jp/English/haikan_e.html" target="_blank" rel="noreferrer">永观堂参观时间 ↗</a>
+          <a href="https://www.kiyomizudera.or.jp/en/location/" target="_blank" rel="noreferrer">清水寺 2026 开放时间 ↗</a>
+          <a href="https://inari.jp/en/access/" target="_blank" rel="noreferrer">伏见稻荷大社交通 ↗</a>
           <a href="https://www.kobeherb.com/en/" target="_blank" rel="noreferrer">神户布引香草园 ↗</a>
           <a href="https://www.pref.nara.lg.jp/site/park/2587.html" target="_blank" rel="noreferrer">春日山原始林 ↗</a>
           <a href="https://guide.michelin.com/jp/ja/kyoto-region/kyoto/restaurants" target="_blank" rel="noreferrer">MICHELIN 京都餐厅 ↗</a>
