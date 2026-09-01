@@ -39,8 +39,18 @@ jobs:
       - name: Build static site
         run: pnpm run build
 
-      - name: Verify static export
-        run: test -f dist/client/index.html
+      - name: Prepare Pages artifact
+        shell: bash
+        run: |
+          exported_index="$(find dist/client -type f -name index.html -print -quit)"
+          if [ -z "$exported_index" ]; then
+            echo "No static index.html was generated"
+            find dist/client -maxdepth 4 -type f -print
+            exit 1
+          fi
+          if [ "$exported_index" != "dist/client/index.html" ]; then
+            cp "$exported_index" dist/client/index.html
+          fi
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
