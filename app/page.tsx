@@ -1,7 +1,8 @@
-import Link from "next/link";
 import TripMap from "./TripMap";
 
 export const dynamic = "force-static";
+
+const dayOneHref = process.env.GITHUB_ACTIONS === "true" ? "./day-1.html" : "/day-1";
 
 const days = [
   {
@@ -298,9 +299,9 @@ export default function Home() {
                 <p className="transit-line"><span>交通耗时</span>{item.transit}</p>
                 <p>{item.note}</p>
                 {index === 0 && (
-                  <Link className="day-detail-link" href="/day-1">
+                  <a className="day-detail-link" href={dayOneHref}>
                     打开第一天手账 <span>↗</span>
-                  </Link>
+                  </a>
                 )}
               </div>
             </article>
