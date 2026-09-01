@@ -83,6 +83,18 @@ a:focus-visible { outline: 3px solid var(--gold); outline-offset: 5px; border-ra
 .map-control-group button { min-height: 34px; padding: 7px 12px; border: 1px solid rgba(22,35,30,.16); border-radius: 999px; color: var(--muted); background: #fffdf8; font: inherit; font-size: 11px; font-weight: 700; cursor: pointer; transition: color .2s ease, background .2s ease, border-color .2s ease; }
 .map-control-group button:hover, .map-control-group button.active { color: #fff; background: var(--moss); border-color: var(--moss); }
 .category-controls button.active { color: var(--ink); background: var(--gold); border-color: var(--gold); }
+.map-date-filter { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 18px; align-items: center; padding: 16px 18px; border-bottom: 1px solid var(--line); background: #f4efe4; }
+.map-date-heading { display: flex; flex-direction: column; gap: 4px; }
+.map-date-heading strong { font: 600 14px Georgia, "Noto Serif SC", serif; }
+.map-date-heading span { color: var(--muted); font-size: 9px; }
+.map-date-scroller { display: flex; gap: 7px; min-width: 0; padding-bottom: 2px; overflow-x: auto; overscroll-behavior-inline: contain; scrollbar-width: thin; }
+.map-date-scroller button { flex: 0 0 auto; min-width: 79px; min-height: 48px; padding: 7px 10px; border: 1px solid rgba(22,35,30,.14); border-radius: 7px; color: var(--muted); background: var(--cream); font: inherit; text-align: left; cursor: pointer; transition: color .2s ease, background .2s ease, border-color .2s ease, transform .2s ease; }
+.map-date-scroller button:hover { transform: translateY(-1px); border-color: var(--moss); }
+.map-date-scroller button.active { color: #fff; background: var(--moss); border-color: var(--moss); }
+.map-date-scroller button small, .map-date-scroller button span { display: block; }
+.map-date-scroller button small { margin-bottom: 3px; color: var(--orange); font: 700 10px Georgia, serif; letter-spacing: .04em; }
+.map-date-scroller button.active small { color: var(--gold); }
+.map-date-scroller button span { font-size: 9px; font-weight: 800; }
 .real-legend { padding: 13px 18px; border-bottom: 1px solid var(--line); background: #faf7ef; }
 .real-legend-dot { display: inline-block; width: 10px; height: 10px; border: 2px solid #fff; border-radius: 50%; box-shadow: 0 0 0 1px rgba(22,35,30,.16); }
 .spot-dot { background: var(--moss); }
@@ -99,6 +111,7 @@ a:focus-visible { outline: 3px solid var(--gold); outline-offset: 5px; border-ra
 .trip-popup strong, .trip-popup small, .trip-popup span { display: block; }
 .trip-popup strong { margin-bottom: 5px; font: 600 16px Georgia, "Noto Serif SC", serif; }
 .trip-popup small { color: var(--muted); font-size: 11px; line-height: 1.5; }
+.trip-popup .leaflet-popup-date { margin-top: 7px; color: var(--moss); font-size: 10px; font-weight: 900; }
 .trip-popup .leaflet-popup-guide { margin-top: 7px; color: #9f482b; font-size: 10px; font-weight: 800; }
 .trip-popup p { margin: 8px 0; color: var(--muted); font-size: 11px; line-height: 1.55; }
 .trip-popup a { display: inline-block; margin-top: 7px; color: var(--orange); font-size: 11px; font-weight: 800; }
@@ -114,7 +127,8 @@ a:focus-visible { outline: 3px solid var(--gold); outline-offset: 5px; border-ra
 .restaurant-pin-grid { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
 .restaurant-pin-card { min-height: 265px; padding: 24px; display: flex; flex-direction: column; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
 .restaurant-pin-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
-.restaurant-pin-top > span { color: #887d73; font-size: 9px; line-height: 1.5; letter-spacing: .04em; }
+.restaurant-pin-meta { display: flex; flex-direction: column; gap: 6px; color: #887d73; font-size: 9px; line-height: 1.5; letter-spacing: .04em; }
+.restaurant-pin-meta b { color: var(--moss); font-size: 9px; letter-spacing: .03em; }
 .restaurant-pin-top em { flex: 0 0 auto; padding: 5px 8px; border-radius: 999px; font-size: 9px; font-style: normal; font-weight: 900; }
 .fit-best { color: #29523b; background: #dceade; }
 .fit-swap { color: #825918; background: #f7e9c7; }
@@ -125,6 +139,7 @@ a:focus-visible { outline: 3px solid var(--gold); outline-offset: 5px; border-ra
 .restaurant-pin-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; }
 .restaurant-pin-links a { padding: 8px 10px; color: var(--ink); background: #f4efe4; border-radius: 5px; font-size: 10px; font-weight: 800; }
 .restaurant-pin-links a:hover { color: #fff; background: var(--moss); }
+.restaurant-pin-empty { grid-column: 1 / -1; margin: 0; padding: 36px 24px; color: var(--muted); border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); font-size: 12px; line-height: 1.7; }
 .route-map-panel { overflow: hidden; background: var(--cream); border: 1px solid var(--line); box-shadow: 0 24px 70px rgba(22,35,30,.08); }
 .map-toolbar { min-height: 72px; padding: 18px 24px; display: flex; align-items: center; justify-content: space-between; gap: 20px; border-bottom: 1px solid var(--line); }
 .map-legend { display: flex; flex-wrap: wrap; gap: 22px; }
@@ -347,6 +362,9 @@ footer { padding: 75px 0; color: #fffaf0; background: var(--ink); }
   .map-heading h2 { font-size: 43px; }
   .real-map-panel { border-inline: 0; }
   .real-map-toolbar { align-items: flex-start; flex-direction: column; padding-inline: 14px; }
+  .map-date-filter { grid-template-columns: 1fr; gap: 12px; padding-inline: 14px; }
+  .map-date-heading { align-items: center; flex-direction: row; justify-content: space-between; }
+  .map-date-scroller { width: calc(100vw - 28px); }
   .real-legend { gap: 13px; padding-inline: 14px; }
   .leaflet-map { height: 560px; }
   .map-disclaimer { padding-inline: 14px; }

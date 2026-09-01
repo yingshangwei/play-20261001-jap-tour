@@ -30,6 +30,10 @@ test("server-renders the Kansai travel guide", async () => {
   assert.match(html, /OpenStreetMap/);
   assert.match(html, /Google Maps/);
   assert.match(html, /候选餐厅与行程的距离关系/);
+  assert.match(html, /地图日期筛选/);
+  assert.match(html, /全部日期/);
+  assert.match(html, /10月4日/);
+  assert.match(html, /10\.02 \/ 10\.03/);
   assert.match(html, /料理屋まえかわ/);
   assert.match(html, /萬寿寺はくらん/);
   assert.match(html, /太庵 \/ Taian/);
