@@ -28,45 +28,45 @@ const days = [
   {
     date: "10.01",
     day: "周四",
-    city: "奈良",
+    city: "大阪",
     stay: "难波 / 心斋桥",
-    title: "古寺之后，走进千年原始林",
-    route: "东大寺 → 二月堂 → 春日大社 → 春日山原始林 → 奈良町",
-    note: "不只停留在奈良公园。体力正常可走 2–3 小时林间短线；想轻松就缩短徒步，把傍晚留给奈良町。",
-    transit: "近铁大阪难波 ↔ 近铁奈良，单程约 40 分钟",
-    tone: "nature",
+    title: "USJ 后睡到自然醒，再慢走大阪南区",
+    route: "黑门市场 → 四天王寺 → 美术馆 / 慶泽园 → 新世界 → 电电城 → 道顿堀",
+    note: "11:00 左右再开始，美术馆与庭园二选一；不安排跨城和早起，把下午留给古寺、公园、动漫店与街头小吃。",
+    transit: "全日集中在难波—天王寺，地铁加步行为主",
+    tone: "city",
   },
   {
     date: "10.02",
     day: "周五",
-    city: "京都",
-    stay: "京都站附近",
-    title: "换城入住，沿东山慢慢散步",
-    route: "银阁寺 → 哲学之道 → 永观堂 → 南禅寺 → 八坂神社 → 祇园",
-    note: "参考旧行程补入永观堂：银阁寺一路向南，16:00 前完成入场，再去南禅寺与祇园。清水寺夜游不放在这天，国庆期间常规 18:00 闭门。",
-    transit: "难波 → 京都站约 50–60 分钟；京都站 → 银阁寺约 30–40 分钟",
-    tone: "culture",
+    city: "神户",
+    stay: "难波 / 心斋桥",
+    title: "从山景走到海港，神户当天往返",
+    route: "布引香草园 → 北野异人馆 → 生田神社 → 神户牛午餐 → 美利坚公园 → Harborland",
+    note: "早上从大阪去新神户，缆车上山后一路顺坡下行；傍晚在港口看日落，再回大阪取行李和休息。",
+    transit: "难波 → 三宫约 45–55 分钟；港区 → 难波约 50 分钟",
+    tone: "nature",
   },
   {
     date: "10.03",
     day: "周六",
     city: "京都",
     stay: "京都站附近",
-    title: "岚山早行，避开周末人潮",
-    route: "竹林 → 天龙寺 → 大河内山庄 → 常寂光寺 / 祇王寺 → 嵯峨野",
-    note: "参考文档中的常寂光寺、祇王寺值得保留，但仍维持 7:00 左右先到竹林；不照搬 10:00 才进岚山的节奏，也不硬塞保津川游船。",
-    transit: "JR 京都 → 嵯峨岚山约 17 分钟；当地步行 4–6 小时",
-    tone: "nature",
+    title: "换城入住，沿东山由北向南",
+    route: "银阁寺 → Omen 午餐 → 哲学之道 → 法然院 → 永观堂 → 南禅寺 → 蹴上 → 八坂神社 → 祇园",
+    note: "到京都后先寄存行李。法然院和蹴上是可删节点；主线吸收飞书文档里的银阁寺、哲学之道、永观堂与南禅寺。",
+    transit: "难波 → 京都站约 50–60 分钟；东山区域内以步行为主",
+    tone: "culture",
   },
   {
     date: "10.04",
     day: "周日",
     city: "宇治 · 城阳",
     stay: "京都站附近",
-    title: "任天堂、宇治川与秋日烟火",
-    route: "任天堂博物馆 → 平等院 → 宇治川 → JR 长池 → 城阳秋花火",
-    note: "最理想是 10:00 左右入馆，14:00 后逛宇治，16:30 前到烟火会场。三处都在京都南部，几乎不折返。",
-    transit: "京都 → 小仓约 25–30 分钟；宇治 → 长池约 20 分钟；长池 → 京都约 35 分钟",
+    title: "伏见、宇治川与秋日烟火",
+    route: "伏见稻荷 → 东福寺 → 平等院 → 中村藤吉 → 宇治川 → 宇治上神社 → 城阳秋花火",
+    note: "伏见稻荷只走到奥社奉拜所，随后一路向南去宇治；把上午留给伏见与东福寺，16:30–17:00 抵达 JR 长池附近会场。",
+    transit: "京都 → 稻荷约 5 分钟；宇治 → 长池约 20 分钟；长池 → 京都约 35 分钟",
     tone: "special",
   },
   {
@@ -83,13 +83,13 @@ const days = [
   {
     date: "10.06",
     day: "周二",
-    city: "大阪",
+    city: "奈良 → 大阪",
     stay: "难波 / 心斋桥",
-    title: "回到大阪，城市与购物收尾",
-    route: "大阪城公园 → 中之岛 / 梅田 → 日本桥电电城 → 心斋桥",
-    note: "标准版上午从京都回大阪。若特别想补参考文档里的伏见稻荷，可 6:30 走到奥社奉拜所后折返，9:00 回酒店；这时删去中之岛 / 梅田，避免全天过满。",
-    transit: "京都站 → 难波约 50–60 分钟；伏见稻荷可选短线另计 2–2.5 小时",
-    tone: "city",
+    title: "退房后顺路游奈良，晚上回到大阪",
+    route: "兴福寺 → 依水园 → 东大寺 → 二月堂 → 春日大社 → 水谷茶屋 → 奈良町 → 难波",
+    note: "从京都带行李到近铁奈良站寄存，按东向西路线走回车站；傍晚去大阪，最后一晚只安排心斋桥补购物或一顿正式餐。",
+    transit: "京都 → 奈良约 45–55 分钟；近铁奈良 → 大阪难波约 40 分钟",
+    tone: "nature",
   },
   {
     date: "10.07",
@@ -107,30 +107,30 @@ const days = [
 const bookingCards = [
   {
     number: "01",
-    urgency: "现在处理",
-    title: "任天堂博物馆",
-    body: "10 月票已进入先到先得。首选 10 月 4 日 10:00–11:00；若没有，就接受 10 月 2、3 或 5 日，再交换对应的京都日。",
-    meta: "全部指定日期与时段 · 周二闭馆",
-    href: "https://museum-tickets.nintendo.com/en/calendar?hidemenu=true",
-    cta: "查看官方票务",
+    urgency: "尽快锁定",
+    title: "USJ",
+    body: "购买 9 月 30 日日期指定 Studio Pass，并优先选含超级任天堂世界指定入场的 Express Pass；当天仍在 2026 万圣节惊魂夜活动期内。",
+    meta: "当天可能早于标示时间开园",
+    href: "https://www.usj.co.jp/web/en/us/tickets/express-pass",
+    cta: "查看 Express Pass",
   },
   {
     number: "02",
     urgency: "固定日期",
     title: "城阳秋花火",
-    body: "10 月 4 日 19:00–19:40，JR 长池站步行约 5 分钟。8,000 张预售票，现场不售票；Ticket Pia 网上票 2,500 日元。",
+    body: "10 月 4 日 19:00 起约 40 分钟，JR 长池站步行约 5 分钟。8,000 张预售票，现场不售票；Ticket Pia 网上票 2,500 日元。",
     meta: "雨天照常 · 恶劣天气取消且原则上不退款",
     href: "https://t.pia.jp/pia/event/event.do?eventBundleCd=b2669988",
     cta: "购买烟火票",
   },
   {
     number: "03",
-    urgency: "尽快锁定",
-    title: "USJ",
-    body: "购买 9 月 30 日日期指定 Studio Pass，并选择含超级任天堂世界指定入场的 Express Pass。当天仍在 2026 万圣节惊魂夜活动期内。",
-    meta: "当天可能早于标示时间开园",
-    href: "https://www.usj.co.jp/web/en/us/tickets/express-pass",
-    cta: "查看 Express Pass",
+    urgency: "正式餐",
+    title: "料理屋まえかわ",
+    body: "本次只需要锁定 1–2 顿好餐。料理屋まえかわ建议放在 10 月 3 日东山日，或 10 月 5 日贵船回城后。",
+    meta: "Google Maps 4.7 · 50 条评价 · 需预约",
+    href: "https://ryouriya-maekawa.com/",
+    cta: "查看官方预约",
   },
 ];
 
@@ -138,38 +138,29 @@ const restaurants = [
   {
     city: "KYOTO · 日本料理",
     name: "料理屋まえかわ",
-    stars: "MICHELIN ★",
-    when: "建议 10.02 晚餐或 10.03 午餐",
+    stars: "GOOGLE MAPS 4.7 · 50 条评价",
+    when: "建议 10.03 或 10.05 晚餐",
     price: "午餐约 ¥10,000 · 晚餐约 ¥20,000",
-    description: "离清水五条站约 300 米，是截图候选里最贴合东山路线的一家。席位少，适合尽早通过官方页面或酒店礼宾确认。",
+    description: "本次正式餐首选。东山日结束后前往最自然，也可放在贵船回城后；席位少，建议尽早确认。",
     href: "https://ryouriya-maekawa.com/",
   },
   {
-    city: "KYOTO · 日本料理",
-    name: "菊乃井本店",
-    stars: "MICHELIN ★★★",
-    when: "建议 10.02 或 10.03 晚餐",
-    price: "晚餐 ¥22,000 起 + 15% 服务费",
-    description: "传统京都料亭体验最完整的一餐。空间、器物与季节料理共同构成体验，国际游客可使用英文或中文在线预约。",
-    href: "https://kikunoi.jp/restaurant/",
+    city: "KOBE · 神户牛",
+    name: "Mouriya Honten",
+    stars: "GOOGLE MAPS 4.6 · 1,836 条评价",
+    when: "建议 10.02 午餐",
+    price: "套餐通常 ¥10,000 以上",
+    description: "布引与北野一路下坡到三宫后正好午餐，位置和路线最贴合。若已订这顿，京都只需再订一顿正式餐。",
+    href: "https://www.mouriya.co.jp/en/head",
   },
   {
-    city: "OSAKA · 现代法餐",
-    name: "La Cime",
-    stars: "MICHELIN ★★",
-    when: "建议 10.06 晚餐",
-    price: "套餐 ¥35,200 · 税及服务费已含",
-    description: "以日本食材表现大阪与奄美文化的现代法餐，位置在本町，适合作为最后一晚的正式收尾。",
-    href: "https://www.la-cime.com/reservation/",
-  },
-  {
-    city: "KYOTO · 京怀石",
-    name: "京懐石 吉泉",
-    stars: "MICHELIN ★★",
-    when: "建议 10.05 晚餐",
-    price: "晚餐 ¥30,000 起 + 10% 服务费",
-    description: "参考文档里的正式餐选择可以保留，但顺移到贵船日：餐厅距出町柳站步行约 10 分钟，回程不绕路。官方以电话预约为主，可请京都酒店协助。",
-    href: "https://www.kichisen-kyoto.com/",
+    city: "KYOTO · 乌冬",
+    name: "Omen Ginkaku-ji",
+    stars: "GOOGLE MAPS 4.3 · 1,967 条评价",
+    when: "10.03 银阁寺之后",
+    price: "约 ¥1,000–2,000",
+    description: "不是正式套餐，但它紧贴东山步行线，能让午餐不打断行程。排队太长时可直接换附近简餐。",
+    href: "https://omen.co.jp/",
   },
 ];
 
@@ -177,20 +168,20 @@ const referenceReview = [
   {
     status: "吸收",
     tone: "adopt",
-    title: "10.02 加入永观堂",
-    body: "参考文档的东北京都步行线很合理。把永观堂放在哲学之道与南禅寺之间，按 16:00 前受付倒推时间，仍能在傍晚走到祇园。",
+    title: "10.03 完整吸收东山北线",
+    body: "飞书文档里的银阁寺、哲学之道、永观堂、南禅寺顺序合理；新版再补法然院、水路阁、蹴上、八坂神社和祇园。",
+  },
+  {
+    status: "取舍",
+    tone: "skip",
+    title: "岚山改为替换方案",
+    body: "九天内还要保留 USJ 后的轻松日、神户、奈良、贵船和固定烟火，岚山无法再单独占一天；若更想去岚山，可替换 10.03 东山线。",
   },
   {
     status: "保留",
     tone: "keep",
-    title: "岚山仍然清晨出发",
-    body: "祇王寺与常寂光寺继续保留；但国庆周六的人流压力更高，所以维持 7:00 竹林先行，不采用参考文档 10:00 后才开始的节奏。",
-  },
-  {
-    status: "顺移",
-    tone: "move",
-    title: "吉泉放到贵船回程",
-    body: "餐厅就在下鸭、出町柳一带。安排在 10.05 比放进东山或岚山日更顺，徒步后换一件干净上衣即可衔接正式晚餐。",
+    title: "贵船作为京都自然主线",
+    body: "晴天从鞍马翻山到贵船，雨天则取消木根道、由贵船口搭巴士直达；两种方案都确保贵船神社不被删除。",
   },
   {
     status: "不照搬",
@@ -199,25 +190,25 @@ const referenceReview = [
     body: "旧行程是 11 月末的夜间特别开放。2026 国庆落在常规时段，清水寺 18:00 闭门；想去只能改成清晨或白天，不能按 19:15 入场。",
   },
   {
-    status: "可选替换",
-    tone: "optional",
-    title: "伏见稻荷放在 10.06 清晨",
-    body: "如果它的优先级高，可 6:30 走千本鸟居短线后回酒店，再去大阪；代价是删掉中之岛 / 梅田。不要塞进任天堂、宇治与烟火的固定日。",
+    status: "顺移",
+    tone: "move",
+    title: "伏见稻荷放到烟火当天",
+    body: "伏见、东福寺、宇治与城阳都在京都南侧；早起走千本鸟居短线后一路向南，比在退房日折返更合理。",
   },
   {
-    status: "不调整",
+    status: "调整住宿",
     tone: "keep",
-    title: "京都继续住京都站",
-    body: "参考文档住四条适合纯市区观光；本行程还要频繁前往岚山、小仓、宇治和大阪，京都站仍是整体换乘更省力的基地。",
+    title: "京都住 3 晚即可",
+    body: "10.03 入住、10.06 退房，覆盖东山、京都南部与贵船三天；奈良安排在退房后顺路去大阪，避免多一次住宿。",
   },
 ];
 
 const practical = [
-  ["住宿", "9.29–10.02 大阪难波／心斋桥 3 晚；10.02–10.06 京都站 4 晚；10.06 最后一晚回难波。"],
-  ["行李", "10 月 2 日退房后带行李直接去京都站附近酒店寄存；10 月 6 日同样先回难波寄存，再开始大阪市内行程。"],
+  ["住宿", "9.29–10.03 大阪难波／心斋桥 4 晚；10.03–10.06 京都站 3 晚；10.06 最后一晚回难波。"],
+  ["行李", "10 月 3 日先到京都站寄存；10 月 6 日退房后把行李寄存在近铁奈良站，游览结束取行李直达大阪。"],
   ["交通", "关西内部使用 ICOCA 加单独购票即可，一般不需要全国 JR Pass；京都优先坐铁路而不是挤巴士。"],
-  ["取舍", "出发改为 9 月 29 日后少了一整天，主线保留奈良、删去神户；若更想看神户，可用神户布引＋港口替换 10 月 1 日奈良。"],
-  ["天气", "9 月末仍可能受台风和阵雨影响。奈良与岚山可视天气微调；贵船下雨则保留神社、取消翻山。"],
+  ["取舍", "主线现在同时包含神户与奈良；代价是岚山不再占用独立一天。若一定想去岚山，用它替换 10 月 3 日东山线。"],
+  ["天气", "9 月末仍可能受台风和阵雨影响。贵船下雨保留神社、取消翻山；神户遇大风则取消布引缆车，把时间留给北野和港区。"],
 ];
 
 export default function Home() {
@@ -242,8 +233,8 @@ export default function Home() {
           <p className="eyebrow">2026 · 国庆关西旅行手册</p>
           <h1>九日关西，<br />沿山林与烟火前行。</h1>
           <p className="hero-copy">
-            从大阪的霓虹出发，穿过奈良古林、岚山嵯峨野和京都北山，
-            把任天堂、贵船、USJ 与一场秋日烟火串成一条舒服的路线。
+            先在大阪住稳、玩完 USJ 后留一天慢下来，再走进神户山海、京都北山与奈良古林，
+            最后回到大阪，用一场秋日烟火串起整段旅程。
           </p>
           <div className="hero-actions">
             <a className="primary-button" href="#route">开始阅读</a>
@@ -259,15 +250,15 @@ export default function Home() {
       <section className="overview shell" aria-label="行程概览">
         <article>
           <span>住宿节奏</span>
-          <strong>大阪 3晚 · 京都 4晚 · 大阪 1晚</strong>
+          <strong>大阪 4晚 · 京都 3晚 · 大阪 1晚</strong>
         </article>
         <article>
           <span>路线基调</span>
           <strong>自然徒步 + 城市散步</strong>
         </article>
         <article>
-          <span>三项必抢</span>
-          <strong>任天堂 · USJ · 城阳烟火</strong>
+          <span>固定锚点</span>
+          <strong>USJ · 贵船 · 城阳烟火</strong>
         </article>
       </section>
 
@@ -275,7 +266,7 @@ export default function Home() {
         <div className="map-heading">
           <div>
             <p className="eyebrow dark">ROUTE MAP</p>
-            <span className="section-note">缩放、筛选，点击标记跳转 Google Maps</span>
+            <span className="section-note">按日期筛选 · 相邻两点 Google Maps 导航</span>
           </div>
           <h2 id="map-title">真实地图，<br />一眼看清是否顺路。</h2>
         </div>
@@ -289,7 +280,7 @@ export default function Home() {
             <p className="eyebrow dark">THE ROUTE</p>
             <span className="section-note">按 2026 年日期安排</span>
           </div>
-          <h2>先在大阪落脚，<br />再慢慢走进京都。</h2>
+          <h2>大阪起收，<br />中段串起神户、京都与奈良。</h2>
         </div>
         <div className="timeline">
           {days.map((item, index) => (
@@ -319,7 +310,7 @@ export default function Home() {
           </div>
           <div>
             <h2 id="reference-title">参考旧行程，<br />但不被它绑住。</h2>
-            <p>那份文档适合 11 月末的四日京都快走；这次是国庆九日、还有任天堂博物馆与烟火两项固定约束。结论是局部吸收，不需要重排全程。</p>
+            <p>飞书文档的价值在于区域内的细顺序；新版吸收东山与京都东南线，同时根据这次的 USJ、贵船、神户、奈良和固定烟火重新分配住宿与跨城日期。</p>
           </div>
         </div>
         <div className="reference-grid">
@@ -345,7 +336,7 @@ export default function Home() {
             <h2 id="fireworks-title">城阳秋花火，<br />是这趟旅行的时间锚点。</h2>
             <p>
               19:00 起约 40 分钟。会场距离 JR 长池站约 5 分钟步行，
-              与任天堂博物馆、宇治同属京都南部，所以安排在同一天最顺。
+              与伏见稻荷、东福寺和宇治同在京都南侧，所以安排在同一天最顺。
             </p>
             <div className="feature-stats">
               <span><strong>8,000</strong>张限定预售</span>
@@ -365,7 +356,7 @@ export default function Home() {
             <p className="eyebrow dark">BOOK FIRST</p>
             <span className="section-note">建议按编号顺序处理</span>
           </div>
-          <h2>先锁定三张票，<br />其余行程才真正成立。</h2>
+          <h2>先锁定两张票，<br />再订一顿正式餐。</h2>
         </div>
         <div className="booking-grid">
           {bookingCards.map((card) => (
@@ -389,8 +380,8 @@ export default function Home() {
         <div className="shell">
           <div className="dining-heading">
             <p className="eyebrow">ONE OR TWO GOOD MEALS</p>
-            <h2>京都优先，<br />大阪收尾。</h2>
-            <p>最贴东山的是料理屋まえかわ；想要传统料亭选菊乃井；贵船回程选吉泉；想用现代法餐收尾再选 La Cime。全程只订其中 1–2 家即可。</p>
+            <h2>京都一顿，<br />神户一顿就够。</h2>
+            <p>正式餐首选料理屋まえかわ；如果神户已经预约 Mouriya，就不必再堆第二顿京都长套餐。地图中其余餐厅按 Google Maps 评分与顺路程度作为灵活备选。</p>
           </div>
           <div className="restaurant-list">
             {restaurants.map((restaurant) => (
@@ -439,7 +430,7 @@ export default function Home() {
           <article>
             <span>大阪</span>
             <h3>日本桥电电城</h3>
-            <p>集中安排在最后一天，买周边后直接回难波整理行李。</p>
+            <p>安排在 USJ 后的轻松大阪日，慢慢逛模型、游戏与周边店，再步行回难波。</p>
           </article>
         </div>
       </section>
@@ -464,8 +455,8 @@ export default function Home() {
         <p className="eyebrow dark">OFFICIAL LINKS</p>
         <h2 id="source-title">出发前，再看一眼最新状态。</h2>
         <div className="source-links">
-          <a href="https://museum.nintendo.com/en/guide/index.html" target="_blank" rel="noreferrer">任天堂博物馆参观指南 ↗</a>
           <a href="https://www.usj.co.jp/web/en/us/park-guide/schedule/park-hour" target="_blank" rel="noreferrer">USJ 营业时间 ↗</a>
+          <a href="https://www.city.joyo.kyoto.jp/joint/0000012600.html" target="_blank" rel="noreferrer">城阳秋花火官方说明 ↗</a>
           <a href="https://kifunejinja.jp/" target="_blank" rel="noreferrer">贵船神社 ↗</a>
           <a href="https://www.eikando.or.jp/English/haikan_e.html" target="_blank" rel="noreferrer">永观堂参观时间 ↗</a>
           <a href="https://www.kiyomizudera.or.jp/en/location/" target="_blank" rel="noreferrer">清水寺 2026 开放时间 ↗</a>

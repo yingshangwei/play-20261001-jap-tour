@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 const title = "九日关西｜2026 国庆旅行攻略";
 const description =
-  "9 月 29 日至 10 月 7 日大阪、京都与奈良九日路线：USJ、任天堂博物馆、贵船神社与城阳秋花火。";
+  "9 月 29 日至 10 月 7 日大阪、神户、京都与奈良九日路线：USJ、贵船神社与城阳秋花火。";
 
 const repository = process.env.GITHUB_REPOSITORY?.split("/");
 const siteUrl =

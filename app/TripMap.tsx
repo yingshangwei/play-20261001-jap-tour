@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import type { Map as LeafletMap, Marker, Polyline } from "leaflet";
+import type { Map as LeafletMap, Marker } from "leaflet";
 
-type Area = "kansai" | "kyoto" | "osaka" | "kobe";
+type Area = "kansai" | "osaka" | "kobe" | "kyoto" | "nara";
 type Category = "all" | "spot" | "restaurant" | "stay";
 type ItineraryDate = "09.29" | "09.30" | "10.01" | "10.02" | "10.03" | "10.04" | "10.05" | "10.06" | "10.07";
 type DateFilter = "all" | ItineraryDate;
@@ -16,364 +16,233 @@ type MapPoint = {
   position: [number, number];
   dates: ItineraryDate[];
   meta: string;
-  address?: string;
   googleQuery: string;
   guide?: string;
   fit?: string;
-  fitLevel?: "最顺" | "可替换" | "需专程";
+  fitLevel?: "顺路" | "预订型" | "备选";
   official?: string;
 };
 
+type DaySegment = { label: string; note: string; pointIds: string[] };
+
 const spots: MapPoint[] = [
-  { id: "kix", name: "关西国际机场", area: "kansai", category: "spot", position: [34.4359, 135.2435], dates: ["09.29", "10.07"], meta: "09.29 抵达 · 10.07 返程", googleQuery: "Kansai International Airport" },
-  { id: "osaka-stay", name: "大阪住宿 · 难波 / 心斋桥", area: "osaka", category: "stay", position: [34.6676, 135.5012], dates: ["09.29", "09.30", "10.01", "10.02", "10.06", "10.07"], meta: "09.29–10.02 · 3晚；10.06 · 1晚", googleQuery: "Namba Osaka" },
-  { id: "usj", name: "USJ", area: "osaka", category: "spot", position: [34.6656, 135.4325], dates: ["09.30"], meta: "09.30 · 全天", googleQuery: "Universal Studios Japan" },
-  { id: "shinsaibashi", name: "心斋桥", area: "osaka", category: "spot", position: [34.6748, 135.5012], dates: ["09.29", "10.06"], meta: "09.29 首晚 + 10.06 收尾", googleQuery: "Shinsaibashi Osaka" },
-  { id: "osaka-castle", name: "大阪城公园", area: "osaka", category: "spot", position: [34.6872, 135.5254], dates: ["10.06"], meta: "10.06", googleQuery: "Osaka Castle" },
-  { id: "nara", name: "奈良公园 · 春日山", area: "kansai", category: "spot", position: [34.6829, 135.8546], dates: ["10.01"], meta: "10.01 · 当天往返", googleQuery: "Nara Park" },
-  { id: "kyoto-stay", name: "京都住宿 · 京都站附近", area: "kyoto", category: "stay", position: [34.9858, 135.7588], dates: ["10.02", "10.03", "10.04", "10.05", "10.06"], meta: "10.02–10.06 · 4晚", googleQuery: "Kyoto Station" },
-  { id: "ginkakuji", name: "银阁寺 · 哲学之道", area: "kyoto", category: "spot", position: [35.027, 135.7982], dates: ["10.02"], meta: "10.02 · 东山步行线", googleQuery: "Ginkakuji Kyoto" },
-  { id: "eikando", name: "永观堂", area: "kyoto", category: "spot", position: [35.0144, 135.7919], dates: ["10.02"], meta: "10.02 · 16:00 前受付", googleQuery: "Eikando Temple Kyoto" },
-  { id: "nanzenji", name: "南禅寺", area: "kyoto", category: "spot", position: [35.0114, 135.793], dates: ["10.02"], meta: "10.02 · 永观堂之后", googleQuery: "Nanzenji Temple Kyoto" },
-  { id: "arashiyama", name: "岚山竹林", area: "kyoto", category: "spot", position: [35.0168, 135.6713], dates: ["10.03"], meta: "10.03", googleQuery: "Arashiyama Bamboo Forest" },
-  { id: "nintendo", name: "任天堂博物馆", area: "kyoto", category: "spot", position: [34.8926, 135.7842], dates: ["10.04"], meta: "10.04 · 预约入馆", googleQuery: "Nintendo Museum Uji" },
-  { id: "byodoin", name: "平等院 · 宇治川", area: "kyoto", category: "spot", position: [34.8901, 135.8072], dates: ["10.04"], meta: "10.04 · 博物馆之后", googleQuery: "Byodoin Temple Uji" },
-  { id: "joyo", name: "城阳秋花火", area: "kyoto", category: "spot", position: [34.8445, 135.7972], dates: ["10.04"], meta: "10.04 · 19:00", googleQuery: "Kizugawa Athletic Park Joyo Kyoto" },
-  { id: "kurama", name: "鞍马寺", area: "kyoto", category: "spot", position: [35.1179, 135.7707], dates: ["10.05"], meta: "10.05 · 徒步起点", googleQuery: "Kurama-dera Kyoto" },
-  { id: "kifune", name: "贵船神社", area: "kyoto", category: "spot", position: [35.1219, 135.7629], dates: ["10.05"], meta: "10.05 · 徒步终点", googleQuery: "Kifune Shrine Kyoto" },
-  { id: "fushimi-inari", name: "伏见稻荷大社", area: "kyoto", category: "spot", position: [34.9671, 135.7727], dates: ["10.06"], meta: "10.06 · 6:30 可选短线", googleQuery: "Fushimi Inari Taisha" },
+  { id: "kix", name: "关西国际机场", area: "kansai", category: "spot", position: [34.4359, 135.2435], dates: ["09.29", "10.07"], meta: "抵达 / 返程", googleQuery: "Kansai International Airport" },
+  { id: "osaka-stay", name: "大阪住宿 · 难波 / 心斋桥", area: "osaka", category: "stay", position: [34.6676, 135.5012], dates: ["09.29", "09.30", "10.01", "10.02", "10.06", "10.07"], meta: "前段 4 晚 · 最后一晚再住大阪", googleQuery: "Namba Osaka" },
+  { id: "kyoto-stay", name: "京都住宿 · 京都站附近", area: "kyoto", category: "stay", position: [34.9858, 135.7588], dates: ["10.03", "10.04", "10.05", "10.06"], meta: "10.03–10.06 · 3 晚", googleQuery: "Kyoto Station" },
+
+  { id: "shinsaibashi", name: "心斋桥筋", area: "osaka", category: "spot", position: [34.6748, 135.5012], dates: ["09.29", "10.06"], meta: "首晚必到 · 最后一晚可补购物", googleQuery: "Shinsaibashi-suji Shopping Street Osaka" },
+  { id: "dotonbori", name: "道顿堀", area: "osaka", category: "spot", position: [34.6687, 135.5013], dates: ["09.29", "10.01", "10.06"], meta: "夜景与美食街", googleQuery: "Dotonbori Osaka" },
+  { id: "hozenji", name: "法善寺横丁", area: "osaka", category: "spot", position: [34.6676, 135.5027], dates: ["09.29", "10.06"], meta: "道顿堀旁的石板小巷", googleQuery: "Hozenji Yokocho Osaka" },
+  { id: "usj", name: "USJ", area: "osaka", category: "spot", position: [34.6656, 135.4325], dates: ["09.30"], meta: "全天 · 2026 万圣节活动期", googleQuery: "Universal Studios Japan" },
+  { id: "kuromon", name: "黑门市场", area: "osaka", category: "spot", position: [34.6654, 135.5064], dates: ["10.01"], meta: "10:30 左右慢慢吃早午餐", googleQuery: "Kuromon Ichiba Market Osaka" },
+  { id: "shitennoji", name: "四天王寺", area: "osaka", category: "spot", position: [34.6545, 135.5165], dates: ["10.01"], meta: "大阪南区安静古寺", googleQuery: "Shitennoji Temple Osaka" },
+  { id: "osaka-art-museum", name: "大阪市立美术馆", area: "osaka", category: "spot", position: [34.6508, 135.5117], dates: ["10.01"], meta: "看当期展览；不感兴趣可跳过", googleQuery: "Osaka City Museum of Fine Arts" },
+  { id: "tennoji-park", name: "天王寺公园 · 慶泽园", area: "osaka", category: "spot", position: [34.651, 135.5107], dates: ["10.01"], meta: "USJ 后的松弛散步", googleQuery: "Keitakuen Garden Osaka" },
+  { id: "shinsekai", name: "新世界 · 通天阁", area: "osaka", category: "spot", position: [34.6525, 135.5063], dates: ["10.01"], meta: "街景、炸串，可不上塔", googleQuery: "Tsutenkaku Shinsekai Osaka" },
+  { id: "den-den-town", name: "日本桥电电城", area: "osaka", category: "spot", position: [34.6592, 135.5062], dates: ["10.01"], meta: "动漫、电器与模型店", googleQuery: "Nipponbashi Denden Town Osaka" },
+
+  { id: "nunobiki", name: "布引香草园 · 缆车", area: "kobe", category: "spot", position: [34.7179, 135.1903], dates: ["10.02"], meta: "神户自然主线 · 建议上山坐缆车", googleQuery: "Kobe Nunobiki Herb Gardens" },
+  { id: "kitano", name: "北野异人馆街", area: "kobe", category: "spot", position: [34.7008, 135.1897], dates: ["10.02"], meta: "从山侧顺坡下行", googleQuery: "Kitano Ijinkan-Gai Kobe" },
+  { id: "ikuta", name: "生田神社", area: "kobe", category: "spot", position: [34.6949, 135.1906], dates: ["10.02"], meta: "三宫站附近短停", googleQuery: "Ikuta Jinja Kobe" },
+  { id: "meriken", name: "美利坚公园", area: "kobe", category: "spot", position: [34.6826, 135.1871], dates: ["10.02"], meta: "港口散步与地标建筑", googleQuery: "Meriken Park Kobe" },
+  { id: "harborland", name: "神户 Harborland", area: "kobe", category: "spot", position: [34.6796, 135.1789], dates: ["10.02"], meta: "看日落后回大阪", googleQuery: "Kobe Harborland" },
+
+  { id: "ginkakuji", name: "银阁寺", area: "kyoto", category: "spot", position: [35.027, 135.7982], dates: ["10.03"], meta: "京都东山北端", googleQuery: "Ginkakuji Kyoto" },
+  { id: "philosopher", name: "哲学之道", area: "kyoto", category: "spot", position: [35.0202, 135.7958], dates: ["10.03"], meta: "沿疏水向南慢走", googleQuery: "Philosopher's Path Kyoto" },
+  { id: "honenin", name: "法然院", area: "kyoto", category: "spot", position: [35.0221, 135.7975], dates: ["10.03"], meta: "林间小寺 · 可选 30 分钟", googleQuery: "Honen-in Temple Kyoto" },
+  { id: "eikando", name: "永观堂", area: "kyoto", category: "spot", position: [35.0144, 135.7919], dates: ["10.03"], meta: "飞书文档保留点", googleQuery: "Eikando Temple Kyoto" },
+  { id: "nanzenji", name: "南禅寺 · 水路阁", area: "kyoto", category: "spot", position: [35.0114, 135.793], dates: ["10.03"], meta: "寺院与红砖水路阁", googleQuery: "Nanzenji Temple Suirokaku Kyoto" },
+  { id: "keage", name: "蹴上倾斜铁道", area: "kyoto", category: "spot", position: [35.0086, 135.7887], dates: ["10.03"], meta: "工业遗迹短停", googleQuery: "Keage Incline Kyoto" },
+  { id: "yasaka", name: "八坂神社", area: "kyoto", category: "spot", position: [35.0037, 135.7785], dates: ["10.03"], meta: "傍晚抵达祇园", googleQuery: "Yasaka Shrine Kyoto" },
+  { id: "gion", name: "祇园 · 花见小路", area: "kyoto", category: "spot", position: [35.0038, 135.7752], dates: ["10.03"], meta: "晚餐前散步", googleQuery: "Hanamikoji Street Gion Kyoto" },
+
+  { id: "fushimi-inari", name: "伏见稻荷大社", area: "kyoto", category: "spot", position: [34.9671, 135.7727], dates: ["10.04"], meta: "07:00 前后到 · 只走至奥社奉拜所", googleQuery: "Fushimi Inari Taisha" },
+  { id: "tofukuji", name: "东福寺", area: "kyoto", category: "spot", position: [34.9768, 135.7735], dates: ["10.04"], meta: "飞书文档东南线保留点", googleQuery: "Tofuku-ji Temple Kyoto" },
+  { id: "byodoin", name: "平等院", area: "kyoto", category: "spot", position: [34.8893, 135.8077], dates: ["10.04"], meta: "宇治主景点", googleQuery: "Byodoin Temple Uji" },
+  { id: "uji-river", name: "宇治川 · 朝雾桥", area: "kyoto", category: "spot", position: [34.8917, 135.8101], dates: ["10.04"], meta: "河岸散步", googleQuery: "Asagiri Bridge Uji" },
+  { id: "ujigami", name: "宇治上神社", area: "kyoto", category: "spot", position: [34.892, 135.811], dates: ["10.04"], meta: "宇治川东岸安静古社", googleQuery: "Ujigami Shrine Uji" },
+  { id: "joyo", name: "城阳秋花火", area: "kyoto", category: "spot", position: [34.8445, 135.7972], dates: ["10.04"], meta: "19:00 开始 · JR 长池站步行约 5 分钟", googleQuery: "Kizugawa Athletic Park Joyo Kyoto" },
+
+  { id: "kurama", name: "鞍马站", area: "kyoto", category: "spot", position: [35.1133, 135.7721], dates: ["10.05"], meta: "自然徒步起点", googleQuery: "Kurama Station Kyoto" },
+  { id: "kurama-dera", name: "鞍马寺", area: "kyoto", category: "spot", position: [35.1179, 135.7707], dates: ["10.05"], meta: "缆车可省前段爬升", googleQuery: "Kurama-dera Kyoto" },
+  { id: "kinone", name: "木根道 · 魔王殿", area: "kyoto", category: "spot", position: [35.1204, 135.7666], dates: ["10.05"], meta: "山路核心段 · 雨天取消", googleQuery: "Kinone Michi Kurama Kyoto" },
+  { id: "kifune-okumiya", name: "贵船神社 奥宫", area: "kyoto", category: "spot", position: [35.1262, 135.7621], dates: ["10.05"], meta: "先走奥宫再顺路下行", googleQuery: "Kifune Shrine Okumiya Kyoto" },
+  { id: "kifune", name: "贵船神社 本宫", area: "kyoto", category: "spot", position: [35.1219, 135.7629], dates: ["10.05"], meta: "必到项 · 石阶灯笼", googleQuery: "Kifune Shrine Kyoto" },
+
+  { id: "kofukuji", name: "兴福寺 · 五重塔", area: "nara", category: "spot", position: [34.6833, 135.8327], dates: ["10.06"], meta: "近铁奈良站步行进入主线", googleQuery: "Kofuku-ji Temple Nara" },
+  { id: "isuien", name: "依水园", area: "nara", category: "spot", position: [34.6854, 135.8394], dates: ["10.06"], meta: "安静庭园 · 可选", googleQuery: "Isuien Garden Nara" },
+  { id: "todaiji", name: "东大寺 · 大佛殿", area: "nara", category: "spot", position: [34.689, 135.8398], dates: ["10.06"], meta: "奈良核心景点", googleQuery: "Todai-ji Daibutsuden Nara" },
+  { id: "nigatsudo", name: "二月堂", area: "nara", category: "spot", position: [34.6894, 135.8454], dates: ["10.06"], meta: "回望奈良盆地", googleQuery: "Nigatsudo Nara" },
+  { id: "kasuga", name: "春日大社", area: "nara", category: "spot", position: [34.6814, 135.8484], dates: ["10.06"], meta: "石灯笼与林间参道", googleQuery: "Kasuga Taisha Nara" },
+  { id: "naramachi", name: "奈良町", area: "nara", category: "spot", position: [34.6776, 135.8307], dates: ["10.06"], meta: "咖啡与老街收尾", googleQuery: "Naramachi Nara" },
 ];
 
 export const restaurantPoints: MapPoint[] = [
-  {
-    id: "maekawa", name: "料理屋まえかわ", area: "kyoto", category: "restaurant", position: [34.99826, 135.767593],
-    dates: ["10.02", "10.03"],
-    meta: "京都 · 日本料理", address: "京都市下京区难波町405", googleQuery: "料理屋まえかわ 京都",
-    guide: "MICHELIN 京都 2026 ★", fit: "10.02 东山散步后或 10.03 晚餐；离清水五条约 300m。", fitLevel: "最顺", official: "https://ryouriya-maekawa.com/",
-  },
-  {
-    id: "gion-nanba", name: "祇園 なん波 / Gion Nanba", area: "kyoto", category: "restaurant", position: [35.004158, 135.775818],
-    dates: ["10.02"],
-    meta: "京都祇园 · 京怀石", address: "京都市东山区祇园町北侧279-7", googleQuery: "Gion Nanba Kyoto",
-    guide: "截图候选 · 往届 MICHELIN 入选", fit: "10.02 八坂神社、祇园路线内，几乎不绕路。", fitLevel: "最顺", official: "https://kyotonanba.com/",
-  },
-  {
-    id: "mizuno", name: "水の / Mizuno", area: "kyoto", category: "restaurant", position: [35.006409, 135.775757],
-    dates: ["10.02"],
-    meta: "京都祇园 · 日本料理", address: "京都市东山区中之町245-2", googleQuery: "水の 京都 新門前",
-    guide: "MICHELIN 京都 2026 入选", fit: "10.02 祇园晚餐最顺；18:00 统一开席，需提前到。", fitLevel: "最顺", official: "https://www.tablecheck.com/en/mizuno-kyoto",
-  },
-  {
-    id: "hakuran", name: "萬寿寺はくらん", area: "kyoto", category: "restaurant", position: [34.997776, 135.758514],
-    dates: ["10.03", "10.05"],
-    meta: "京都五条 · 日本料理", address: "京都市下京区御供石町358", googleQuery: "萬寿寺はくらん 京都",
-    guide: "MICHELIN 京都 2026 ★", fit: "离京都站住宿最近，适合 10.03 或 10.05 晚餐。", fitLevel: "最顺", official: "https://manjujihakuran.com/",
-  },
-  {
-    id: "hyotei", name: "瓢亭 / Hyotei", area: "kyoto", category: "restaurant", position: [35.01141, 135.786011],
-    dates: ["10.02"],
-    meta: "京都南禅寺 · 京怀石", address: "京都市左京区南禅寺草川町35", googleQuery: "Hyotei Kyoto",
-    guide: "MICHELIN 京都 2026 ★★★", fit: "10.02 南禅寺路线旁；午餐最省时间。", fitLevel: "最顺", official: "https://hyotei.co.jp/en/",
-  },
-  {
-    id: "kikunoi", name: "菊乃井本店", area: "kyoto", category: "restaurant", position: [35.000397, 135.781204],
-    dates: ["10.02"],
-    meta: "京都东山 · 京怀石", address: "京都市东山区下河原町459", googleQuery: "Kikunoi Honten Kyoto",
-    guide: "MICHELIN 京都 2026 ★★★", fit: "10.02 圆山公园、八坂神社之后直接步行抵达。", fitLevel: "最顺", official: "https://kikunoi.jp/en/",
-  },
-  {
-    id: "kichisen", name: "京懐石 吉泉 / Kichisen", area: "kyoto", category: "restaurant", position: [35.035683, 135.771378],
-    dates: ["10.05"],
-    meta: "京都下鸭 · 京怀石", address: "京都市左京区下鸭森本町5", googleQuery: "Kyokaiseki Kichisen Kyoto",
-    guide: "MICHELIN 京都 2026 ★★", fit: "10.05 贵船回程经过出町柳时最顺，建议预留换装与休息。", fitLevel: "最顺", official: "https://www.kichisen-kyoto.com/en/",
-  },
-  {
-    id: "taian", name: "太庵 / Taian", area: "osaka", category: "restaurant", position: [34.673367, 135.507217],
-    dates: ["10.06"],
-    meta: "大阪心斋桥 · 日本料理", address: "大阪市中央区岛之内1-21-2", googleQuery: "Taian Osaka",
-    guide: "MICHELIN 大阪 2026 ★★★", fit: "10.06 心斋桥收尾日最顺，步行即可回难波一带。", fitLevel: "最顺", official: "https://guide.michelin.com/jp/ja/osaka-region/osaka/restaurant/taian",
-  },
-  {
-    id: "la-cime", name: "La Cime", area: "osaka", category: "restaurant", position: [34.685772, 135.503525],
-    dates: ["10.06"],
-    meta: "大阪本町 · 现代法餐", address: "大阪市中央区瓦町3-2-15", googleQuery: "La Cime Osaka",
-    guide: "MICHELIN 大阪 2026 ★★", fit: "10.06 大阪城、中之岛之后最顺，地铁回难波方便。", fitLevel: "最顺", official: "https://www.la-cime.com/",
-  },
-  {
-    id: "aragawa", name: "麤皮 / Aragawa", area: "kobe", category: "restaurant", position: [34.697136, 135.189606],
-    dates: ["10.01"],
-    meta: "神户北野 · 炭火牛排", address: "神户市中央区中山手通2-15-18", googleQuery: "Aragawa Kobe",
-    guide: "截图候选 · 高端牛排", fit: "仅在 10.01 把奈良换成神户时顺路；从三宫步行约 10–15 分钟。", fitLevel: "可替换", official: "https://aragawa.co.jp/",
-  },
-  {
-    id: "mouriya", name: "モーリヤ本店 / Mouriya Honten", area: "kobe", category: "restaurant", position: [34.693119, 135.191193],
-    dates: ["10.01"],
-    meta: "神户三宫 · 神户牛", address: "神户市中央区下山手通2-1-17", googleQuery: "Mouriya Honten Kobe",
-    guide: "截图候选 · 神户牛排", fit: "神户备选日最容易插入，紧邻三宫站。", fitLevel: "可替换", official: "https://www.mouriya.co.jp/en/head",
-  },
-  {
-    id: "uemura", name: "料理屋 植むら", area: "kobe", category: "restaurant", position: [34.697174, 135.191757],
-    dates: ["10.01"],
-    meta: "神户北野坂 · 日本料理", address: "神户市中央区中山手通1-24-14", googleQuery: "料理屋植むら 神戸",
-    guide: "往届 MICHELIN ★★", fit: "18:00 / 21:00 分批开席；只有采用神户备选日才建议。", fitLevel: "可替换", official: "https://www.ryouriya-uemura.com/",
-  },
-  {
-    id: "komago", name: "子孫 / Komago", area: "kobe", category: "restaurant", position: [34.762573, 135.33165],
-    dates: ["10.01"],
-    meta: "西宫甲阳园 · 日本料理", address: "西宫市甲阳园本庄町5-21", googleQuery: "子孫 KOMAGO 西宮",
-    guide: "往届 MICHELIN ★★★", fit: "不在大阪—京都主线上；需要从大阪专程往返，不建议硬塞。", fitLevel: "需专程", official: "https://komago-cuisine.com/",
-  },
+  { id: "ajinoya", name: "Ajinoya Honten", area: "osaka", category: "restaurant", position: [34.668065, 135.500976], dates: ["09.29", "10.01", "10.06"], meta: "大阪烧 · ¥1,000–2,000", googleQuery: "Namba Okonomiyaki Ajinoya Honten", guide: "Google Maps 4.2 · 3,937 条评价", fit: "道顿堀旁，适合首晚或大阪收尾；热门时段可能排队。", fitLevel: "顺路", official: "https://ajinoya-okonomiyaki.com/" },
+  { id: "wanaka", name: "たこ焼道楽わなか 千日前本店", area: "osaka", category: "restaurant", position: [34.66521, 135.503402], dates: ["10.01", "10.06"], meta: "章鱼烧 · ¥1–1,000", googleQuery: "Takoyaki Wanaka Sennichimae Osaka", guide: "Google Maps 4.3 · 4,365 条评价", fit: "电电城走回难波时顺手吃，不占一顿正式正餐。", fitLevel: "顺路", official: "https://takoyaki-wanaka.com/" },
+  { id: "rikimaru", name: "焼肉力丸 なんば千日前店", area: "osaka", category: "restaurant", position: [34.6669, 135.5038], dates: ["09.29", "10.01", "10.06"], meta: "烧肉 · ¥4,000–6,000", googleQuery: "Yakiniku Rikimaru Sennichimae Osaka", guide: "Google Maps 4.8 · 16,590 条评价", fit: "难波核心区、评论量大；想轻松吃烧肉时比长套餐更灵活。", fitLevel: "备选", official: "https://handafood.jp/rikimaru/" },
+  { id: "mouriya", name: "モーリヤ本店 / Mouriya Honten", area: "kobe", category: "restaurant", position: [34.693119, 135.191193], dates: ["10.02"], meta: "神户牛排 · ¥10,000+", googleQuery: "Mouriya Honten Kobe", guide: "Google Maps 4.6 · 1,836 条评价", fit: "北野下坡至三宫后吃午餐最顺，建议提前预约。", fitLevel: "预订型", official: "https://www.mouriya.co.jp/en/head" },
+  { id: "kokubu", name: "KOKUBU Steak House", area: "kobe", category: "restaurant", position: [34.6942, 135.192], dates: ["10.02"], meta: "神户牛排 · ¥10,000+", googleQuery: "KOKUBU Steak House Kobe", guide: "Google Maps 4.7 · 311 条评价", fit: "席位较少的牛排备选，也在三宫—北野之间。", fitLevel: "预订型" },
+  { id: "omen", name: "名代おめん 銀閣寺本店", area: "kyoto", category: "restaurant", position: [35.026256, 135.795009], dates: ["10.03"], meta: "乌冬 · ¥1,000–2,000", googleQuery: "Omen Ginkaku-ji Kyoto", guide: "Google Maps 4.3 · 1,967 条评价", fit: "银阁寺出来就是最自然的午餐停靠点。", fitLevel: "顺路", official: "https://omen.co.jp/" },
+  { id: "katsukura", name: "名代とんかつ かつくら 三条本店", area: "kyoto", category: "restaurant", position: [35.0086, 135.7675], dates: ["10.03", "10.05"], meta: "炸猪排 · ¥2,000–3,000", googleQuery: "Katsukura Tonkatsu Sanjo Main Store", guide: "Google Maps 4.5 · 2,339 条评价", fit: "回到京都市中心后的高评论量晚餐备选，不要求长套餐。", fitLevel: "备选", official: "https://www.katsukura.jp/" },
+  { id: "maekawa", name: "料理屋まえかわ", area: "kyoto", category: "restaurant", position: [34.99826, 135.767593], dates: ["10.03", "10.05"], meta: "日本料理 · ¥10,000+", googleQuery: "料理屋まえかわ 京都", guide: "Google Maps 4.7 · 50 条评价", fit: "本次正式餐首选；东山日或贵船回城后都能衔接，必须预约。", fitLevel: "预订型", official: "https://ryouriya-maekawa.com/" },
+  { id: "nakamura-uji", name: "中村藤吉 平等院店", area: "kyoto", category: "restaurant", position: [34.891473, 135.80664], dates: ["10.04"], meta: "茶餐与甜品 · ¥1,000–2,000", googleQuery: "Nakamura Tokichi Byodoin Uji", guide: "Google Maps 4.3 · 2,352 条评价", fit: "平等院表参道上，去宇治川前休息；排队长就外带。", fitLevel: "顺路", official: "https://www.tokichi.jp/" },
+  { id: "mizuya", name: "水谷茶屋", area: "nara", category: "restaurant", position: [34.683491, 135.846791], dates: ["10.06"], meta: "日式简餐 · ¥1,000–2,000", googleQuery: "Mizuya Chaya Nara", guide: "Google Maps 4.7 · 1,244 条评价", fit: "春日大社林间路线旁，景观和顺路程度都很好。", fitLevel: "顺路" },
+  { id: "maguro-koya", name: "まぐろ小屋 / Maguro Koya", area: "nara", category: "restaurant", position: [34.68548, 135.828858], dates: ["10.06"], meta: "金枪鱼料理 · ¥2,000–3,000", googleQuery: "Maguro Koya Nara", guide: "Google Maps 4.5 · 1,451 条评价", fit: "靠近近铁奈良站，适合进景区前或返程前吃。", fitLevel: "备选" },
 ];
 
 const allPoints = [...spots, ...restaurantPoints];
+const pointById = new Map(allPoints.map((point) => [point.id, point]));
 
-const routeLines = [
-  { date: "09.29" as ItineraryDate, label: "09.29 抵达", color: "#ef6a39", points: [[34.4359, 135.2435], [34.6676, 135.5012], [34.6748, 135.5012]] as [number, number][] },
-  { date: "09.30" as ItineraryDate, label: "09.30 USJ", color: "#355c45", points: [[34.6676, 135.5012], [34.6656, 135.4325], [34.6676, 135.5012]] as [number, number][] },
-  { date: "10.01" as ItineraryDate, label: "10.01 奈良", color: "#567762", points: [[34.6676, 135.5012], [34.6829, 135.8546], [34.6676, 135.5012]] as [number, number][] },
-  { date: "10.02" as ItineraryDate, label: "10.02 东山", color: "#ef6a39", points: [[34.6676, 135.5012], [34.9858, 135.7588], [35.027, 135.7982], [35.0144, 135.7919], [35.0114, 135.793], [35.0037, 135.778]] as [number, number][] },
-  { date: "10.03" as ItineraryDate, label: "10.03 岚山", color: "#355c45", points: [[34.9858, 135.7588], [35.0168, 135.6713], [34.9858, 135.7588]] as [number, number][] },
-  { date: "10.04" as ItineraryDate, label: "10.04 宇治烟火", color: "#d59d2f", points: [[34.9858, 135.7588], [34.8926, 135.7842], [34.8901, 135.8072], [34.8445, 135.7972], [34.9858, 135.7588]] as [number, number][] },
-  { date: "10.05" as ItineraryDate, label: "10.05 贵船", color: "#355c45", points: [[34.9858, 135.7588], [35.1179, 135.7707], [35.1219, 135.7629], [34.9858, 135.7588]] as [number, number][] },
-  { date: "10.06" as ItineraryDate, label: "10.06 京都→大阪", color: "#ef6a39", points: [[34.9858, 135.7588], [34.6872, 135.5254], [34.6748, 135.5012], [34.6676, 135.5012]] as [number, number][] },
-  { date: "10.07" as ItineraryDate, label: "10.07 返程", color: "#ef6a39", points: [[34.6676, 135.5012], [34.4359, 135.2435]] as [number, number][] },
-];
-
-const areaBounds: Record<Area, [[number, number], [number, number]]> = {
-  kansai: [[34.39, 135.14], [35.16, 135.9]],
-  kyoto: [[34.82, 135.64], [35.15, 135.83]],
-  osaka: [[34.62, 135.4], [34.72, 135.56]],
-  kobe: [[34.66, 135.14], [34.79, 135.38]],
+const daySegments: Record<ItineraryDate, DaySegment[]> = {
+  "09.29": [{ label: "难波夜行", note: "机场进城属于跨区域交通，不在这里画箭头。", pointIds: ["shinsaibashi", "dotonbori", "hozenji"] }],
+  "09.30": [{ label: "USJ 全天", note: "园内项目顺序随排队时间调整，以 USJ App 为准。", pointIds: ["usj"] }],
+  "10.01": [{ label: "大阪南区慢行", note: "11 点左右再开始；美术馆和慶泽园二选一即可。", pointIds: ["kuromon", "shitennoji", "osaka-art-museum", "tennoji-park", "shinsekai", "den-den-town", "wanaka", "dotonbori"] }],
+  "10.02": [
+    { label: "神户山侧", note: "缆车上山后一路下坡，体力消耗可控。", pointIds: ["nunobiki", "kitano", "ikuta"] },
+    { label: "三宫午餐", note: "Mouriya 与 KOKUBU 选一家，最好预约。", pointIds: ["mouriya"] },
+    { label: "神户港区", note: "从三宫坐车到港口，港区内部再步行串联。", pointIds: ["meriken", "harborland"] },
+  ],
+  "10.03": [{ label: "京都东山 · 北向南", note: "法然院、蹴上为可删节点；累了就从南禅寺直接去祇园。", pointIds: ["ginkakuji", "omen", "philosopher", "honenin", "eikando", "nanzenji", "keage", "yasaka", "gion"] }],
+  "10.04": [
+    { label: "京都南 · 伏见", note: "伏见稻荷只走到奥社奉拜所，避免把体力耗光。", pointIds: ["fushimi-inari", "tofukuji"] },
+    { label: "宇治", note: "平等院表参道、茶餐、河岸和宇治上神社集中步行。", pointIds: ["byodoin", "nakamura-uji", "uji-river", "ujigami"] },
+    { label: "城阳", note: "跨城去 JR 长池不画箭头；16:30–17:00 抵达会场。", pointIds: ["joyo"] },
+  ],
+  "10.05": [{ label: "鞍马 → 贵船", note: "晴天翻山；雨天删掉木根道，改由贵船口巴士直达贵船。", pointIds: ["kurama", "kurama-dera", "kinone", "kifune-okumiya", "kifune"] }],
+  "10.06": [{ label: "奈良公园 · 东向西回站", note: "京都退房后把行李寄存在近铁奈良站，游览结束直接去大阪。", pointIds: ["kofukuji", "isuien", "todaiji", "nigatsudo", "kasuga", "mizuya", "naramachi"] }],
+  "10.07": [],
 };
 
-const areaLabels: Record<Area, string> = { kansai: "关西全程", kyoto: "京都", osaka: "大阪", kobe: "神户 / 西宫" };
+const dayTitles: Record<ItineraryDate, string> = {
+  "09.29": "抵达大阪 · 只走难波夜线", "09.30": "USJ 全天", "10.01": "USJ 后的轻松大阪", "10.02": "神户自然与港口一日",
+  "10.03": "入住京都 · 东山步行线", "10.04": "伏见、宇治与城阳烟火", "10.05": "鞍马翻山至贵船", "10.06": "奈良游览后回大阪", "10.07": "难波前往关西机场",
+};
+
+const areaBounds: Record<Area, [[number, number], [number, number]]> = {
+  kansai: [[34.39, 135.14], [35.16, 135.9]], osaka: [[34.62, 135.4], [34.72, 135.56]], kobe: [[34.66, 135.14], [34.74, 135.22]],
+  kyoto: [[34.82, 135.64], [35.15, 135.83]], nara: [[34.67, 135.82], [34.7, 135.86]],
+};
+
+const areaLabels: Record<Area, string> = { kansai: "关西全程", osaka: "大阪", kobe: "神户", kyoto: "京都", nara: "奈良" };
 const categoryLabels: Record<Category, string> = { all: "全部", spot: "景点", restaurant: "餐厅", stay: "住宿" };
 const dateOptions: Array<[DateFilter, string]> = [
-  ["all", "全部日期"],
-  ["09.29", "9月29日"],
-  ["09.30", "9月30日"],
-  ["10.01", "10月1日"],
-  ["10.02", "10月2日"],
-  ["10.03", "10月3日"],
-  ["10.04", "10月4日"],
-  ["10.05", "10月5日"],
-  ["10.06", "10月6日"],
-  ["10.07", "10月7日"],
+  ["all", "全部日期"], ["09.29", "9月29日"], ["09.30", "9月30日"], ["10.01", "10月1日"], ["10.02", "10月2日"],
+  ["10.03", "10月3日"], ["10.04", "10月4日"], ["10.05", "10月5日"], ["10.06", "10月6日"], ["10.07", "10月7日"],
 ];
 
-const routeButtons = [
-  ["09.29 机场→难波", "Kansai International Airport", "Namba Osaka", ""],
-  ["09.30 难波→USJ", "Namba Osaka", "Universal Studios Japan", ""],
-  ["10.01 难波→奈良", "Namba Osaka", "Nara Park", ""],
-  ["10.02 大阪→京都东山", "Namba Osaka", "Gion Kyoto", "Kyoto Station|Ginkakuji Kyoto|Eikando Temple Kyoto|Nanzenji Temple Kyoto"],
-  ["10.03 京都→岚山", "Kyoto Station", "Arashiyama Bamboo Forest", ""],
-  ["10.04 任天堂→宇治→烟火", "Kyoto Station", "Kizugawa Athletic Park Joyo", "Nintendo Museum Uji|Byodoin Temple Uji"],
-  ["10.05 鞍马→贵船", "Kyoto Station", "Kifune Shrine Kyoto", "Kurama-dera Kyoto"],
-  ["10.06 可选伏见稻荷", "Kyoto Station", "Kyoto Station", "Fushimi Inari Taisha"],
-  ["10.06 京都→大阪", "Kyoto Station", "Namba Osaka", "Osaka Castle|Shinsaibashi"],
-  ["10.07 难波→KIX", "Namba Osaka", "Kansai International Airport", ""],
-];
-
-function googleSearch(query: string) {
-  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
+function googleSearch(query: string) { return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`; }
+function googleDirections(origin: string, destination: string, waypoints: string[] = []) {
+  const base = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}&travelmode=transit`;
+  return waypoints.length ? `${base}&waypoints=${encodeURIComponent(waypoints.join("|"))}` : base;
 }
-
-function googleDirections(origin: string, destination: string, waypoints: string) {
-  const base = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}`;
-  return waypoints ? `${base}&waypoints=${encodeURIComponent(waypoints)}` : base;
-}
-
 function popupHtml(point: MapPoint) {
   const detail = point.guide ? `<span class="leaflet-popup-guide">${point.guide}</span>` : "";
   const fit = point.fit ? `<p>${point.fit}</p>` : "";
-  const schedule = `<span class="leaflet-popup-date">日期 ${point.dates.join(" / ")}</span>`;
-  return `<div class="trip-popup"><strong>${point.name}</strong><small>${point.meta}</small>${schedule}${detail}${fit}<a href="${googleSearch(point.googleQuery)}" target="_blank" rel="noreferrer">Google Maps 导航 ↗</a></div>`;
+  return `<div class="trip-popup"><strong>${point.name}</strong><small>${point.meta}</small><span class="leaflet-popup-date">日期 ${point.dates.join(" / ")}</span>${detail}${fit}<a href="${googleSearch(point.googleQuery)}" target="_blank" rel="noreferrer">在 Google Maps 查看 ↗</a></div>`;
+}
+function orderForPoint(date: DateFilter, pointId: string) {
+  if (date === "all") return null;
+  const index = daySegments[date].flatMap((segment) => segment.pointIds).indexOf(pointId);
+  return index >= 0 ? index + 1 : null;
 }
 
 export default function TripMap() {
   const mapElement = useRef<HTMLDivElement | null>(null);
   const mapInstance = useRef<LeafletMap | null>(null);
+  const leafletRef = useRef<typeof import("leaflet") | null>(null);
   const markerEntries = useRef<Array<{ marker: Marker; point: MapPoint }>>([]);
-  const lineEntries = useRef<Array<{ line: Polyline; date: ItineraryDate }>>([]);
   const [category, setCategory] = useState<Category>("all");
   const [area, setArea] = useState<Area>("kansai");
   const [selectedDate, setSelectedDate] = useState<DateFilter>("all");
 
+  function buildIcon(L: typeof import("leaflet"), point: MapPoint, date: DateFilter) {
+    const order = point.category === "spot" ? orderForPoint(date, point.id) : null;
+    const symbol = point.category === "restaurant" ? "食" : point.category === "stay" ? "住" : order ?? "景";
+    return L.divIcon({ className: "trip-marker-wrap", html: `<span class="trip-marker marker-${point.category}${order ? " marker-ordered" : ""}">${symbol}</span>`, iconSize: [34, 34], iconAnchor: [17, 17], popupAnchor: [0, -15] });
+  }
+
   useEffect(() => {
     let disposed = false;
-
     async function setupMap() {
       if (!mapElement.current || mapInstance.current) return;
       const L = await import("leaflet");
       if (disposed || !mapElement.current) return;
-
-      const map = L.map(mapElement.current, { zoomControl: true, scrollWheelZoom: false });
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        maxZoom: 19,
-        attribution: "&copy; OpenStreetMap contributors",
-      }).addTo(map);
-
+      leafletRef.current = L;
+      const map = L.map(mapElement.current, { zoomControl: true, scrollWheelZoom: true, touchZoom: true, wheelPxPerZoomLevel: 72 });
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19, attribution: "&copy; OpenStreetMap contributors" }).addTo(map);
       markerEntries.current = allPoints.map((point) => {
-        const symbol = point.category === "restaurant" ? "食" : point.category === "stay" ? "住" : "景";
-        const icon = L.divIcon({
-          className: "trip-marker-wrap",
-          html: `<span class="trip-marker marker-${point.category}">${symbol}</span>`,
-          iconSize: [34, 34],
-          iconAnchor: [17, 17],
-          popupAnchor: [0, -15],
-        });
-        const marker = L.marker(point.position, { icon, title: point.name }).bindPopup(popupHtml(point), { maxWidth: 265 });
+        const marker = L.marker(point.position, { icon: buildIcon(L, point, "all"), title: point.name }).bindPopup(popupHtml(point), { maxWidth: 275 });
         marker.addTo(map);
         return { marker, point };
       });
-
-      lineEntries.current = routeLines.map((route) => {
-        const line = L.polyline(route.points, { color: route.color, weight: 3, opacity: 0.72, dashArray: "7 7" });
-        line.bindTooltip(route.label, { sticky: true });
-        line.addTo(map);
-        return { line, date: route.date };
-      });
-
       map.fitBounds(areaBounds.kansai, { padding: [24, 24] });
       mapInstance.current = map;
       window.setTimeout(() => map.invalidateSize(), 80);
     }
-
     setupMap();
-    return () => {
-      disposed = true;
-      mapInstance.current?.remove();
-      mapInstance.current = null;
-      markerEntries.current = [];
-      lineEntries.current = [];
-    };
+    return () => { disposed = true; mapInstance.current?.remove(); mapInstance.current = null; leafletRef.current = null; markerEntries.current = []; };
   }, []);
 
   useEffect(() => {
     const map = mapInstance.current;
-    if (!map) return;
+    const L = leafletRef.current;
+    if (!map || !L) return;
     const visiblePositions: [number, number][] = [];
     markerEntries.current.forEach(({ marker, point }) => {
-      const categoryMatches = category === "all" || point.category === category;
-      const dateMatches = selectedDate === "all" || point.dates.includes(selectedDate);
-      const visible = categoryMatches && dateMatches;
+      marker.setIcon(buildIcon(L, point, selectedDate));
+      const visible = (category === "all" || point.category === category) && (selectedDate === "all" || point.dates.includes(selectedDate));
       if (visible && !map.hasLayer(marker)) marker.addTo(map);
       if (!visible && map.hasLayer(marker)) marker.removeFrom(map);
       if (visible) visiblePositions.push(point.position);
     });
-    lineEntries.current.forEach(({ line, date }) => {
-      const categoryMatches = category === "all" || category === "spot" || category === "stay";
-      const dateMatches = selectedDate === "all" || date === selectedDate;
-      const visible = categoryMatches && dateMatches;
-      if (visible && !map.hasLayer(line)) line.addTo(map);
-      if (!visible && map.hasLayer(line)) line.removeFrom(map);
-    });
-    if (selectedDate !== "all" && visiblePositions.length > 0) {
-      map.fitBounds(visiblePositions, { padding: [54, 54], maxZoom: 13 });
-    }
+    if (selectedDate !== "all" && visiblePositions.length > 0) map.fitBounds(visiblePositions, { padding: [58, 58], maxZoom: 14 });
   }, [category, selectedDate]);
 
-  function focusArea(nextArea: Area) {
-    setArea(nextArea);
-    mapInstance.current?.fitBounds(areaBounds[nextArea], { padding: [24, 24] });
-  }
-
-  const visiblePointCount = allPoints.filter((point) => {
-    const categoryMatches = category === "all" || point.category === category;
-    const dateMatches = selectedDate === "all" || point.dates.includes(selectedDate);
-    return categoryMatches && dateMatches;
-  }).length;
-
-  const visibleRestaurants = selectedDate === "all"
-    ? restaurantPoints
-    : restaurantPoints.filter((restaurant) => restaurant.dates.includes(selectedDate));
+  function focusArea(nextArea: Area) { setArea(nextArea); mapInstance.current?.fitBounds(areaBounds[nextArea], { padding: [24, 24] }); }
+  const visiblePointCount = allPoints.filter((point) => (category === "all" || point.category === category) && (selectedDate === "all" || point.dates.includes(selectedDate))).length;
+  const visibleRestaurants = selectedDate === "all" ? restaurantPoints : restaurantPoints.filter((restaurant) => restaurant.dates.includes(selectedDate));
+  const selectedSegments = selectedDate === "all" ? [] : daySegments[selectedDate];
 
   return (
     <div className="real-map-panel">
       <div className="real-map-toolbar">
-        <div className="map-control-group" aria-label="地图区域">
-          {Object.entries(areaLabels).map(([key, label]) => (
-            <button className={area === key ? "active" : ""} type="button" key={key} onClick={() => focusArea(key as Area)}>{label}</button>
-          ))}
-        </div>
-        <div className="map-control-group category-controls" aria-label="地图标记筛选">
-          {Object.entries(categoryLabels).map(([key, label]) => (
-            <button className={category === key ? "active" : ""} type="button" key={key} onClick={() => setCategory(key as Category)}>{label}</button>
-          ))}
-        </div>
+        <div className="map-control-group" aria-label="地图区域">{Object.entries(areaLabels).map(([key, label]) => <button className={area === key ? "active" : ""} type="button" key={key} onClick={() => focusArea(key as Area)}>{label}</button>)}</div>
+        <div className="map-control-group category-controls" aria-label="地图标记筛选">{Object.entries(categoryLabels).map(([key, label]) => <button className={category === key ? "active" : ""} type="button" key={key} onClick={() => setCategory(key as Category)}>{label}</button>)}</div>
       </div>
-
       <div className="map-date-filter">
-        <div className="map-date-heading">
-          <strong>按日期</strong>
-          <span aria-live="polite">
-            {selectedDate === "all" ? `全程 · ${visiblePointCount} 个点位` : `${selectedDate} · ${visiblePointCount} 个点位`}
-          </span>
-        </div>
-        <div className="map-date-scroller" aria-label="地图日期筛选">
-          {dateOptions.map(([value, label]) => (
-            <button
-              className={selectedDate === value ? "active" : ""}
-              type="button"
-              key={value}
-              aria-pressed={selectedDate === value}
-              onClick={() => setSelectedDate(value)}
-            >
-              <small>{value === "all" ? "全程" : value}</small>
-              <span>{label}</span>
-            </button>
-          ))}
-        </div>
+        <div className="map-date-heading"><strong>按日期</strong><span aria-live="polite">{selectedDate === "all" ? `全程 · ${visiblePointCount} 个点位` : `${selectedDate} · ${visiblePointCount} 个点位`}</span></div>
+        <div className="map-date-scroller" aria-label="地图日期筛选">{dateOptions.map(([value, label]) => <button className={selectedDate === value ? "active" : ""} type="button" key={value} aria-pressed={selectedDate === value} onClick={() => setSelectedDate(value)}><small>{value === "all" ? "全程" : value}</small><span>{label}</span></button>)}</div>
       </div>
-
-      <div className="map-legend real-legend" aria-label="地图图例">
-        <span><i className="real-legend-dot spot-dot" />景点</span>
-        <span><i className="real-legend-dot restaurant-dot" />候选餐厅</span>
-        <span><i className="real-legend-dot stay-dot" />住宿</span>
-        <span><i className="legend-line day-line" />行程先后顺序</span>
-      </div>
-
+      <div className="map-legend real-legend" aria-label="地图图例"><span><i className="real-legend-dot spot-dot" />景点</span><span><i className="real-legend-dot restaurant-dot" />餐厅</span><span><i className="real-legend-dot stay-dot" />住宿</span><span>日期筛选后，景点数字就是当天顺序</span></div>
       <div className="leaflet-map" ref={mapElement} aria-label="关西景点、住宿与餐厅交互地图" />
-      <p className="map-disclaimer">底图为 OpenStreetMap 实际地理数据；彩色虚线表示游览顺序，不代表具体铁轨。点击任意标记可跳转 Google Maps 获取当日实时换乘。</p>
+      <p className="map-disclaimer">底图使用 OpenStreetMap；地图上不再连接节点，区域内顺序改在下方用箭头表达。双指滚动或捏合可缩放地图，点击标记可打开 Google Maps。</p>
 
-      <div className="google-route-strip" aria-label="按日期打开 Google Maps 路线">
-        {routeButtons.map(([label, origin, destination, waypoints]) => (
-          <a href={googleDirections(origin, destination, waypoints)} target="_blank" rel="noreferrer" key={label}>{label}<span>↗</span></a>
-        ))}
-      </div>
-
-      <div className="restaurant-map-heading">
-        <div>
-          <p className="eyebrow dark">DINING PINS</p>
-          <h3>候选餐厅与行程的距离关系</h3>
-        </div>
-        <p>餐厅已按当前路线分配建议日期，并会跟随上方日期筛选；具体预订日期之后仍可调整。星级与营业状态请在预约前复核官方页面。</p>
-      </div>
-
-      <div className="restaurant-pin-grid">
-        {visibleRestaurants.length === 0 && (
-          <p className="restaurant-pin-empty">这一天暂时没有安排正式餐厅，优先保留机动时间与当地简餐。</p>
+      <section className="day-route-detail" aria-label="当天详细行程">
+        {selectedDate === "all" ? <div className="day-route-empty"><strong>选择上方某一天</strong><p>即可查看区域内的详细顺序、相邻两点导航，以及当天整段路线的 Google Maps 跳转。</p></div> : (
+          <>
+            <div className="day-route-header"><div><span>{selectedDate}</span><h3>{dayTitles[selectedDate]}</h3></div><small>箭头本身可以点击，直接打开相邻两点 Google Maps 导航</small></div>
+            {selectedSegments.length === 0 ? <p className="day-route-none">返程日不再安排景点，请直接前往关西机场。</p> : selectedSegments.map((segment) => {
+              const segmentPoints = segment.pointIds.map((id) => pointById.get(id)).filter((point): point is MapPoint => Boolean(point));
+              const wholeRoute = segmentPoints.length > 1 ? googleDirections(segmentPoints[0].googleQuery, segmentPoints.at(-1)!.googleQuery, segmentPoints.slice(1, -1).map((point) => point.googleQuery)) : null;
+              return <article className="day-segment" key={segment.label}>
+                <div className="day-segment-title"><div><strong>{segment.label}</strong><p>{segment.note}</p></div>{wholeRoute && <a href={wholeRoute} target="_blank" rel="noreferrer">整段路线 ↗</a>}</div>
+                <div className="day-flow">{segmentPoints.map((point, index) => <div className="day-flow-step" key={point.id}>
+                  <a className={`day-stop stop-${point.category}`} href={googleSearch(point.googleQuery)} target="_blank" rel="noreferrer"><b>{index + 1}</b><span>{point.name}</span><small>{point.meta}</small></a>
+                  {index < segmentPoints.length - 1 && <a className="day-arrow" href={googleDirections(point.googleQuery, segmentPoints[index + 1].googleQuery)} target="_blank" rel="noreferrer" aria-label={`从${point.name}前往${segmentPoints[index + 1].name}`}>→<small>两点导航 ↗</small></a>}
+                </div>)}</div>
+              </article>;
+            })}
+          </>
         )}
+      </section>
+
+      <div className="restaurant-map-heading"><div><p className="eyebrow dark">DINING PINS</p><h3>Google Maps 高评价餐厅</h3></div><p>评分与评价数读取于 2026 年 9 月 2 日；会随 Google Maps 变化。餐厅已按顺路程度分配日期，营业时间和预约仍需出发前复核。</p></div>
+      <div className="restaurant-pin-grid">
+        {visibleRestaurants.length === 0 && <p className="restaurant-pin-empty">这一天不安排园外或正式餐厅，优先保留机动时间。</p>}
         {visibleRestaurants.map((restaurant) => {
-          const fitClass = restaurant.fitLevel === "最顺" ? "best" : restaurant.fitLevel === "可替换" ? "swap" : "detour";
-          return (
-          <article className="restaurant-pin-card" key={restaurant.id}>
-            <div className="restaurant-pin-top">
-              <div className="restaurant-pin-meta">
-                <span>{restaurant.meta}</span>
-                <b>建议 {restaurant.dates.join(" / ")}</b>
-              </div>
-              <em className={`fit-${fitClass}`}>{restaurant.fitLevel}</em>
-            </div>
-            <h4>{restaurant.name}</h4>
-            <strong>{restaurant.guide}</strong>
-            <p>{restaurant.fit}</p>
-            <div className="restaurant-pin-links">
-              <a href={googleSearch(restaurant.googleQuery)} target="_blank" rel="noreferrer">地图 ↗</a>
-              {restaurant.official && <a href={restaurant.official} target="_blank" rel="noreferrer">官方 / 预约 ↗</a>}
-            </div>
-          </article>
-          );
+          const fitClass = restaurant.fitLevel === "顺路" ? "best" : restaurant.fitLevel === "预订型" ? "swap" : "detour";
+          return <article className="restaurant-pin-card" key={restaurant.id}><div className="restaurant-pin-top"><div className="restaurant-pin-meta"><span>{restaurant.meta}</span><b>建议 {restaurant.dates.join(" / ")}</b></div><em className={`fit-${fitClass}`}>{restaurant.fitLevel}</em></div><h4>{restaurant.name}</h4><strong>{restaurant.guide}</strong><p>{restaurant.fit}</p><div className="restaurant-pin-links"><a href={googleSearch(restaurant.googleQuery)} target="_blank" rel="noreferrer">Google Maps ↗</a>{restaurant.official && <a href={restaurant.official} target="_blank" rel="noreferrer">官方 / 预约 ↗</a>}</div></article>;
         })}
       </div>
     </div>
