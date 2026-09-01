@@ -52,6 +52,19 @@ jobs:
             cp "$exported_index" dist/client/index.html
           fi
 
+          repository_name="${GITHUB_REPOSITORY#*/}"
+          nested_assets="dist/client/${repository_name}/_next"
+          if [ -d "$nested_assets" ]; then
+            cp -R "$nested_assets" dist/client/_next
+          fi
+          if [ ! -d "dist/client/_next" ]; then
+            echo "No client _next assets were generated"
+            find dist/client -maxdepth 4 -type d -print
+            exit 1
+          fi
+
+          touch dist/client/.nojekyll
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
