@@ -1,5 +1,7 @@
 import TripMap from "./TripMap";
 
+export const dynamic = "force-static";
+
 const days = [
   {
     date: "09.29",
