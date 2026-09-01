@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2"><Document>
+<name>关西 2026 · Day 1 大阪抵达日</name>
+<Folder><name>Day 1 2026-09-29 — 落地以后，慢慢走进大阪的夜</name>
+<Placemark><name>1. 关西机场</name><Point><coordinates>135.243500,34.435900,0</coordinates></Point></Placemark>
+<Placemark><name>2. 南海难波</name><Point><coordinates>135.501100,34.663700,0</coordinates></Point></Placemark>
+<Placemark><name>3. 酒店放行李</name><Point><coordinates>135.501200,34.667600,0</coordinates></Point></Placemark>
+<Placemark><name>4. 心斋桥筋</name><Point><coordinates>135.501200,34.674800,0</coordinates></Point></Placemark>
+<Placemark><name>5. 道顿堀今井</name><Point><coordinates>135.502500,34.668700,0</coordinates></Point></Placemark>
+<Placemark><name>6. 戎桥·道顿堀</name><Point><coordinates>135.501300,34.668700,0</coordinates></Point></Placemark>
+<Placemark><name>7. 法善寺横丁</name><Point><coordinates>135.502700,34.667900,0</coordinates></Point></Placemark>
+<Placemark><name>8. 今晚住宿</name><Point><coordinates>135.501200,34.667600,0</coordinates></Point></Placemark>
+<Placemark><name>Day 1 route</name><Style><LineStyle><color>ff0000ff</color><width>3</width></LineStyle></Style><LineString><coordinates>135.243500,34.435900,0 135.501100,34.663700,0 135.501200,34.667600,0 135.501200,34.674800,0 135.502500,34.668700,0 135.501300,34.668700,0 135.502700,34.667900,0 135.501200,34.667600,0</coordinates></LineString></Placemark>
+</Folder>
+</Document></kml>

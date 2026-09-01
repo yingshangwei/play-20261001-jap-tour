@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "installed": {
+    "trip-planner": {
+      "repository": "https://github.com/skywain/trip-planner-skill",
+      "commit": "45060fb2022e338cbdf13879c7ecacbce55bb159",
+      "profile": "keyless-core",
+      "supplierApiKeyRequired": false
+    },
+    "japan-recs": {
+      "repository": "https://github.com/abalmeo/claude-skill-japan-recs",
+      "commit": "9ffee8a711daa56959293ef37eb0063ccbb508ad",
+      "profile": "codex-stateless-search",
+      "supplierApiKeyRequired": false
+    },
+    "pricewin-hotel-deal-finder": {
+      "repository": "https://github.com/Price-Win/pricewin-skills-hub",
+      "commit": "ea022aa512aaf729d9d91ff4f4a0b9a965f6a521",
+      "profile": "read-only-keyless-search",
+      "supplierApiKeyRequired": false
+    },
+    "jap-tour-sync": {
+      "repository": "local",
+      "profile": "repository-maintenance",
+      "supplierApiKeyRequired": false
+    }
+  }
+}

@@ -1,0 +1,442 @@
+.desk {
+  min-height: 100vh;
+  padding: 42px 18px;
+  color: #2b2a26;
+  background:
+    radial-gradient(circle at 18% 12%, rgba(255, 190, 112, .09), transparent 29%),
+    linear-gradient(135deg, #17201e, #2b2925 62%, #151a18);
+  font-family: "KaiTi", "STKaiti", "Noto Serif SC", Georgia, serif;
+}
+
+.journal {
+  position: relative;
+  width: min(1180px, 100%);
+  margin: 0 auto;
+  overflow: hidden;
+  background:
+    linear-gradient(rgba(111, 84, 47, .035) 1px, transparent 1px),
+    radial-gradient(circle at 10% 3%, rgba(111, 67, 31, .08), transparent 24%),
+    #f3ead5;
+  background-size: 100% 28px, auto, auto;
+  border: 1px solid rgba(255, 247, 226, .22);
+  box-shadow: 0 34px 90px rgba(0, 0, 0, .38), inset 18px 0 32px rgba(91, 59, 27, .06);
+}
+
+.journal::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  box-shadow: inset 0 0 80px rgba(91, 53, 24, .12);
+}
+
+.cover {
+  position: relative;
+  min-height: 780px;
+  padding: 34px 54px 66px;
+  border-bottom: 1px solid rgba(91, 59, 27, .2);
+}
+
+.cover::before,
+.cover::after {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  width: 118px;
+  height: 30px;
+  background: rgba(213, 190, 146, .64);
+  border: 1px solid rgba(111, 84, 47, .09);
+  box-shadow: 0 2px 5px rgba(54, 40, 20, .1);
+}
+
+.cover::before { right: 25%; top: 136px; transform: rotate(-3deg); }
+.cover::after { right: 7%; bottom: 50px; transform: rotate(4deg); }
+
+.topbar {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 20px;
+  border-bottom: 1px dashed rgba(66, 61, 48, .42);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 11px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.topbar a { border-bottom: 1px solid currentColor; }
+
+.coverGrid {
+  display: grid;
+  grid-template-columns: .82fr 1.18fr;
+  gap: 62px;
+  align-items: center;
+  padding-top: 68px;
+}
+
+.coverCopy { position: relative; z-index: 3; }
+.kicker,
+.sectionIntro > div > p,
+.foodHeading > p,
+.contingency > div:first-child > p,
+.mapKit > div:first-child > p {
+  margin: 0 0 18px;
+  color: #9f4b2f;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .15em;
+}
+
+.coverCopy h1 {
+  margin: 0;
+  font-size: clamp(70px, 9.3vw, 126px);
+  font-weight: 500;
+  line-height: .9;
+  letter-spacing: -.08em;
+}
+
+.lead {
+  max-width: 430px;
+  margin: 36px 0 0;
+  color: #5f5a4c;
+  font-size: 16px;
+  line-height: 2;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 34px;
+  font-size: 12px;
+}
+
+.stats span {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(73, 63, 45, .18);
+}
+
+.stats strong { color: #355c45; font: 700 18px Georgia, serif; }
+
+.sun {
+  margin: 22px 0 0;
+  color: #776b58;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 10px;
+}
+
+.photoBlock {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  padding: 13px 13px 36px;
+  background: #f8f2e6;
+  box-shadow: 0 18px 30px rgba(67, 45, 22, .22);
+  transform: rotate(1.1deg);
+}
+
+.heroImage {
+  aspect-ratio: 4 / 5;
+  background:
+    linear-gradient(140deg, rgba(28, 42, 47, .18), transparent 46%),
+    url("/day-1-journal-collage.png") center / cover no-repeat,
+    linear-gradient(155deg, #e4c593 0 24%, #536967 25% 49%, #cf6d3f 50% 71%, #263c3a 72%);
+  filter: saturate(.92) contrast(.97);
+}
+
+.photoBlock figcaption {
+  margin-top: 12px;
+  color: #7b6d58;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 9px;
+  text-align: center;
+}
+
+.photoBlock code { font: inherit; }
+
+.routeTape {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  margin-top: 52px;
+  padding: 16px 20px;
+  color: #f8efdc;
+  background: #385b49;
+  box-shadow: 8px 8px 0 rgba(177, 113, 65, .2);
+  transform: rotate(-.35deg);
+}
+
+.routeTape span {
+  flex: 0 0 auto;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 10px;
+  letter-spacing: .12em;
+}
+
+.routeTape strong { font-size: 16px; font-weight: 500; }
+
+.firstRule {
+  position: relative;
+  display: grid;
+  grid-template-columns: 160px 1fr auto;
+  gap: 28px;
+  align-items: center;
+  margin: 0 54px;
+  padding: 38px 0;
+  border-bottom: 1px dashed rgba(66, 61, 48, .42);
+}
+
+.pin {
+  display: inline-grid;
+  place-items: center;
+  width: 138px;
+  height: 46px;
+  color: #f8efdc;
+  background: #b05738;
+  border-radius: 50%;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: .1em;
+  transform: rotate(-4deg);
+}
+
+.firstRule p { margin: 0; color: #595246; font-size: 14px; line-height: 1.85; }
+.firstRule p strong { color: #2c2b26; }
+.firstRule > a { padding-bottom: 5px; border-bottom: 1px solid #7a5f42; font-size: 12px; font-weight: 700; }
+
+.schedule,
+.foodSection,
+.contingency,
+.mapKit,
+.sources {
+  padding: 100px 54px;
+}
+
+.sectionIntro,
+.contingency,
+.mapKit {
+  display: grid;
+  grid-template-columns: .72fr 1.28fr;
+  gap: 70px;
+}
+
+.sectionIntro h2,
+.foodHeading h2,
+.contingency h2,
+.mapKit h2 {
+  margin: 0;
+  font-size: clamp(46px, 6vw, 78px);
+  font-weight: 500;
+  line-height: 1.08;
+  letter-spacing: -.055em;
+}
+
+.sectionIntro aside {
+  align-self: end;
+  padding: 26px;
+  background: #e7d9b7;
+  border: 1px solid rgba(89, 62, 32, .16);
+  box-shadow: 6px 7px 0 rgba(99, 72, 39, .1);
+  transform: rotate(.8deg);
+}
+
+.sectionIntro aside strong,
+.sectionIntro aside span { display: block; }
+.sectionIntro aside strong { margin-bottom: 10px; color: #9f4b2f; font-size: 14px; }
+.sectionIntro aside span { color: #665d4f; font-size: 13px; line-height: 1.7; }
+
+.timeline {
+  margin: 68px 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid rgba(69, 58, 41, .22);
+}
+
+.timelineItem {
+  display: grid;
+  grid-template-columns: 210px 1fr;
+  border-bottom: 1px solid rgba(69, 58, 41, .22);
+}
+
+.timeColumn {
+  padding: 30px 24px 30px 0;
+  border-right: 1px dashed rgba(69, 58, 41, .3);
+}
+
+.timeColumn span {
+  display: block;
+  margin-bottom: 14px;
+  color: #b05738;
+  font: italic 15px Georgia, serif;
+}
+
+.timeColumn time {
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.timelineBody { position: relative; padding: 28px 10px 30px 34px; }
+.kind {
+  color: #7b6f5a;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .14em;
+}
+
+.timelineBody h3 { margin: 8px 0 0; font-size: 21px; font-weight: 600; line-height: 1.5; }
+.timelineBody p { max-width: 670px; margin: 13px 0 0; color: #716958; font-size: 13px; line-height: 1.75; }
+.timelineBody > a { display: inline-block; margin-top: 14px; padding-bottom: 3px; border-bottom: 1px solid currentColor; color: #315b49; font-size: 11px; font-weight: 800; }
+
+.itemMeta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.itemMeta span { padding: 4px 7px; color: #82513a; background: rgba(179, 92, 55, .1); font-size: 9px; }
+.hop .kind { color: #315b49; }
+.meal { background: rgba(179, 92, 55, .045); }
+.meal .kind { color: #b05738; }
+
+.foodSection {
+  color: #f8efdc;
+  background: #315447;
+}
+
+.foodHeading {
+  display: grid;
+  grid-template-columns: .58fr 1fr .58fr;
+  gap: 42px;
+  align-items: start;
+}
+
+.foodHeading > p { color: #f0b867; }
+.foodHeading > span { color: rgba(248, 239, 220, .65); font-size: 12px; line-height: 1.8; }
+
+.foodGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 70px;
+  border-top: 1px solid rgba(255, 255, 255, .23);
+  border-left: 1px solid rgba(255, 255, 255, .23);
+}
+
+.foodCard {
+  position: relative;
+  min-height: 490px;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid rgba(255, 255, 255, .23);
+  border-bottom: 1px solid rgba(255, 255, 255, .23);
+}
+
+.foodNumber { color: #f0b867; font: italic 18px Georgia, serif; }
+.foodFlag { margin-top: 52px; color: rgba(248, 239, 220, .66); font-size: 10px; letter-spacing: .08em; }
+.foodCard h3 { margin: 12px 0 6px; font-size: 29px; font-weight: 500; line-height: 1.35; }
+.foodCard > strong { color: #f0b867; font-size: 12px; }
+.foodCard p { margin: 24px 0 0; color: rgba(248, 239, 220, .77); font-size: 13px; line-height: 1.85; }
+.foodCard small { margin: 18px 0 0; color: rgba(248, 239, 220, .56); font-size: 11px; line-height: 1.7; }
+.cardLinks { display: flex; gap: 16px; margin-top: auto; padding-top: 30px; }
+.cardLinks a { padding-bottom: 4px; border-bottom: 1px solid rgba(248, 239, 220, .5); font-size: 11px; font-weight: 800; }
+
+.contingency { border-bottom: 1px solid rgba(69, 58, 41, .22); }
+.noteStack { border-top: 1px solid rgba(69, 58, 41, .22); }
+.noteStack article { display: grid; grid-template-columns: 92px 1fr; gap: 28px; padding: 28px 0; border-bottom: 1px solid rgba(69, 58, 41, .22); }
+.noteStack span { color: #a45235; font-size: 13px; font-weight: 800; }
+.noteStack p { margin: 0; color: #665d4f; font-size: 13px; line-height: 1.8; }
+
+.mapKit { align-items: start; }
+.mapActions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 1px solid rgba(69, 58, 41, .22); border-left: 1px solid rgba(69, 58, 41, .22); }
+.mapActions a { min-height: 76px; padding: 20px; display: flex; align-items: center; border-right: 1px solid rgba(69, 58, 41, .22); border-bottom: 1px solid rgba(69, 58, 41, .22); font-size: 12px; font-weight: 800; }
+.mapActions a:hover { color: #f8efdc; background: #315447; }
+.mapNote { grid-column: 2; margin: 14px 0 0; color: #786d5a; font-size: 11px; }
+
+.sources { padding-top: 20px; }
+.sources details { border-block: 1px solid rgba(69, 58, 41, .22); }
+.sources summary { padding: 26px 0; cursor: pointer; font-size: 18px; font-weight: 800; }
+.sourceBody { padding: 6px 0 34px; }
+.sourceBody > p { max-width: 760px; color: #6a6254; font-size: 13px; line-height: 1.85; }
+.sourceBody > div { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 25px; }
+.sourceBody a { padding: 14px; border: 1px solid rgba(69, 58, 41, .2); font-size: 12px; }
+.sourceBody a span { display: block; margin-top: 8px; color: #877b68; font-size: 9px; }
+
+.footer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 40px;
+  padding: 60px 54px;
+  color: #f8efdc;
+  background: #9f4b2f;
+}
+
+.footer span { font-family: var(--font-geist-mono), monospace; font-size: 10px; letter-spacing: .15em; }
+.footer p { max-width: 680px; margin: 18px 0 0; font-size: 21px; line-height: 1.6; }
+.footer > a { padding-bottom: 5px; border-bottom: 1px solid rgba(255,255,255,.55); font-size: 11px; }
+
+.desk a:focus-visible,
+.desk summary:focus-visible {
+  outline: 3px solid #f0b867;
+  outline-offset: 5px;
+}
+
+@media (max-width: 900px) {
+  .coverGrid,
+  .sectionIntro,
+  .contingency,
+  .mapKit { grid-template-columns: 1fr; gap: 42px; }
+  .coverCopy { padding-right: 8%; }
+  .photoBlock { width: min(600px, 92%); justify-self: center; }
+  .foodHeading { grid-template-columns: 1fr; gap: 22px; }
+  .foodGrid { grid-template-columns: 1fr; }
+  .foodCard { min-height: 390px; }
+  .mapNote { grid-column: 1; }
+}
+
+@media (max-width: 680px) {
+  .desk { padding: 0; }
+  .cover,
+  .schedule,
+  .foodSection,
+  .contingency,
+  .mapKit,
+  .sources { padding-left: 20px; padding-right: 20px; }
+  .cover { padding-top: 22px; }
+  .topbar { align-items: flex-start; flex-direction: column; gap: 13px; }
+  .coverGrid { padding-top: 50px; }
+  .coverCopy h1 { font-size: 72px; }
+  .lead { font-size: 14px; }
+  .photoBlock { width: 100%; }
+  .routeTape { align-items: flex-start; flex-direction: column; gap: 8px; margin-top: 36px; }
+  .firstRule { grid-template-columns: 1fr; margin: 0 20px; gap: 18px; }
+  .schedule,
+  .foodSection,
+  .contingency,
+  .mapKit { padding-top: 76px; padding-bottom: 76px; }
+  .sectionIntro h2,
+  .foodHeading h2,
+  .contingency h2,
+  .mapKit h2 { font-size: 46px; }
+  .timelineItem { grid-template-columns: 1fr; }
+  .timeColumn { display: flex; justify-content: space-between; padding: 24px 0 14px; border-right: 0; }
+  .timeColumn span { margin: 0; }
+  .timelineBody { padding: 0 0 26px; }
+  .timelineBody h3 { font-size: 18px; }
+  .foodCard { min-height: 430px; padding: 25px 20px; }
+  .noteStack article { grid-template-columns: 1fr; gap: 10px; }
+  .mapActions,
+  .sourceBody > div { grid-template-columns: 1fr; }
+  .footer { align-items: flex-start; flex-direction: column; padding: 48px 20px; }
+  .footer p { font-size: 18px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mapActions a { transition: none; }
+}

@@ -1,0 +1,249 @@
+{
+ "trip": "关西 2026 · Day 1 大阪抵达日",
+ "lang": "zh",
+ "tz": "Asia/Tokyo",
+ "meta": {
+  "dates": "2026-09-29",
+  "route": "KIX → 难波 → 心斋桥 → 道顿堀 → 法善寺横丁",
+  "generated": "2026-09-02",
+  "self_check": "自检：按到达日低体力规则排程；未安排预约项目；所有交通时刻保留为范围。"
+ },
+ "decisions": [
+  "14:00 落地后预留 80 分钟完成入境、行李和移动到机场站，不追固定班次。",
+  "第一晚只走酒店附近的免费街区，21:05 左右收工，为次日 USJ 留体力。",
+  "晚餐首选道顿堀今井的热汤面；排队超过 30 分钟就切换为千日前章鱼烧与附近简餐。"
+ ],
+ "checklist": [
+  {
+   "item": "落地后查看下一班南海 Rapi:t / 空港急行",
+   "deadline": "2026-09-29 出关后",
+   "link": "https://www.nankai.co.jp/en_railway/access-timetable",
+   "note": "Rapi:t 最快约 34 分钟；空港急行约 45 分钟。不要在航班落地前锁死某一班。"
+  },
+  {
+   "item": "复查道顿堀今井当天营业状态",
+   "deadline": "2026-09-27",
+   "link": "https://tabelog.com/en/osaka/A2701/A270202/27001289/",
+   "note": "2026-09-02 查询：周二通常营业，当前公示 11:30–21:30；临时变更以店方为准。"
+  }
+ ],
+ "legs": [
+  {
+   "type": "机场铁路",
+   "date": "2026-09-29",
+   "carrier": "南海电铁",
+   "from": "关西机场",
+   "to": "南海难波",
+   "dep": "约 15:40，出关后取下一班",
+   "arr": "约 16:25",
+   "price": "—，现场或官方页确认",
+   "bags": "列车设有行李空间；注意保管随身物品",
+   "link": "https://www.nankai.co.jp/en_railway/access-fromkix",
+   "backup": "空港急行约 45 分钟，无需特急券"
+  }
+ ],
+ "days": [
+  {
+   "date": "2026-09-29",
+   "tz": "Asia/Tokyo",
+   "city": "大阪 · 难波 / 心斋桥",
+   "label": "落地以后，慢慢走进大阪的夜",
+   "sun_stop": "戎桥·道顿堀",
+   "walking_km": {
+    "total": 3.4,
+    "how": "地图点间步行约 2.2 km × 1.3，加心斋桥筋与河畔自由散步约 0.5 km"
+   },
+   "ribbon": "KIX →南海约 35–45′→ 难波 →放行李→ 心斋桥筋 →道顿堀晚餐→ 戎桥夜景 →法善寺横丁 →酒店",
+   "rain_alt": "全程缩短为心斋桥筋商店街 + 道顿堀今井；取消河畔停留，法善寺仅快速经过。",
+   "late_cut": "晚点超过 1 小时：先删心斋桥购物，再删戎桥河畔停留；保留热饭、法善寺与早睡。",
+   "timeline": [
+    {
+     "t": "14:00–15:20",
+     "what": "关西机场落地 · 入境、取行李、洗手间与补水",
+     "kind": "anchor",
+     "note": "航班到达时间按现有行程；80 分钟是到达日缓冲，不是机场承诺。",
+     "tag": "pinned"
+    },
+    {
+     "t": "15:20–15:40",
+     "what": "步行到关西机场站 · 现场比较下一班 Rapi:t 与空港急行",
+     "kind": "free",
+     "note": "不为赶指定列车压缩入境流程。"
+    },
+    {
+     "t": "15:40–16:25",
+     "what": "南海电铁 关西机场→南海难波 · Rapi:t 最快约34分 / 空港急行约45分",
+     "kind": "hop",
+     "verify": "est",
+     "link": "https://www.google.com/maps/dir/?api=1&origin=34.435900%2C135.243500&destination=34.663700%2C135.501100&travelmode=transit"
+    },
+    {
+     "t": "16:25–16:40",
+     "what": "步行 南海难波→酒店放行李 约0.4 km · 10分(+找入口缓冲)",
+     "kind": "hop",
+     "verify": "est",
+     "link": "https://www.google.com/maps/dir/?api=1&origin=34.663700%2C135.501100&destination=34.667600%2C135.501200&travelmode=walking"
+    },
+    {
+     "t": "16:40–17:35",
+     "what": "入住、冲澡、换鞋并休息",
+     "kind": "free",
+     "note": "酒店尚未锁定；页面以难波 / 心斋桥住宿区为中心。",
+     "tag": "pinned"
+    },
+    {
+     "t": "17:35–17:50",
+     "what": "步行 酒店放行李→心斋桥筋 约0.8 km · 12分(+过街缓冲)",
+     "kind": "hop",
+     "verify": "est",
+     "link": "https://www.google.com/maps/dir/?api=1&origin=34.667600%2C135.501200&destination=34.674800%2C135.501200&travelmode=walking"
+    },
+    {
+     "t": "17:50–18:30",
+     "what": "心斋桥筋商店街 · 药妆与基础补给",
+     "kind": "free",
+     "note": "只买当晚必需品，不在第一天做大宗比价。",
+     "tag": "skippable"
+    },
+    {
+     "t": "18:30–18:45",
+     "what": "步行 心斋桥筋→道顿堀今井 约0.8 km · 12分(+找店缓冲)",
+     "kind": "hop",
+     "verify": "est",
+     "link": "https://www.google.com/maps/dir/?api=1&origin=34.674800%2C135.501200&destination=34.668700%2C135.502500&travelmode=walking"
+    },
+    {
+     "t": "18:45–19:40",
+     "what": "晚餐 · 道顿堀今井本店",
+     "kind": "meal",
+     "price": "约 ¥1,000–1,999",
+     "note": "推荐狐狸乌冬或亲子丼；热汤、节奏轻，适合飞行后。排队 >30 分钟就改去わなか千日前本店吃章鱼烧，再在附近补一份主食。",
+     "tag": "swap→わなか千日前本店"
+    },
+    {
+     "t": "19:40–19:50",
+     "what": "步行 道顿堀今井→戎桥·道顿堀 约0.3 km · 5分(+拍照缓冲)",
+     "kind": "hop",
+     "verify": "est",
+     "link": "https://www.google.com/maps/dir/?api=1&origin=34.668700%2C135.502500&destination=34.668700%2C135.501300&travelmode=walking"
+    },
+    {
+     "t": "19:50–20:20",
+     "what": "戎桥与道顿堀川 · 看霓虹倒影",
+     "kind": "free",
+     "note": "不搭船、不排项目，累了随时结束。",
+     "tag": "skippable"
+    },
+    {
+     "t": "20:20–20:30",
+     "what": "步行 戎桥·道顿堀→法善寺横丁 约0.4 km · 7分(+巷口缓冲)",
+     "kind": "hop",
+     "verify": "est",
+     "link": "https://www.google.com/maps/dir/?api=1&origin=34.668700%2C135.501300&destination=34.667900%2C135.502700&travelmode=walking"
+    },
+    {
+     "t": "20:30–20:50",
+     "what": "法善寺横丁 · 石板路与水挂不动尊",
+     "kind": "anchor",
+     "price": "免费",
+     "note": "街巷无需预约；店铺营业日各异。保持安静，不影响参拜。",
+     "tag": "skippable"
+    },
+    {
+     "t": "20:50–21:05",
+     "what": "步行 法善寺横丁→今晚住宿 约0.6 km · 10分(+回房缓冲)",
+     "kind": "hop",
+     "verify": "est",
+     "link": "https://www.google.com/maps/dir/?api=1&origin=34.667900%2C135.502700&destination=34.667600%2C135.501200&travelmode=walking"
+    },
+    {
+     "t": "21:05 之后",
+     "what": "回房补水、整理 USJ 随身包，早点睡",
+     "kind": "free",
+     "tag": "pinned"
+    }
+   ],
+   "stops": [
+    {
+     "name": "关西机场",
+     "lat": 34.4359,
+     "lon": 135.2435
+    },
+    {
+     "name": "南海难波",
+     "lat": 34.6637,
+     "lon": 135.5011,
+     "mode": "train"
+    },
+    {
+     "name": "酒店放行李",
+     "lat": 34.6676,
+     "lon": 135.5012
+    },
+    {
+     "name": "心斋桥筋",
+     "lat": 34.6748,
+     "lon": 135.5012
+    },
+    {
+     "name": "道顿堀今井",
+     "lat": 34.6687,
+     "lon": 135.5025
+    },
+    {
+     "name": "戎桥·道顿堀",
+     "lat": 34.6687,
+     "lon": 135.5013
+    },
+    {
+     "name": "法善寺横丁",
+     "lat": 34.6679,
+     "lon": 135.5027
+    },
+    {
+     "name": "今晚住宿",
+     "lat": 34.6676,
+     "lon": 135.5012
+    }
+   ],
+   "sun": "天亮 05:25 · ☀ 05:49 / 🌇 17:47 · JST · sunrise-sunset.org"
+  }
+ ],
+ "brief": {
+  "holidays": "2026-09-29 不是日本法定节假日；相邻的敬老日为 09-21、秋分日为 09-23（Nager.Date，2026-09-02 查询）。",
+  "weather": "接近出发时再看逐小时预报；第一晚已提供全商店街雨备。",
+  "connectivity": "Google Maps 在日本可用；另下载大阪离线地图与本页 KML。"
+ },
+ "sources": [
+  {
+   "title": "南海电铁 · 关西机场到难波",
+   "url": "https://www.nankai.co.jp/en_railway/access-fromkix",
+   "as_of": "2026-09-02"
+  },
+  {
+   "title": "大阪官方旅游 · Minami 模范路线",
+   "url": "https://osaka-info.jp/en/modelcourse/course-enjoy-minami/",
+   "as_of": "2026-09-02"
+  },
+  {
+   "title": "大阪官方旅游 · 法善寺横丁",
+   "url": "https://www.osaka-info.jp/en/spot/hozenji-yokocho/",
+   "as_of": "2026-09-02"
+  },
+  {
+   "title": "Tabelog · 道顿堀今井本店",
+   "url": "https://tabelog.com/en/osaka/A2701/A270202/27001289/",
+   "as_of": "2026-09-02"
+  },
+  {
+   "title": "Tabelog · わなか千日前本店",
+   "url": "https://tabelog.com/osaka/A2701/A270202/27002320/",
+   "as_of": "2026-09-02"
+  }
+ ],
+ "unverified": [
+  "酒店尚未确定，因此酒店步行距离按难波 / 心斋桥住宿区估算；订房后要重跑地图。",
+  "航班到达时间沿用现有行程的 14:00；若机票时刻变化，整条时间线顺延。",
+  "精确南海班次和票价以 2026-09-29 出关后的官方实时信息为准。"
+ ]
+}

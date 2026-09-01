@@ -1,3 +1,4 @@
+import Link from "next/link";
 import TripMap from "./TripMap";
 
 export const dynamic = "force-static";
@@ -296,6 +297,11 @@ export default function Home() {
                 <p className="route-line">{item.route}</p>
                 <p className="transit-line"><span>交通耗时</span>{item.transit}</p>
                 <p>{item.note}</p>
+                {index === 0 && (
+                  <Link className="day-detail-link" href="/day-1">
+                    打开第一天手账 <span>↗</span>
+                  </Link>
+                )}
               </div>
             </article>
           ))}
