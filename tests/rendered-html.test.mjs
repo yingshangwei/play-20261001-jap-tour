@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 async function render(pathname = "/") {
@@ -23,8 +24,8 @@ test("server-renders the Kansai travel guide", async () => {
   assert.match(html, /09\.29 — 10\.07/);
   assert.match(html, /城阳秋花火/);
   assert.match(html, /大阪 4晚 · 京都 3晚 · 大阪 1晚/);
-  assert.match(html, /南海 Rapi:t \/ 机场急行/);
-  assert.match(html, /交通耗时/);
+  assert.match(html, /南海 Rapi:t／空港急行/);
+  assert.match(html, /交通摘要/);
   assert.match(html, /真实地图/);
   assert.match(html, /OpenStreetMap/);
   assert.match(html, /Google Maps/);
@@ -33,8 +34,8 @@ test("server-renders the Kansai travel guide", async () => {
   assert.match(html, /全部日期/);
   assert.match(html, /10月4日/);
   assert.match(html, /相邻两点 Google Maps 导航/);
-  assert.match(html, /两点导航/);
-  assert.match(html, /整段路线/);
+  assert.match(html, /首末班约束/);
+  assert.match(html, /无法乘坐时的备用方案/);
   assert.match(html, /料理屋まえかわ/);
   assert.match(html, /Mouriya Honten/);
   assert.match(html, /Google Maps 4\.8 · 16,590 条评价/);
@@ -53,6 +54,19 @@ test("server-renders the Kansai travel guide", async () => {
   assert.doesNotMatch(html, /彩色虚线|行程先后顺序/);
   assert.doesNotMatch(html, /09\.28|十日关西/);
   assert.doesNotMatch(html, /codex-preview|SkeletonPreview/);
+});
+
+test("covers every consecutive itinerary leg with transit guidance", async () => {
+  const source = await readFile(new URL("../app/transitData.ts", import.meta.url), "utf8");
+  assert.equal(source.match(/\[key\("/g)?.length, 44);
+  assert.equal(source.match(/suggestedTime: "/g)?.length, 44);
+  assert.equal(source.match(/duration: "/g)?.length, 44);
+  assert.equal(source.match(/route: "/g)?.length, 44);
+  assert.equal(source.match(/fallback: "/g)?.length, 44);
+  assert.match(source, /最早班次/);
+  assert.match(source, /最晚班次/);
+  assert.match(source, /JR 长池/);
+  assert.match(source, /京都巴士 33 路/);
 });
 
 test("server-renders the Day 1 Osaka journal", async () => {
