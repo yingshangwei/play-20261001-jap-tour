@@ -100,8 +100,17 @@ a:focus-visible { outline: 3px solid var(--gold); outline-offset: 5px; border-ra
 .spot-dot { background: var(--moss); }
 .restaurant-dot { background: var(--orange); }
 .stay-dot { background: var(--gold); }
+.map-arrow-state { margin-left: auto; padding: 5px 9px; border: 1px solid rgba(22,35,30,.16); border-radius: 999px; background: var(--cream); font-weight: 800; }
+.map-arrow-state.state-visible { color: #fff; border-color: var(--moss); background: var(--moss); }
+.map-arrow-state.state-zoom { color: #7a4b15; border-color: rgba(213,157,47,.55); background: #fff4d8; }
 .leaflet-map { z-index: 0; width: 100%; height: 650px; background: #dfe9e5; overscroll-behavior: contain; touch-action: none; }
 .leaflet-map .leaflet-control-attribution { font-size: 9px; }
+.trip-route-arrow-wrap { border: 0; background: transparent; pointer-events: none; }
+.trip-route-arrow { display: block; overflow: visible; transform-origin: center; filter: drop-shadow(0 2px 2px rgba(22,35,30,.16)); }
+.trip-route-arrow-halo, .trip-route-arrow-stroke { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.trip-route-arrow-halo { stroke: rgba(255,253,248,.94); stroke-width: 10; }
+.trip-route-arrow-stroke { stroke: var(--ink); stroke-width: 5; }
+.trip-route-arrow marker path { fill: var(--ink); }
 .trip-marker-wrap { border: 0; background: transparent; }
 .trip-marker { display: grid; place-items: center; width: 34px; height: 34px; border: 3px solid rgba(255,253,248,.95); border-radius: 50%; color: #fff; background: var(--moss); box-shadow: 0 5px 16px rgba(22,35,30,.28); font-size: 11px; font-weight: 900; transition: transform .2s ease; }
 .trip-marker:hover { transform: translateY(-2px) scale(1.08); }
@@ -132,7 +141,9 @@ a:focus-visible { outline: 3px solid var(--gold); outline-offset: 5px; border-ra
 .day-segment-title { display: flex; align-items: flex-start; justify-content: space-between; gap: 22px; margin-bottom: 18px; }
 .day-segment-title strong { font: 600 16px Georgia, "Noto Serif SC", serif; }
 .day-segment-title p { margin: 6px 0 0; color: var(--muted); font-size: 10px; line-height: 1.6; }
-.day-segment-title > a { flex: 0 0 auto; padding: 8px 10px; border: 1px solid var(--line); border-radius: 6px; color: var(--moss); background: var(--cream); font-size: 10px; font-weight: 900; }
+.day-segment-actions { flex: 0 0 auto; display: flex; align-items: center; gap: 8px; }
+.day-segment-actions > span { padding: 5px 8px; border-radius: 999px; color: var(--muted); background: #eee8dc; font-size: 9px; font-weight: 900; }
+.day-segment-actions > a { padding: 8px 10px; border: 1px solid var(--line); border-radius: 6px; color: var(--moss); background: var(--cream); font-size: 10px; font-weight: 900; }
 .day-flow { display: flex; align-items: stretch; gap: 0; overflow-x: auto; overscroll-behavior-inline: contain; padding-bottom: 6px; scrollbar-width: thin; }
 .day-flow-step { flex: 0 0 auto; display: flex; align-items: center; }
 .day-stop { position: relative; width: 164px; min-height: 102px; padding: 15px 13px 12px 43px; display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: 8px; background: var(--cream); transition: transform .2s ease, border-color .2s ease; }
@@ -144,6 +155,7 @@ a:focus-visible { outline: 3px solid var(--gold); outline-offset: 5px; border-ra
 .day-arrow { width: 78px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--orange); font: 28px Georgia, serif; }
 .day-arrow small { margin-top: 3px; color: var(--muted); font: 800 8px "Noto Sans SC", sans-serif; white-space: nowrap; }
 .day-arrow:hover small { color: var(--orange); }
+.day-arrow.mode-transit { color: var(--moss); }
 .google-route-strip { display: flex; gap: 8px; padding: 0 18px 18px; overflow-x: auto; scrollbar-width: thin; }
 .google-route-strip a { flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: space-between; gap: 14px; min-width: 155px; padding: 11px 12px; color: var(--ink); background: #f4efe4; border: 1px solid var(--line); border-radius: 7px; font-size: 10px; font-weight: 800; transition: transform .2s ease, border-color .2s ease; }
 .google-route-strip a:hover { transform: translateY(-2px); border-color: var(--orange); }
@@ -396,6 +408,7 @@ footer { padding: 75px 0; color: #fffaf0; background: var(--ink); }
   .map-date-heading { align-items: center; flex-direction: row; justify-content: space-between; }
   .map-date-scroller { width: calc(100vw - 28px); }
   .real-legend { gap: 13px; padding-inline: 14px; }
+  .map-arrow-state { width: 100%; margin-left: 0; justify-content: center; }
   .leaflet-map { height: 560px; }
   .map-disclaimer { padding-inline: 14px; }
   .day-route-header { align-items: flex-start; flex-direction: column; gap: 10px; padding-inline: 14px; }
@@ -404,6 +417,7 @@ footer { padding: 75px 0; color: #fffaf0; background: var(--ink); }
   .day-route-header small { text-align: left; }
   .day-segment { padding: 20px 14px; }
   .day-segment-title { align-items: flex-start; flex-direction: column; gap: 12px; }
+  .day-segment-actions { width: 100%; justify-content: space-between; }
   .day-flow { width: calc(100vw - 28px); }
   .day-stop { width: 152px; min-height: 98px; }
   .day-arrow { width: 64px; }
