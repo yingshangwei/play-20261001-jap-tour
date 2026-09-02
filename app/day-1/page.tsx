@@ -1,7 +1,15 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import type { CSSProperties } from "react";
 import plan from "@/travel-plans/day-1-osaka.plan.geo.json";
 import styles from "./page.module.css";
+
+export const dynamic = "force-static";
+
+const repositoryName = process.env.GITHUB_REPOSITORY?.split("/")[1] ?? "play-20261001-jap-tour";
+const publicBasePath = process.env.GITHUB_ACTIONS === "true" ? `/${repositoryName}` : "";
+const journalArtStyle = {
+  "--day-one-journal-art": `url("${publicBasePath}/day-1-journal-collage.png")`,
+} as CSSProperties;
 
 export const metadata: Metadata = {
   title: "第一夜，大阪｜关西 2026 Day 1",
@@ -76,7 +84,7 @@ export default function DayOnePage() {
       <article className={styles.journal}>
         <header className={styles.cover}>
           <nav className={styles.topbar} aria-label="第一天页面导航">
-            <Link href="/">← 返回九日总行程</Link>
+            <a href="./">← 返回九日总行程</a>
             <span>DAY 01 · 2026.09.29 · TUE</span>
           </nav>
 
@@ -102,6 +110,7 @@ export default function DayOnePage() {
                 className={styles.heroImage}
                 role="img"
                 aria-label="大阪抵达夜手账拼贴图片位"
+                style={journalArtStyle}
               />
               <figcaption>
                 图片位：<code>public/day-1-journal-collage.png</code>
@@ -220,7 +229,7 @@ export default function DayOnePage() {
             <a href={mapSearch("Shinsaibashi-suji Shopping Street")} target="_blank" rel="noreferrer">03 · 心斋桥筋 ↗</a>
             <a href={mapSearch("Dotonbori Osaka")} target="_blank" rel="noreferrer">04 · 道顿堀 ↗</a>
             <a href={mapSearch("Hozenji Yokocho Osaka")} target="_blank" rel="noreferrer">05 · 法善寺横丁 ↗</a>
-            <a href="/downloads/day-1-osaka.kml" download>下载 Day 1 离线 KML ↓</a>
+            <a href="./downloads/day-1-osaka.kml" download>下载 Day 1 离线 KML ↓</a>
           </div>
           <p className={styles.mapNote}>KML 可导入 Organic Maps；Google Maps 离线区域不支持离线公交换乘。</p>
         </section>
@@ -249,7 +258,7 @@ export default function DayOnePage() {
             <span>DAY 01 / 09.29</span>
             <p>回房补水，整理 USJ 随身包。大阪的第一晚，到这里就够了。</p>
           </div>
-          <Link href="/">回到九日总行程 ↑</Link>
+          <a href="./">回到九日总行程 ↑</a>
         </footer>
       </article>
     </main>

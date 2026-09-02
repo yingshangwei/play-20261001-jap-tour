@@ -52,6 +52,16 @@ jobs:
             cp "$exported_index" dist/client/index.html
           fi
 
+          if [ ! -f "dist/client/day-1.html" ]; then
+            echo "Day 1 static page was not generated"
+            find dist/client -maxdepth 2 -type f -print
+            exit 1
+          fi
+          if ! grep -q 'href="./day-1.html"' dist/client/index.html; then
+            echo "Home page does not link to the exported Day 1 page"
+            exit 1
+          fi
+
           repository_name="${GITHUB_REPOSITORY#*/}"
           nested_assets="dist/client/${repository_name}/_next"
           if [ -d "$nested_assets" ]; then
