@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import type { Map as LeafletMap, Marker } from "leaflet";
+import type { LayerGroup, Map as LeafletMap, Marker } from "leaflet";
 
 type Area = "kansai" | "osaka" | "kobe" | "kyoto" | "nara";
 type Category = "all" | "spot" | "restaurant" | "stay";
@@ -23,7 +23,10 @@ type MapPoint = {
   official?: string;
 };
 
-type DaySegment = { label: string; note: string; pointIds: string[] };
+type TransportMode = "walking" | "transit";
+type DaySegment = { label: string; note: string; pointIds: string[]; mode: TransportMode; drawOnMap?: boolean };
+
+const ROUTE_ARROW_MIN_ZOOM = 12;
 
 const spots: MapPoint[] = [
   { id: "kix", name: "关西国际机场", area: "kansai", category: "spot", position: [34.4359, 135.2435], dates: ["09.29", "10.07"], meta: "抵达 / 返程", googleQuery: "Kansai International Airport" },
@@ -82,26 +85,42 @@ const allPoints = [...spots, ...restaurantPoints];
 const pointById = new Map(allPoints.map((point) => [point.id, point]));
 
 const daySegments: Record<ItineraryDate, DaySegment[]> = {
-  "09.29": [{ label: "难波夜行", note: "机场进城属于跨区域交通，不在这里画箭头。", pointIds: ["shinsaibashi", "dotonbori", "hozenji"] }],
-  "09.30": [{ label: "USJ 全天", note: "园内项目顺序随排队时间调整，以 USJ App 为准。", pointIds: ["usj"] }],
-  "10.01": [{ label: "大阪南区慢行", note: "10:30 后再开始；任何一站觉得累都可以直接回难波。", pointIds: ["kuromon", "shitennoji", "tennoji-park", "shinsekai", "den-den-town"] }],
+  "09.29": [
+    { label: "机场进城", note: "抵达日从关西机场前往大阪住宿；这是跨区域交通，不在地图上画箭头。", pointIds: ["kix", "osaka-stay"], mode: "transit" },
+    { label: "难波夜行 · 回到住宿", note: "住宿点目前是难波／心斋桥区域中心，实际酒店确定后再校准首尾步行距离。", pointIds: ["osaka-stay", "shinsaibashi", "dotonbori", "hozenji", "osaka-stay"], mode: "walking", drawOnMap: true },
+  ],
+  "09.30": [{ label: "住宿往返 USJ", note: "从大阪住宿出发，闭园后回到同一住宿；园内项目顺序随排队时间调整，以 USJ App 为准。", pointIds: ["osaka-stay", "usj", "osaka-stay"], mode: "transit" }],
+  "10.01": [{ label: "大阪南区慢行 · 住宿闭环", note: "10:30 后再开始；わなか作为回难波途中的顺路小吃，任何一站觉得累都可以提前回住宿。", pointIds: ["osaka-stay", "kuromon", "shitennoji", "tennoji-park", "shinsekai", "den-den-town", "wanaka", "osaka-stay"], mode: "walking", drawOnMap: true }],
   "10.02": [
-    { label: "神户山侧", note: "缆车上山、一路向下，不在坡道间来回折返。", pointIds: ["nunobiki", "kitano"] },
-    { label: "三宫午餐", note: "Mouriya 建议预约；餐后再向海港移动。", pointIds: ["mouriya"] },
-    { label: "神户港", note: "美利坚公园步行到 Harborland，看完日落回大阪。", pointIds: ["meriken", "harborland"] },
+    { label: "大阪前往神户", note: "从大阪住宿出发前往布引；跨城段只提供公共交通导航，不画地图箭头。", pointIds: ["osaka-stay", "nunobiki"], mode: "transit" },
+    { label: "神户山海顺行", note: "缆车上山后一路向下，经北野与 Mouriya 午餐走向港区，不在坡道间来回折返。", pointIds: ["nunobiki", "kitano", "mouriya", "meriken", "harborland"], mode: "walking", drawOnMap: true },
+    { label: "神户返回大阪", note: "看完日落后返回大阪住宿，形成完整住宿往返。", pointIds: ["harborland", "osaka-stay"], mode: "transit" },
   ],
-  "10.03": [{ label: "岚山核心 · 不追清单", note: "竹林只短停，天龙寺与河岸才是主体验；不追加猴子公园和小火车。", pointIds: ["arashiyama-bamboo", "tenryuji", "togetsukyo"] }],
+  "10.03": [
+    { label: "大阪退房 → 岚山", note: "移动日从大阪住宿退房后前往岚山，大件行李已提前寄往京都。", pointIds: ["osaka-stay", "arashiyama-bamboo"], mode: "transit" },
+    { label: "岚山核心 · 不追清单", note: "竹林只短停，天龙寺与河岸才是主体验；不追加猴子公园和小火车。", pointIds: ["arashiyama-bamboo", "tenryuji", "togetsukyo"], mode: "walking", drawOnMap: true },
+    { label: "岚山 → 京都住宿", note: "游览结束后先入住京都站附近住宿并休息。", pointIds: ["togetsukyo", "kyoto-stay"], mode: "transit" },
+    { label: "京都晚餐后回住宿", note: "料理屋まえかわ是正式晚餐首选；酒店地址未定，暂不在地图上画住宿连线。", pointIds: ["kyoto-stay", "maekawa", "kyoto-stay"], mode: "transit" },
+  ],
   "10.04": [
-    { label: "京都东山", note: "哲学之道留足 60–75 分钟，南禅寺结束后直接转往宇治。", pointIds: ["philosopher", "nanzenji"] },
-    { label: "宇治", note: "只保留平等院、茶歇与河岸；凤凰堂内部排队过长就跳过。", pointIds: ["byodoin", "nakamura-uji", "uji-river"] },
-    { label: "城阳", note: "跨城去 JR 长池不画箭头；16:00 左右抵达会场。", pointIds: ["joyo"] },
+    { label: "住宿 → 京都东山", note: "从京都住宿前往哲学之道；酒店只是区域中心点，因此只提供公共交通导航。", pointIds: ["kyoto-stay", "philosopher"], mode: "transit" },
+    { label: "京都东山", note: "哲学之道留足 60–75 分钟，南禅寺结束后直接转往宇治。", pointIds: ["philosopher", "nanzenji"], mode: "walking", drawOnMap: true },
+    { label: "东山 → 宇治", note: "跨片区转往宇治，不在地图上用长线连接。", pointIds: ["nanzenji", "byodoin"], mode: "transit" },
+    { label: "宇治", note: "只保留平等院、茶歇与河岸；凤凰堂内部排队过长就跳过。", pointIds: ["byodoin", "nakamura-uji", "uji-river"], mode: "walking", drawOnMap: true },
+    { label: "城阳烟火 → 返回住宿", note: "从宇治前往 JR 长池，16:00 左右抵达会场；烟火散场后回京都住宿。", pointIds: ["uji-river", "joyo", "kyoto-stay"], mode: "transit" },
   ],
-  "10.05": [{ label: "贵船神社三社", note: "贵船神社不可删除；晴雨都走本宫、奥宫、结社，鞍马翻山仅作现场加码。", pointIds: ["kifune", "kifune-okumiya", "kifune-yui"] }],
+  "10.05": [
+    { label: "住宿 → 贵船", note: "从京都住宿搭铁路与巴士前往贵船；跨区域段不画地图箭头。", pointIds: ["kyoto-stay", "kifune"], mode: "transit" },
+    { label: "贵船神社三社", note: "贵船神社不可删除；晴雨都走本宫、奥宫、结社，鞍马翻山仅作现场加码。", pointIds: ["kifune", "kifune-okumiya", "kifune-yui"], mode: "walking", drawOnMap: true },
+    { label: "贵船 → 返回住宿", note: "午餐和河畔休息后原路返回京都住宿。", pointIds: ["kifune-yui", "kyoto-stay"], mode: "transit" },
+  ],
   "10.06": [
-    { label: "京都南 · 伏见", note: "清晨只走到奥社奉拜所，不登稻荷山；之后沿 JR 奈良线继续南下。", pointIds: ["fushimi-inari"] },
-    { label: "奈良公园 · 只留核心", note: "大件行李已寄往大阪；春日大社结束后坐巴士回近铁奈良站。", pointIds: ["todaiji", "nigatsudo", "mizuya", "kasuga"] },
+    { label: "京都退房 → 伏见", note: "从京都住宿退房后清晨前往伏见稻荷；大件行李已提前寄往大阪。", pointIds: ["kyoto-stay", "fushimi-inari"], mode: "transit" },
+    { label: "伏见 → 奈良", note: "伏见只走到奥社奉拜所、不登稻荷山，随后沿 JR 奈良线继续南下。", pointIds: ["fushimi-inari", "todaiji"], mode: "transit" },
+    { label: "奈良公园 · 只留核心", note: "东大寺、二月堂、林间午餐和春日大社连续步行；结束后坐巴士回近铁奈良站。", pointIds: ["todaiji", "nigatsudo", "mizuya", "kasuga"], mode: "walking", drawOnMap: true },
+    { label: "奈良 → 大阪住宿", note: "傍晚返回大阪并入住，移动日从京都住宿开始、以大阪住宿结束。", pointIds: ["kasuga", "osaka-stay"], mode: "transit" },
   ],
-  "10.07": [],
+  "10.07": [{ label: "住宿 → 关西机场", note: "从大阪住宿出发，约 09:00 抵达关西机场。", pointIds: ["osaka-stay", "kix"], mode: "transit" }],
 };
 
 const dayTitles: Record<ItineraryDate, string> = {
@@ -122,8 +141,8 @@ const dateOptions: Array<[DateFilter, string]> = [
 ];
 
 function googleSearch(query: string) { return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`; }
-function googleDirections(origin: string, destination: string, waypoints: string[] = []) {
-  const base = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}&travelmode=walking`;
+function googleDirections(origin: string, destination: string, waypoints: string[] = [], mode: TransportMode = "walking") {
+  const base = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}&travelmode=${mode}`;
   return waypoints.length ? `${base}&waypoints=${encodeURIComponent(waypoints.join("|"))}` : base;
 }
 function popupHtml(point: MapPoint) {
@@ -133,10 +152,10 @@ function popupHtml(point: MapPoint) {
 }
 function orderForPoint(date: DateFilter, pointId: string) {
   if (date === "all") return null;
-  const orderedSpotIds = daySegments[date]
+  const orderedPointIds = daySegments[date]
     .flatMap((segment) => segment.pointIds)
-    .filter((id) => pointById.get(id)?.category === "spot");
-  const index = orderedSpotIds.indexOf(pointId);
+    .filter((id, index, ids) => pointById.get(id)?.category !== "stay" && ids.indexOf(id) === index);
+  const index = orderedPointIds.indexOf(pointId);
   return index >= 0 ? index + 1 : null;
 }
 
@@ -145,13 +164,15 @@ export default function TripMap() {
   const mapInstance = useRef<LeafletMap | null>(null);
   const leafletRef = useRef<typeof import("leaflet") | null>(null);
   const markerEntries = useRef<Array<{ marker: Marker; point: MapPoint }>>([]);
+  const arrowLayer = useRef<LayerGroup | null>(null);
   const [category, setCategory] = useState<Category>("all");
   const [area, setArea] = useState<Area>("kansai");
   const [selectedDate, setSelectedDate] = useState<DateFilter>("all");
+  const [arrowState, setArrowState] = useState<"idle" | "zoom" | "visible">("idle");
 
   function buildIcon(L: typeof import("leaflet"), point: MapPoint, date: DateFilter) {
-    const order = point.category === "spot" ? orderForPoint(date, point.id) : null;
-    const symbol = point.category === "restaurant" ? "食" : point.category === "stay" ? "住" : order ?? "景";
+    const order = point.category === "stay" ? null : orderForPoint(date, point.id);
+    const symbol = point.category === "stay" ? "住" : order ?? (point.category === "restaurant" ? "食" : "景");
     return L.divIcon({ className: "trip-marker-wrap", html: `<span class="trip-marker marker-${point.category}${order ? " marker-ordered" : ""}">${symbol}</span>`, iconSize: [34, 34], iconAnchor: [17, 17], popupAnchor: [0, -15] });
   }
 
@@ -163,7 +184,11 @@ export default function TripMap() {
       if (disposed || !mapElement.current) return;
       leafletRef.current = L;
       const map = L.map(mapElement.current, { zoomControl: true, scrollWheelZoom: true, touchZoom: true, wheelPxPerZoomLevel: 72 });
+      const routeArrowPane = map.createPane("routeArrowPane");
+      routeArrowPane.style.zIndex = "590";
+      routeArrowPane.style.pointerEvents = "none";
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19, attribution: "&copy; OpenStreetMap contributors" }).addTo(map);
+      arrowLayer.current = L.layerGroup().addTo(map);
       markerEntries.current = allPoints.map((point) => {
         const marker = L.marker(point.position, { icon: buildIcon(L, point, "all"), title: point.name }).bindPopup(popupHtml(point), { maxWidth: 275 });
         marker.addTo(map);
@@ -174,7 +199,7 @@ export default function TripMap() {
       window.setTimeout(() => map.invalidateSize(), 80);
     }
     setupMap();
-    return () => { disposed = true; mapInstance.current?.remove(); mapInstance.current = null; leafletRef.current = null; markerEntries.current = []; };
+    return () => { disposed = true; mapInstance.current?.remove(); mapInstance.current = null; leafletRef.current = null; markerEntries.current = []; arrowLayer.current = null; };
   }, []);
 
   useEffect(() => {
@@ -192,6 +217,60 @@ export default function TripMap() {
     if (selectedDate !== "all" && visiblePositions.length > 0) map.fitBounds(visiblePositions, { padding: [58, 58], maxZoom: 14 });
   }, [category, selectedDate]);
 
+  useEffect(() => {
+    const map = mapInstance.current;
+    const L = leafletRef.current;
+    const layer = arrowLayer.current;
+    if (!map || !L || !layer) return;
+
+    function redrawRouteArrows() {
+      layer.clearLayers();
+      if (selectedDate === "all") {
+        setArrowState("idle");
+        return;
+      }
+      if (map.getZoom() < ROUTE_ARROW_MIN_ZOOM) {
+        setArrowState("zoom");
+        return;
+      }
+
+      let arrowCount = 0;
+      const viewport = map.getBounds().pad(0.18);
+      daySegments[selectedDate].filter((segment) => segment.drawOnMap).forEach((segment, segmentIndex) => {
+        const segmentPoints = segment.pointIds.map((id) => pointById.get(id)).filter((point): point is MapPoint => Boolean(point));
+        segmentPoints.slice(0, -1).forEach((point, pointIndex) => {
+          const nextPoint = segmentPoints[pointIndex + 1];
+          const categoryMatches = (candidate: MapPoint) => category === "all" || candidate.category === category;
+          if (!categoryMatches(point) || !categoryMatches(nextPoint)) return;
+          if (!viewport.contains(point.position) || !viewport.contains(nextPoint.position)) return;
+
+          const start = map.latLngToContainerPoint(point.position);
+          const end = map.latLngToContainerPoint(nextPoint.position);
+          const distance = start.distanceTo(end);
+          if (distance < 34) return;
+
+          const width = Math.min(Math.max(distance + 50, 84), 1100);
+          const height = 76;
+          const centerPoint = L.point((start.x + end.x) / 2, (start.y + end.y) / 2);
+          const center = map.containerPointToLatLng(centerPoint);
+          const rotation = Math.atan2(end.y - start.y, end.x - start.x) * 180 / Math.PI;
+          const bend = (segmentIndex + pointIndex) % 2 === 0 ? 15 : -15;
+          const markerId = `route-arrow-${selectedDate.replace(".", "-")}-${segmentIndex}-${pointIndex}`;
+          const path = `M 23 38 Q ${Math.round(width / 2)} ${38 + bend} ${width - 27} 38`;
+          const html = `<svg class="trip-route-arrow" viewBox="0 0 ${width} ${height}" width="${width}" height="${height}" style="transform:rotate(${rotation}deg)" aria-hidden="true"><defs><marker id="${markerId}" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="9" markerHeight="9" orient="auto"><path d="M 0 0 L 12 6 L 0 12 Z" /></marker></defs><path class="trip-route-arrow-halo" d="${path}"/><path class="trip-route-arrow-stroke" d="${path}" marker-end="url(#${markerId})"/></svg>`;
+          const icon = L.divIcon({ className: "trip-route-arrow-wrap", html, iconSize: [width, height], iconAnchor: [width / 2, height / 2] });
+          L.marker(center, { icon, interactive: false, keyboard: false, pane: "routeArrowPane" }).addTo(layer);
+          arrowCount += 1;
+        });
+      });
+      setArrowState(arrowCount > 0 ? "visible" : "zoom");
+    }
+
+    redrawRouteArrows();
+    map.on("zoomend moveend resize", redrawRouteArrows);
+    return () => { map.off("zoomend moveend resize", redrawRouteArrows); layer.clearLayers(); };
+  }, [category, selectedDate]);
+
   function focusArea(nextArea: Area) { setArea(nextArea); mapInstance.current?.fitBounds(areaBounds[nextArea], { padding: [24, 24] }); }
   const visiblePointCount = allPoints.filter((point) => (category === "all" || point.category === category) && (selectedDate === "all" || point.dates.includes(selectedDate))).length;
   const visibleRestaurants = selectedDate === "all" ? restaurantPoints : restaurantPoints.filter((restaurant) => restaurant.dates.includes(selectedDate));
@@ -207,22 +286,23 @@ export default function TripMap() {
         <div className="map-date-heading"><strong>按日期</strong><span aria-live="polite">{selectedDate === "all" ? `全程 · ${visiblePointCount} 个点位` : `${selectedDate} · ${visiblePointCount} 个点位`}</span></div>
         <div className="map-date-scroller" aria-label="地图日期筛选">{dateOptions.map(([value, label]) => <button className={selectedDate === value ? "active" : ""} type="button" key={value} aria-pressed={selectedDate === value} onClick={() => setSelectedDate(value)}><small>{value === "all" ? "全程" : value}</small><span>{label}</span></button>)}</div>
       </div>
-      <div className="map-legend real-legend" aria-label="地图图例"><span><i className="real-legend-dot spot-dot" />景点</span><span><i className="real-legend-dot restaurant-dot" />餐厅</span><span><i className="real-legend-dot stay-dot" />住宿</span><span>日期筛选后，景点数字就是当天顺序</span></div>
+      <div className="map-legend real-legend" aria-label="地图图例"><span><i className="real-legend-dot spot-dot" />景点</span><span><i className="real-legend-dot restaurant-dot" />餐厅</span><span><i className="real-legend-dot stay-dot" />住宿</span><span>日期筛选后，行程内景点和餐厅按顺序编号</span><span className={`map-arrow-state state-${arrowState}`}>{arrowState === "idle" ? "选中某天后显示片区箭头" : arrowState === "visible" ? "片区箭头已显示" : "继续放大到片区查看箭头"}</span></div>
       <div className="leaflet-map" ref={mapElement} aria-label="关西景点、住宿与餐厅交互地图" />
-      <p className="map-disclaimer">底图使用 OpenStreetMap；地图上不再连接节点，区域内顺序改在下方用箭头表达。双指滚动或捏合可缩放地图，点击标记可打开 Google Maps。</p>
+      <p className="map-disclaimer">底图使用 OpenStreetMap；选中某天并放大到片区后，粗黑弧形箭头表示当天区域内的游览顺序。跨城交通不画长线，住宿首尾和每一段真实导航都在下方列出。双指滚动或捏合可缩放地图，点击标记可打开 Google Maps。</p>
 
       <section className="day-route-detail" aria-label="当天详细行程">
         {selectedDate === "all" ? <div className="day-route-empty"><strong>选择上方某一天</strong><p>即可查看区域内的详细顺序、相邻两点导航，以及当天整段路线的 Google Maps 跳转。</p></div> : (
           <>
             <div className="day-route-header"><div><span>{selectedDate}</span><h3>{dayTitles[selectedDate]}</h3></div><small>箭头本身可以点击，直接打开相邻两点 Google Maps 导航</small></div>
-            {selectedSegments.length === 0 ? <p className="day-route-none">返程日不再安排景点，请直接前往关西机场。</p> : selectedSegments.map((segment) => {
+            {selectedSegments.map((segment) => {
               const segmentPoints = segment.pointIds.map((id) => pointById.get(id)).filter((point): point is MapPoint => Boolean(point));
-              const wholeRoute = segmentPoints.length > 1 ? googleDirections(segmentPoints[0].googleQuery, segmentPoints.at(-1)!.googleQuery, segmentPoints.slice(1, -1).map((point) => point.googleQuery)) : null;
+              const isClosedTransitLoop = segment.mode === "transit" && segmentPoints[0]?.id === segmentPoints.at(-1)?.id;
+              const wholeRoute = segmentPoints.length > 1 && !isClosedTransitLoop ? googleDirections(segmentPoints[0].googleQuery, segmentPoints.at(-1)!.googleQuery, segmentPoints.slice(1, -1).map((point) => point.googleQuery), segment.mode) : null;
               return <article className="day-segment" key={segment.label}>
-                <div className="day-segment-title"><div><strong>{segment.label}</strong><p>{segment.note}</p></div>{wholeRoute && <a href={wholeRoute} target="_blank" rel="noreferrer">整段路线 ↗</a>}</div>
+                <div className="day-segment-title"><div><strong>{segment.label}</strong><p>{segment.note}</p></div><div className="day-segment-actions"><span>{segment.mode === "walking" ? "步行片区" : "公共交通"}</span>{wholeRoute && <a href={wholeRoute} target="_blank" rel="noreferrer">整段路线 ↗</a>}</div></div>
                 <div className="day-flow">{segmentPoints.map((point, index) => <div className="day-flow-step" key={point.id}>
-                  <a className={`day-stop stop-${point.category}`} href={googleSearch(point.googleQuery)} target="_blank" rel="noreferrer"><b>{index + 1}</b><span>{point.name}</span><small>{point.meta}</small></a>
-                  {index < segmentPoints.length - 1 && <a className="day-arrow" href={googleDirections(point.googleQuery, segmentPoints[index + 1].googleQuery)} target="_blank" rel="noreferrer" aria-label={`从${point.name}前往${segmentPoints[index + 1].name}`}>→<small>两点导航 ↗</small></a>}
+                  <a className={`day-stop stop-${point.category}`} href={googleSearch(point.googleQuery)} target="_blank" rel="noreferrer"><b>{point.category === "stay" ? "住" : orderForPoint(selectedDate, point.id) ?? index + 1}</b><span>{point.name}</span><small>{point.meta}</small></a>
+                  {index < segmentPoints.length - 1 && <a className={`day-arrow mode-${segment.mode}`} href={googleDirections(point.googleQuery, segmentPoints[index + 1].googleQuery, [], segment.mode)} target="_blank" rel="noreferrer" aria-label={`从${point.name}前往${segmentPoints[index + 1].name}`}>→<small>{segment.mode === "walking" ? "步行导航" : "公共交通"} ↗</small></a>}
                 </div>)}</div>
               </article>;
             })}
