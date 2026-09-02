@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { LayerGroup, Map as LeafletMap, Marker } from "leaflet";
+import { getTransitLeg } from "./transitData";
 
 type Area = "kansai" | "osaka" | "kobe" | "kyoto" | "nara";
 type Category = "all" | "spot" | "restaurant" | "stay";
@@ -122,6 +123,12 @@ const daySegments: Record<ItineraryDate, DaySegment[]> = {
   ],
   "10.07": [{ label: "住宿 → 关西机场", note: "从大阪住宿出发，约 09:00 抵达关西机场。", pointIds: ["osaka-stay", "kix"], mode: "transit" }],
 };
+
+const missingTransitLegs = Object.entries(daySegments).flatMap(([date, segments]) => segments.flatMap((segment) => segment.pointIds.slice(0, -1).flatMap((fromId, index) => {
+  const toId = segment.pointIds[index + 1];
+  return getTransitLeg(date, fromId, toId) ? [] : [`${date}:${fromId}>${toId}`];
+})));
+if (missingTransitLegs.length > 0) throw new Error(`Missing transit details: ${missingTransitLegs.join(", ")}`);
 
 const dayTitles: Record<ItineraryDate, string> = {
   "09.29": "抵达大阪 · 只走难波夜线", "09.30": "USJ 全天", "10.01": "USJ 后的轻松大阪", "10.02": "神户山海一日",
@@ -291,19 +298,50 @@ export default function TripMap() {
       <p className="map-disclaimer">底图使用 OpenStreetMap；选中某天并放大到片区后，粗黑弧形箭头表示当天区域内的游览顺序。跨城交通不画长线，住宿首尾和每一段真实导航都在下方列出。双指滚动或捏合可缩放地图，点击标记可打开 Google Maps。</p>
 
       <section className="day-route-detail" aria-label="当天详细行程">
-        {selectedDate === "all" ? <div className="day-route-empty"><strong>选择上方某一天</strong><p>即可查看区域内的详细顺序、相邻两点导航，以及当天整段路线的 Google Maps 跳转。</p></div> : (
+        {selectedDate === "all" ? <div className="day-route-empty"><strong>选择上方某一天</strong><p>即可查看当天每一次地点更换的推荐方式、线路、建议时间、首末班约束与无法乘坐时的备用方案。</p></div> : (
           <>
-            <div className="day-route-header"><div><span>{selectedDate}</span><h3>{dayTitles[selectedDate]}</h3></div><small>箭头本身可以点击，直接打开相邻两点 Google Maps 导航</small></div>
+            <div className="day-route-header"><div><span>{selectedDate}</span><h3>{dayTitles[selectedDate]}</h3></div><small>每一段都可打开 Google Maps；公共交通卡另附运营方时刻入口</small></div>
+            <div className="transit-audit-note">
+              <strong>班次核对说明</strong>
+              <p>时刻资料核对于 2026-09-02。酒店地址尚未锁定，住宿相关步行与接驳时间均为区域估算；临时停运、活动加开车与 10 月换季时刻仍需在出发前两周及当天复查。</p>
+            </div>
             {selectedSegments.map((segment) => {
               const segmentPoints = segment.pointIds.map((id) => pointById.get(id)).filter((point): point is MapPoint => Boolean(point));
+              const segmentLegs = segmentPoints.slice(0, -1).map((from, index) => ({
+                from,
+                to: segmentPoints[index + 1],
+                detail: getTransitLeg(selectedDate, from.id, segmentPoints[index + 1].id),
+              }));
               const isClosedTransitLoop = segment.mode === "transit" && segmentPoints[0]?.id === segmentPoints.at(-1)?.id;
               const wholeRoute = segmentPoints.length > 1 && !isClosedTransitLoop ? googleDirections(segmentPoints[0].googleQuery, segmentPoints.at(-1)!.googleQuery, segmentPoints.slice(1, -1).map((point) => point.googleQuery), segment.mode) : null;
               return <article className="day-segment" key={segment.label}>
-                <div className="day-segment-title"><div><strong>{segment.label}</strong><p>{segment.note}</p></div><div className="day-segment-actions"><span>{segment.mode === "walking" ? "步行片区" : "公共交通"}</span>{wholeRoute && <a href={wholeRoute} target="_blank" rel="noreferrer">整段路线 ↗</a>}</div></div>
+                <div className="day-segment-title"><div><strong>{segment.label}</strong><p>{segment.note}</p></div><div className="day-segment-actions"><span>{segmentLegs.length} 段交通</span>{wholeRoute && <a href={wholeRoute} target="_blank" rel="noreferrer">整段路线 ↗</a>}</div></div>
                 <div className="day-flow">{segmentPoints.map((point, index) => <div className="day-flow-step" key={point.id}>
                   <a className={`day-stop stop-${point.category}`} href={googleSearch(point.googleQuery)} target="_blank" rel="noreferrer"><b>{point.category === "stay" ? "住" : orderForPoint(selectedDate, point.id) ?? index + 1}</b><span>{point.name}</span><small>{point.meta}</small></a>
                   {index < segmentPoints.length - 1 && <a className={`day-arrow mode-${segment.mode}`} href={googleDirections(point.googleQuery, segmentPoints[index + 1].googleQuery, [], segment.mode)} target="_blank" rel="noreferrer" aria-label={`从${point.name}前往${segmentPoints[index + 1].name}`}>→<small>{segment.mode === "walking" ? "步行导航" : "公共交通"} ↗</small></a>}
                 </div>)}</div>
+                <div className="day-leg-grid">
+                  {segmentLegs.map(({ from, to, detail }, index) => {
+                    const directionsMode = detail?.kind === "步行" ? "walking" : "transit";
+                    return <div className={`day-leg-card ${detail?.kind === "步行" ? "leg-walk" : "leg-transit"}`} key={`${from.id}-${to.id}`}>
+                      <div className="day-leg-heading">
+                        <span>{String(index + 1).padStart(2, "0")}</span>
+                        <strong>{from.name} <i>→</i> {to.name}</strong>
+                        <em>{detail?.kind ?? "待补"}</em>
+                      </div>
+                      {detail ? <>
+                        <div className="day-leg-facts"><span><b>建议</b>{detail.suggestedTime}</span><span><b>耗时</b>{detail.duration}</span></div>
+                        <p className="day-leg-route"><b>怎么走</b>{detail.route}</p>
+                        {detail.serviceBoundary && <p className={`day-leg-boundary boundary-${detail.serviceBoundary.label === "最晚班次" ? "last" : detail.serviceBoundary.label === "最早班次" ? "first" : "reference"}`}><b>{detail.serviceBoundary.label}</b>{detail.serviceBoundary.detail}</p>}
+                        <p className="day-leg-fallback"><b>无法乘坐 / 行走</b>{detail.fallback}</p>
+                        <div className="day-leg-links">
+                          <a href={googleDirections(from.googleQuery, to.googleQuery, [], directionsMode)} target="_blank" rel="noreferrer">Google Maps 导航 ↗</a>
+                          {detail.sources?.map((source) => <a href={source.href} target="_blank" rel="noreferrer" key={source.href}>{source.label} ↗</a>)}
+                        </div>
+                      </> : <p className="day-leg-missing">这段交通资料缺失，请暂时使用 Google Maps 导航并在出发前核对。</p>}
+                    </div>;
+                  })}
+                </div>
               </article>;
             })}
           </>
