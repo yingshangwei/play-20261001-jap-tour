@@ -29,7 +29,8 @@ const NUNOBIKI_HOURS = "https://www.kobeherb.com/en/hours-of-operation-and-fares
 const KOBE_SUBWAY_SANNOMIYA = "https://kotsu.city.kobe.lg.jp/subway/timetable1/sannomiya/";
 const JR_KOBE = "https://timetable.jr-odekake.net/station-timetable/2809012001?date=20261002";
 const OSAKA_METRO_UMEDA = "https://subway.osakametro.co.jp/station_guide/M/m16/index.php";
-const JR_SAGA_ARASHIYAMA = "https://timetable.jr-odekake.net/train-timetable/5471?date=20261003";
+const JR_KYOTO_SAGA = "https://timetable.jr-odekake.net/train-timetable/23671?date=20261003";
+const JR_SAGA_ARASHIYAMA = "https://timetable.jr-odekake.net/train-timetable/260841?date=20261003";
 const MAEKAWA_ACCESS = "https://ryouriya-maekawa.com/access.html";
 const KYOTO_BUS_7 = "https://www2.city.kyoto.lg.jp/kotsu/busdia/hyperdia/06121202.htm";
 const KYOTO_SUBWAY = "https://www2.city.kyoto.lg.jp/kotsu/tikadia/hyperdia/menu0221.htm";
@@ -189,30 +190,39 @@ export const transitLegs: Record<string, TransitLegBase> = {
     ],
   },
 
-  [key("10.03", "osaka-stay", "arashiyama-bamboo")]: {
+  [key("10.03", "osaka-stay", "kyoto-stay")]: {
     kind: "铁路",
-    suggestedTime: "07:50 退房",
+    suggestedTime: "08:15 带箱退房",
     duration: "约 75–90 分钟",
-    route: "大阪 Metro 御堂筋线：难波 → 梅田；步行到阪急大阪梅田，搭京都线特急到桂，换阪急岚山线到岚山，再步行 15–20 分钟到竹林。",
-    serviceBoundary: { label: "最早班次", detail: "按难波区域估算，约 05:15 起可组成完整换乘；酒店地址确定后再核对首个可衔接班次。" },
-    fallback: "阪急异常时改 JR：大阪 → 京都 → 嵯峨岚山；若大件行李未成功前送，先寄存在阪急岚山／JR 嵯峨岚山站。",
+    route: "大阪 Metro 御堂筋线：难波 → 梅田；步行到 JR 大阪站，搭 JR 京都线新快速到京都，再直接步行到京都站附近酒店前台交箱。行李只在两个住宿点之间移动。",
+    serviceBoundary: { label: "班次参考", detail: "大阪到京都白天班次密集；酒店地址未定，按 09:45–10:00 到京都酒店估算，并额外留 20 分钟前台交接。" },
+    fallback: "JR 京都线异常时，从难波到新大阪后换东海道新干线到京都；箱子三边合计超过 160 cm 时需预订带特大行李空间的座位。若京都酒店不接受入住前行李，应在订房阶段换酒店，不改用车站寄存。",
+  },
+  [key("10.03", "kyoto-stay", "arashiyama-bamboo")]: {
+    kind: "铁路",
+    suggestedTime: "10:05 离开前台；目标京都站 10:27 JR",
+    duration: "约 35–45 分钟",
+    route: "从京都站附近酒店轻装步行回站，搭 JR 嵯峨野线普通：10:27 京都 → 10:44 嵯峨岚山，再步行约 10–15 分钟到竹林。",
+    serviceBoundary: { label: "班次参考", detail: "10:27→10:44 已按 10/3 周六 JR 官方时刻核对；错过后约 10:42、10:57 仍有普通列车，但要压缩渡月桥河岸时间。" },
+    fallback: "JR 临时异常时，从京都地铁四条站步行到阪急乌丸，搭阪急京都线到桂换岚山线；不要取回已经交给酒店的大箱。",
+    sources: [{ label: "JR 京都→嵯峨岚山 10/3", href: JR_KYOTO_SAGA }],
   },
   [key("10.03", "arashiyama-bamboo", "tenryuji")]: {
-    kind: "步行", suggestedTime: "10:10", duration: "约 5–8 分钟",
+    kind: "步行", suggestedTime: "11:25", duration: "约 5–8 分钟",
     route: "从竹林主路经天龙寺北门进入庭园，避免绕回岚山大街。",
     fallback: "北门临时关闭时沿竹林小径回长辻通，从天龙寺正门进入。",
   },
   [key("10.03", "tenryuji", "togetsukyo")]: {
-    kind: "步行", suggestedTime: "11:45", duration: "约 10–12 分钟",
+    kind: "步行", suggestedTime: "13:00", duration: "约 10–12 分钟",
     route: "从天龙寺正门沿长辻通向南到渡月桥与桂川河岸。",
     fallback: "雨大或人流太密时在天龙寺门口打车到 JR 嵯峨岚山，直接结束岚山段。",
   },
   [key("10.03", "togetsukyo", "kyoto-stay")]: {
     kind: "铁路",
-    suggestedTime: "14:00 离开河岸；目标 14:31 JR",
+    suggestedTime: "14:35 离开河岸；目标 15:02 JR",
     duration: "约 35–45 分钟",
     route: "步行 12–15 分钟到 JR 嵯峨岚山，搭 JR 嵯峨野线直达京都站，再步行到酒店。",
-    serviceBoundary: { label: "班次参考", detail: "10/3 优先搭 14:31 JR 嵯峨岚山 → 14:49 京都；若提前到站可搭 14:17 → 14:34。" },
+    serviceBoundary: { label: "班次参考", detail: "10/3 优先搭 15:02 JR 嵯峨岚山 → 15:20 京都；错过可搭 15:16 → 15:34，但酒店休息时间会缩短。" },
     fallback: "JR 异常时从阪急岚山到桂换京都线至乌丸，再换京都地铁乌丸线到京都站。",
     sources: [{ label: "JR 嵯峨岚山 10/3 时刻", href: JR_SAGA_ARASHIYAMA }],
   },
@@ -505,32 +515,38 @@ const transitTimings: Record<string, TransitTiming> = {
   [key("10.02", "harborland", "osaka-stay")]: {
     departurePlan: "Harborland｜19:15；约 19:30 到 JR 神户站",
     arrivalPlan: "大阪／梅田约 20:10｜酒店约 20:30–20:45",
-    stayPlan: "回店后只整理次日随身包；大件行李已前送京都",
+    stayPlan: "回店后完成换宿打包；大箱次日只随人前往京都酒店",
     timingStatus: "预计时间",
   },
 
-  [key("10.03", "osaka-stay", "arashiyama-bamboo")]: {
-    departurePlan: "大阪酒店｜07:50 退房，仅带随身包",
-    arrivalPlan: "阪急岚山约 09:20｜竹林约 09:35–09:40",
-    stayPlan: "竹林只停留 30 分钟；10:10 前往天龙寺",
+  [key("10.03", "osaka-stay", "kyoto-stay")]: {
+    departurePlan: "大阪酒店｜08:15 带大箱退房，直接前往新住宿",
+    arrivalPlan: "京都站约 09:30–09:45｜京都酒店约 09:45–10:00",
+    stayPlan: "前台交箱或预办理约 15–20 分钟；10:05 前轻装离开",
     timingStatus: "预计时间",
   },
+  [key("10.03", "kyoto-stay", "arashiyama-bamboo")]: {
+    departurePlan: "京都酒店｜10:05 离开前台；京都站 10:27 JR",
+    arrivalPlan: "JR 嵯峨岚山 10:44｜竹林约 10:55",
+    stayPlan: "竹林只停留 30 分钟；11:25 前往天龙寺",
+    timingStatus: "部分核实",
+  },
   [key("10.03", "arashiyama-bamboo", "tenryuji")]: {
-    departurePlan: "竹林｜10:10 出发",
-    arrivalPlan: "天龙寺北门约 10:15",
-    stayPlan: "庭园与寺院约 90 分钟；11:45 离开",
+    departurePlan: "竹林｜11:25 出发",
+    arrivalPlan: "天龙寺北门约 11:30",
+    stayPlan: "庭园与寺院约 90 分钟；13:00 离开",
     timingStatus: "预计时间",
   },
   [key("10.03", "tenryuji", "togetsukyo")]: {
-    departurePlan: "天龙寺｜11:45 出发",
-    arrivalPlan: "渡月桥／桂川约 12:00",
-    stayPlan: "河岸与午餐约 2 小时；14:00 去 JR 站",
+    departurePlan: "天龙寺｜13:00 出发",
+    arrivalPlan: "渡月桥／桂川约 13:15",
+    stayPlan: "午餐与河岸约 80 分钟；14:35 去 JR 站",
     timingStatus: "预计时间",
   },
   [key("10.03", "togetsukyo", "kyoto-stay")]: {
-    departurePlan: "渡月桥｜14:00；目标 JR 嵯峨岚山 14:31",
-    arrivalPlan: "京都站 14:49｜京都酒店约 15:05–15:20",
-    stayPlan: "入住并休息约 2 小时 30 分；17:45 再赴晚餐",
+    departurePlan: "渡月桥｜14:35；目标 JR 嵯峨岚山 15:02",
+    arrivalPlan: "京都站 15:20｜京都酒店约 15:30",
+    stayPlan: "取房、确认大箱并休息约 2 小时 15 分；17:45 再赴晚餐",
     timingStatus: "部分核实",
   },
   [key("10.03", "kyoto-stay", "maekawa")]: {

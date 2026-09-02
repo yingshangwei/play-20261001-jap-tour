@@ -74,6 +74,18 @@ a:focus-visible { outline: 3px solid var(--gold); outline-offset: 5px; border-ra
 .overview span { color: #7d887f; font-size: 12px; letter-spacing: .08em; }
 .overview strong { font-family: Georgia, "Noto Serif SC", serif; font-size: 20px; font-weight: 500; }
 
+.luggage-plan { padding: 108px 0 25px; }
+.luggage-plan-heading { display: grid; grid-template-columns: .42fr 1fr; gap: 50px; align-items: start; margin-bottom: 52px; }
+.luggage-plan-heading h2 { margin: 0; font: 500 clamp(42px, 5.4vw, 74px)/1.08 Georgia, "Noto Serif SC", serif; letter-spacing: -.04em; }
+.luggage-plan-heading > div:last-child > p { max-width: 720px; margin: 26px 0 0; color: var(--muted); font-size: 14px; line-height: 1.85; }
+.luggage-plan-grid { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+.luggage-plan-grid article { min-height: 345px; padding: 28px; display: flex; flex-direction: column; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); background: rgba(255,253,248,.42); }
+.luggage-plan-grid article > span { color: var(--orange); font: italic 21px Georgia, serif; }
+.luggage-plan-grid article > small { margin-top: 8px; color: #7d887f; font-size: 10px; font-weight: 800; letter-spacing: .08em; }
+.luggage-plan-grid h3 { margin: 44px 0 16px; font: 600 22px/1.35 Georgia, "Noto Serif SC", serif; }
+.luggage-plan-grid p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.8; }
+.luggage-plan-grid a { margin-top: auto; padding-top: 24px; color: var(--orange); font-size: 11px; font-weight: 900; }
+
 .map-section { padding: 128px 0 50px; scroll-margin-top: 20px; }
 .map-heading { display: grid; grid-template-columns: .42fr 1fr; gap: 50px; align-items: start; margin-bottom: 55px; }
 .map-heading h2 { margin: 0; font: 500 clamp(42px, 5.4vw, 74px)/1.08 Georgia, "Noto Serif SC", serif; letter-spacing: -.04em; }
@@ -408,7 +420,9 @@ footer { padding: 75px 0; color: #fffaf0; background: var(--ink); }
   .route-sequence strong { margin: 0; }
   .route-sequence small { grid-column: 2; }
   .restaurant-pin-grid { grid-template-columns: repeat(2, 1fr); }
-  .feature-grid, .detours, .practical { grid-template-columns: 1fr; gap: 55px; }
+  .feature-grid, .detours, .practical, .luggage-plan-heading { grid-template-columns: 1fr; gap: 55px; }
+  .luggage-plan-grid { grid-template-columns: 1fr; }
+  .luggage-plan-grid article { min-height: 285px; }
   .reference-grid { grid-template-columns: repeat(2, 1fr); }
   .booking-grid { grid-template-columns: 1fr; }
   .booking-card { min-height: 370px; }
@@ -430,6 +444,11 @@ footer { padding: 75px 0; color: #fffaf0; background: var(--ink); }
   .sun-disc { right: -120px; bottom: -70px; width: 300px; height: 300px; font-size: 43px; }
   .overview { grid-template-columns: 1fr; margin-top: -28px; }
   .overview article { min-height: 108px; padding: 25px; border-right: 0; border-bottom: 1px solid var(--line); }
+  .luggage-plan { padding: 82px 0 5px; }
+  .luggage-plan-heading { gap: 34px; }
+  .luggage-plan-heading h2 { font-size: 43px; }
+  .luggage-plan-grid { border-left: 0; }
+  .luggage-plan-grid article { min-height: 270px; padding: 24px 20px; }
   .map-section { width: 100%; padding: 90px 0 20px; }
   .map-heading { width: min(100% - 28px, 1160px); margin-inline: auto; }
   .map-heading h2 { font-size: 43px; }

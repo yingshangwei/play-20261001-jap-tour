@@ -51,7 +51,13 @@ test("server-renders the Kansai travel guide", async () => {
   assert.match(html, /水谷茶屋/);
   assert.match(html, /布引香草园/);
   assert.match(html, /神户保留：从山景走到海港/);
-  assert.match(html, /退房后直达岚山，再入住京都/);
+  assert.match(html, /先把行李交给京都酒店，再轻装去岚山/);
+  assert.match(html, /两次换宿 · 零次带大箱游览/);
+  assert.match(html, /箱子先到位/);
+  assert.match(html, /人再轻装出发/);
+  assert.match(html, /09:45–10:05 京都酒店交箱/);
+  assert.match(html, /宅急便酒店到酒店行李规则/);
+  assert.match(html, /不使用伏见或奈良寄存柜/);
   assert.match(html, /哲学之道、宇治川与秋日烟火/);
   assert.match(html, /贵船神社是硬约束/);
   assert.match(html, /永观堂/);
@@ -67,15 +73,15 @@ test("server-renders the Kansai travel guide", async () => {
 
 test("covers every consecutive itinerary leg with transit guidance", async () => {
   const source = await readFile(new URL("../app/transitData.ts", import.meta.url), "utf8");
-  assert.equal(source.match(/^ {4}kind: "/gm)?.length, 44);
-  assert.equal(source.match(/suggestedTime: "/g)?.length, 44);
-  assert.equal(source.match(/duration: "/g)?.length, 44);
-  assert.equal(source.match(/route: "/g)?.length, 44);
-  assert.equal(source.match(/fallback: "/g)?.length, 44);
-  assert.equal(source.match(/departurePlan: "/g)?.length, 44);
-  assert.equal(source.match(/arrivalPlan: "/g)?.length, 44);
-  assert.equal(source.match(/stayPlan: "/g)?.length, 44);
-  assert.equal(source.match(/^ {4}timingStatus: "/gm)?.length, 44);
+  assert.equal(source.match(/^ {4}kind: "/gm)?.length, 45);
+  assert.equal(source.match(/suggestedTime: "/g)?.length, 45);
+  assert.equal(source.match(/duration: "/g)?.length, 45);
+  assert.equal(source.match(/route: "/g)?.length, 45);
+  assert.equal(source.match(/fallback: "/g)?.length, 45);
+  assert.equal(source.match(/departurePlan: "/g)?.length, 45);
+  assert.equal(source.match(/arrivalPlan: "/g)?.length, 45);
+  assert.equal(source.match(/stayPlan: "/g)?.length, 45);
+  assert.equal(source.match(/^ {4}timingStatus: "/gm)?.length, 45);
   assert.match(source, /最早班次/);
   assert.match(source, /最晚班次/);
   assert.match(source, /JR 长池/);

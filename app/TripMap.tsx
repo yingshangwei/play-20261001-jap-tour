@@ -49,7 +49,7 @@ const spots: MapPoint[] = [
   { id: "meriken", name: "美利坚公园", area: "kobe", category: "spot", position: [34.6826, 135.1871], dates: ["10.02"], meta: "港口散步与地标建筑", googleQuery: "Meriken Park Kobe" },
   { id: "harborland", name: "神户 Harborland", area: "kobe", category: "spot", position: [34.6796, 135.1789], dates: ["10.02"], meta: "看日落后回大阪", googleQuery: "Kobe Harborland" },
 
-  { id: "arashiyama-bamboo", name: "岚山竹林小径", area: "kyoto", category: "spot", position: [35.017, 135.6713], dates: ["10.03"], meta: "09:40–10:10 · 只留 30 分钟", googleQuery: "Arashiyama Bamboo Forest Kyoto", guide: "Google Maps 4.4 · 约 2.4 万条评价", fit: "最常见负面反馈是拥挤且主路很短；到达后拍照即走，不把它当半日主景点。" },
+  { id: "arashiyama-bamboo", name: "岚山竹林小径", area: "kyoto", category: "spot", position: [35.017, 135.6713], dates: ["10.03"], meta: "10:55–11:25 · 只留 30 分钟", googleQuery: "Arashiyama Bamboo Forest Kyoto", guide: "Google Maps 4.4 · 约 2.4 万条评价", fit: "先把行李交给京都酒店再来；午前客流会比清晨多，因此拍照后即走，不把它当半日主景点。" },
   { id: "tenryuji", name: "天龙寺庭园", area: "kyoto", category: "spot", position: [35.0158, 135.6738], dates: ["10.03"], meta: "08:30 开门 · 岚山主景点", googleQuery: "Tenryu-ji Kyoto", guide: "Google Maps 4.5 · 约 1.7 万条评价", fit: "庭园体验比竹林更完整，且可从北门自然衔接竹林。", official: "https://www.tenryuji.com/en/visit/index.html" },
   { id: "togetsukyo", name: "渡月桥・桂川", area: "kyoto", category: "spot", position: [35.0135, 135.6778], dates: ["10.03"], meta: "河岸休息 · 看山景", googleQuery: "Togetsukyo Bridge Kyoto", guide: "Google Maps 4.5", fit: "与天龙寺同一核心区，作为午后低强度收尾，不追加猴子公园爬坡。" },
 
@@ -76,7 +76,7 @@ export const restaurantPoints: MapPoint[] = [
   { id: "rikimaru", name: "焼肉力丸 なんば千日前店", area: "osaka", category: "restaurant", position: [34.6669, 135.5038], dates: ["09.29", "10.01", "10.06"], meta: "烧肉 · ¥4,000–6,000", googleQuery: "Yakiniku Rikimaru Sennichimae Osaka", guide: "Google Maps 4.8 · 16,590 条评价", fit: "难波核心区、评论量大；想轻松吃烧肉时比长套餐更灵活。", fitLevel: "备选", official: "https://handafood.jp/rikimaru/" },
   { id: "mouriya", name: "モーリヤ本店 / Mouriya Honten", area: "kobe", category: "restaurant", position: [34.693119, 135.191193], dates: ["10.02"], meta: "神户牛排 · ¥10,000+", googleQuery: "Mouriya Honten Kobe", guide: "Google Maps 4.6 · 约 1,800 条评价", fit: "北野下坡到三宫后最顺路，作为本次第 2 顿可预约正餐。", fitLevel: "预订型", official: "https://www.mouriya.co.jp/en/head" },
   { id: "katsukura", name: "名代とんかつ かつくら 三条本店", area: "kyoto", category: "restaurant", position: [35.0086, 135.7675], dates: ["10.03", "10.05"], meta: "炸猪排 · ¥2,000–3,000", googleQuery: "Katsukura Tonkatsu Sanjo Main Store", guide: "Google Maps 4.5 · 2,339 条评价", fit: "岚山或贵船回城后的高评论量晚餐备选，不要求长套餐。", fitLevel: "备选", official: "https://www.katsukura.jp/" },
-  { id: "maekawa", name: "料理屋まえかわ", area: "kyoto", category: "restaurant", position: [34.99826, 135.767593], dates: ["10.03"], meta: "日本料理 · ¥10,000+", googleQuery: "料理屋まえかわ 京都", guide: "Google Maps 4.7 · 50 条评价", fit: "本次正式餐首选；岚山 14:00 左右结束，入住并休息后赴约。", fitLevel: "预订型", official: "https://ryouriya-maekawa.com/" },
+  { id: "maekawa", name: "料理屋まえかわ", area: "kyoto", category: "restaurant", position: [34.99826, 135.767593], dates: ["10.03"], meta: "日本料理 · ¥10,000+", googleQuery: "料理屋まえかわ 京都", guide: "Google Maps 4.7 · 50 条评价", fit: "本次正式餐首选；15:30 左右回到京都酒店，休息后赴 18:30 固定晚餐。", fitLevel: "预订型", official: "https://ryouriya-maekawa.com/" },
   { id: "nakamura-uji", name: "中村藤吉 平等院店", area: "kyoto", category: "restaurant", position: [34.891473, 135.80664], dates: ["10.04"], meta: "茶餐与甜品 · ¥1,000–2,000", googleQuery: "Nakamura Tokichi Byodoin Uji", guide: "Google Maps 4.3 · 2,352 条评价", fit: "平等院表参道上，去宇治川前休息；排队长就外带。", fitLevel: "顺路", official: "https://www.tokichi.jp/" },
   { id: "mizuya", name: "水谷茶屋", area: "nara", category: "restaurant", position: [34.683491, 135.846791], dates: ["10.06"], meta: "日式简餐 · ¥1,000–2,000", googleQuery: "Mizuya Chaya Nara", guide: "Google Maps 4.7 · 1,244 条评价", fit: "春日大社林间路线旁，景观和顺路程度都很好。", fitLevel: "顺路" },
   { id: "maguro-koya", name: "まぐろ小屋 / Maguro Koya", area: "nara", category: "restaurant", position: [34.68548, 135.828858], dates: ["10.06"], meta: "金枪鱼料理 · ¥2,000–3,000", googleQuery: "Maguro Koya Nara", guide: "Google Maps 4.5 · 1,451 条评价", fit: "靠近近铁奈良站，适合进景区前或返程前吃。", fitLevel: "备选" },
@@ -98,9 +98,10 @@ const daySegments: Record<ItineraryDate, DaySegment[]> = {
     { label: "神户返回大阪", note: "看完日落后返回大阪住宿，形成完整住宿往返。", pointIds: ["harborland", "osaka-stay"], mode: "transit" },
   ],
   "10.03": [
-    { label: "大阪退房 → 岚山", note: "移动日从大阪住宿退房后前往岚山，大件行李已提前寄往京都。", pointIds: ["osaka-stay", "arashiyama-bamboo"], mode: "transit" },
+    { label: "大阪酒店 → 京都酒店", note: "08:15 带箱退房，行李只在住宿点之间移动；到京都前台交箱后才开始游览。", pointIds: ["osaka-stay", "kyoto-stay"], mode: "transit" },
+    { label: "京都酒店 → 岚山", note: "前台完成交接后轻装出发，目标 10:27 JR 京都站班次。", pointIds: ["kyoto-stay", "arashiyama-bamboo"], mode: "transit" },
     { label: "岚山核心 · 不追清单", note: "竹林只短停，天龙寺与河岸才是主体验；不追加猴子公园和小火车。", pointIds: ["arashiyama-bamboo", "tenryuji", "togetsukyo"], mode: "walking", drawOnMap: true },
-    { label: "岚山 → 京都住宿", note: "游览结束后先入住京都站附近住宿并休息。", pointIds: ["togetsukyo", "kyoto-stay"], mode: "transit" },
+    { label: "岚山 → 京都住宿", note: "15:02 从嵯峨岚山返回，约 15:30 到住宿取房并休息。", pointIds: ["togetsukyo", "kyoto-stay"], mode: "transit" },
     { label: "京都晚餐后回住宿", note: "料理屋まえかわ是正式晚餐首选；酒店地址未定，暂不在地图上画住宿连线。", pointIds: ["kyoto-stay", "maekawa", "kyoto-stay"], mode: "transit" },
   ],
   "10.04": [
@@ -116,7 +117,7 @@ const daySegments: Record<ItineraryDate, DaySegment[]> = {
     { label: "贵船 → 返回住宿", note: "午餐和河畔休息后原路返回京都住宿。", pointIds: ["kifune-yui", "kyoto-stay"], mode: "transit" },
   ],
   "10.06": [
-    { label: "京都退房 → 伏见", note: "从京都住宿 08:05 退房后前往伏见稻荷；大件行李已提前寄往大阪。", pointIds: ["kyoto-stay", "fushimi-inari"], mode: "transit" },
+    { label: "京都退房 → 伏见", note: "大箱已于 10 月 4 日由京都酒店直送大阪酒店；08:05 只背两晚分装包退房。", pointIds: ["kyoto-stay", "fushimi-inari"], mode: "transit" },
     { label: "伏见 → 奈良", note: "伏见只走到奥社奉拜所、不登稻荷山，随后沿 JR 奈良线继续南下。", pointIds: ["fushimi-inari", "todaiji"], mode: "transit" },
     { label: "奈良公园 · 只留核心", note: "东大寺、二月堂、林间午餐和春日大社连续步行；结束后坐巴士回近铁奈良站。", pointIds: ["todaiji", "nigatsudo", "mizuya", "kasuga"], mode: "walking", drawOnMap: true },
     { label: "奈良 → 大阪住宿", note: "傍晚返回大阪并入住，移动日从京都住宿开始、以大阪住宿结束。", pointIds: ["kasuga", "osaka-stay"], mode: "transit" },

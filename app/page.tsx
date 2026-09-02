@@ -52,8 +52,9 @@ const days = [
     title: "神户保留：从山景走到海港",
     route: "大阪住宿 → 布引香草园 → 北野 → 神户牛午餐 → 美利坚公园 → Harborland → 大阪住宿",
     rhythm: "常规作息 · 09:30 离店",
+    luggage: "当天不换酒店；大箱留在大阪住宿，回店后再完成次日换宿打包",
     schedule: "09:30 离店 · 09:52–10:42 阪神 · 11:15–12:45 布引 · 14:00–15:30 午餐 · 20:30 回大阪",
-    note: "保留评价稳定的布引、北野与港区，删除功能较弱的生田神社短停。把 Mouriya 午餐推到 14:00，换来接近正常作息的上午；大件行李仍须在前一晚或当晨寄往京都。",
+    note: "保留评价稳定的布引、北野与港区，删除功能较弱的生田神社短停。把 Mouriya 午餐推到 14:00，换来接近正常作息的上午；大件行李整天留在大阪酒店，不带去神户。",
     transit: "09:52 大阪难波直达 10:42 神户三宫，再换地铁；返程 JR 神户线＋御堂筋线",
     tone: "nature",
   },
@@ -62,12 +63,13 @@ const days = [
     day: "周六",
     city: "京都",
     stay: "京都站附近",
-    title: "退房后直达岚山，再入住京都",
-    route: "大阪住宿退房 → 岚山竹林 → 天龙寺 → 渡月桥 → 京都入住 → 正式晚餐 → 京都住宿",
-    rhythm: "本次第 2 次早起 · 07:50 退房",
-    schedule: "07:50 退房 · 09:40–14:00 岚山 · 14:31–14:49 JR · 15:05–15:20 入住 · 18:30 正餐",
-    note: "这是除 USJ、返程外唯一一次 8 点前离店：移动日要兼顾岚山和 18:30 固定开席。竹林只留 30 分钟，主体验仍是天龙寺庭园和渡月桥；不追加猴子公园或小火车。",
-    transit: "御堂筋线＋阪急京都／岚山线进山；JR 嵯峨野线回京都站；晚餐用 JR 奈良线＋京阪本线",
+    title: "先把行李交给京都酒店，再轻装去岚山",
+    route: "大阪住宿退房 → 京都住宿交箱 → 岚山竹林 → 天龙寺 → 渡月桥 → 京都住宿休息 → 正式晚餐 → 京都住宿",
+    rhythm: "移动日 · 08:15 带箱离店",
+    luggage: "箱子只走大阪酒店→京都酒店；10:05 前台交接后，全日不再携带或寄存大件",
+    schedule: "08:15 退房 · 09:45–10:05 京都酒店交箱 · 10:27–10:44 JR · 10:55–14:35 岚山 · 15:02–15:20 JR · 15:30 回店 · 18:30 正餐",
+    note: "不再先带箱去岚山，也不依赖车站寄存。竹林只留 30 分钟，主体验仍是天龙寺庭园和渡月桥；若大阪到京都晚点，优先压缩河岸，不动 18:30 固定晚餐。",
+    transit: "御堂筋线＋JR 京都线先到京都酒店；JR 嵯峨野线往返岚山；晚餐用 JR 奈良线＋京阪本线",
     tone: "culture",
   },
   {
@@ -78,6 +80,7 @@ const days = [
     title: "哲学之道、宇治川与秋日烟火",
     route: "京都住宿 → 哲学之道 → 南禅寺・水路阁 → 平等院 → 宇治川 → 城阳秋花火 → 京都住宿",
     rhythm: "常规偏早 · 08:50 离店",
+    luggage: "08:20 前把大箱交给京都酒店前台，宅急便直送 10.06 的大阪酒店；随身保留两晚用品",
     schedule: "08:50 离店 · 09:45–11:45 东山 · 12:45–14:55 宇治 · 15:26 JR · 16:00 会场 · 19:00–19:40 烟火 · 21:35 回店",
     note: "哲学之道和烟火都是不可删除项。伏见稻荷改到 10 月 6 日清晨；当天删除东福寺和宇治上神社，平等院不等待周日可能长达约 2 小时的凤凰堂内部参观。",
     transit: "市巴士 7 路进东山；地铁东西线＋JR 奈良线去宇治／长池；烟火后目标 20:50，21:23 到京都",
@@ -104,8 +107,9 @@ const days = [
     title: "伏见稻荷之后，沿 JR 奈良线继续南下",
     route: "京都住宿退房 → 伏见稻荷本殿・千本鸟居・奥社 → 东大寺 → 二月堂 → 林间午餐 → 春日大社 → 大阪住宿",
     rhythm: "移动日轻早起 · 08:05 退房",
+    luggage: "大箱已由京都酒店直送大阪酒店；当天只背两晚分装包，不使用伏见或奈良寄存柜",
     schedule: "08:05 退房 · 08:26–08:32 JR · 08:35–10:00 伏见 · 10:32–11:40 JR · 12:05–16:35 奈良 · 18:05–18:25 入住大阪",
-    note: "伏见稻荷推迟约 80 分钟，仍只走到奥社奉拜所、不登山。代价是主入口人流会多一些，因此 10:00 准时下山；奈良继续只留东大寺、二月堂、林间午餐与春日大社。大件行李前一晚寄往大阪。",
+    note: "伏见稻荷推迟约 80 分钟，仍只走到奥社奉拜所、不登山。代价是主入口人流会多一些，因此 10:00 准时下山；奈良继续只留东大寺、二月堂、林间午餐与春日大社。",
     transit: "JR 08:26 京都→08:32 稻荷；10:32 稻荷→11:40 奈良；近铁 17:12→17:49 大阪难波",
     tone: "nature",
   },
@@ -121,6 +125,33 @@ const days = [
     note: "12:00 国际航班按 08:00 南海 Rapi:t 规划，约 08:50 进入航站楼，保留 3 小时以上。",
     transit: "南海 Rapi:t 08:00→08:39 或空港急行 08:02→08:49；空港急行首班约 05:15",
     tone: "city",
+  },
+];
+
+const luggagePlans = [
+  {
+    date: "10.03",
+    label: "先换酒店，再开始玩",
+    title: "大阪酒店 → 京都酒店 → 岚山",
+    body: "08:15 带箱退房，约 09:45 到京都站附近住宿，直接在前台交箱或预办理入住；10:05 后只带日用小包去岚山。全程不把大箱带到景点，也不找车站寄存柜。",
+    href: "https://timetable.jr-odekake.net/train-timetable/23671?date=20261003",
+    cta: "查看 10:27 JR 班次",
+  },
+  {
+    date: "10.04",
+    label: "酒店到酒店前送",
+    title: "京都酒店 → 大阪酒店",
+    body: "按宅急便官方保守时限，10 月 4 日早上把大箱交给京都酒店前台，写明 10 月 6 日入住的大阪酒店、预订人和电话；随身小包装两晚衣物、药品、证件和贵重物品。",
+    href: "https://faq-en.kuronekoyamato.co.jp/app/answers/detail/a_id/6692/",
+    cta: "查看宅急便酒店寄送规则",
+  },
+  {
+    date: "订房",
+    label: "不满足就换酒店",
+    title: "两端都必须有可代收前台",
+    body: "京都酒店需接受入住前行李，且能在前台寄出宅急便；大阪酒店需接受住客抵达前的大箱。无前台民宿、Airbnb 或拒绝代收的住宿不适合这套路线。订房后应邮件确认，而不是到现场碰运气。",
+    href: "https://faq-en.kuronekoyamato.co.jp/app/answers/detail/a_id/4028/",
+    cta: "查看无前台住宿限制",
   },
 ];
 
@@ -161,7 +192,7 @@ const restaurants = [
     stars: "GOOGLE MAPS 4.7 · 50 条评价",
     when: "建议 10.03 晚餐",
     price: "午餐约 ¥10,000 · 晚餐约 ¥20,000",
-    description: "本次正式餐首选。岚山约 14:00 结束，入住京都后有足够时间休息、换衣再赴约；席位少，建议尽早确认。",
+    description: "本次正式餐首选。15:20 左右从岚山回到京都、取房并休息后赴约；席位少且 18:30 固定开席，建议尽早确认。",
     href: "https://ryouriya-maekawa.com/",
   },
   {
@@ -186,7 +217,7 @@ const referenceReview = [
     status: "取舍",
     tone: "skip",
     title: "神户和岚山同时保留，但各自删到核心",
-    body: "10 月 2 日保留神户布引、北野和港区；10 月 3 日退房后直达岚山再入住京都。竹林只短停，天龙寺庭园与渡月桥才是主体验。",
+    body: "10 月 2 日保留神户布引、北野和港区；10 月 3 日先把行李交给京都酒店，再轻装往返岚山。竹林只短停，天龙寺庭园与渡月桥才是主体验。",
   },
   {
     status: "保留",
@@ -216,7 +247,7 @@ const referenceReview = [
 
 const practical = [
   ["住宿", "9.29–10.03 大阪难波／心斋桥 4 晚；10.03–10.06 京都站 3 晚；10.06 最后一晚回难波。"],
-  ["行李", "10 月 2 日早上把大件行李寄往京都，10 月 5 日晚再寄往大阪；两个移动日都只带随身包，先确认酒店可以代收。"],
+  ["行李", "10.03 箱子随人只走大阪酒店→京都酒店，交前台后再去岚山；10.04 大箱由京都酒店前送大阪酒店，10.06 伏见与奈良全程只背两晚分装包。"],
   ["交通", "关西内部使用 ICOCA 加单独购票即可，一般不需要全国 JR Pass；京都优先坐铁路而不是挤巴士。"],
   ["取舍", "神户、岚山与伏见稻荷都保留；删除东福寺、银阁寺及东山重复寺社。10 月 4 日只走哲学之道、南禅寺、宇治核心和固定烟火。"],
   ["天气", "9 月末仍可能受台风和阵雨影响。贵船下雨仍直达神社；神户大风取消布引缆车；岚山下雨缩短竹林与河岸停留。"],
@@ -273,6 +304,30 @@ export default function Home() {
         </article>
       </section>
 
+      <section className="luggage-plan shell" aria-labelledby="luggage-title">
+        <div className="luggage-plan-heading">
+          <div>
+            <p className="eyebrow dark">LUGGAGE FIRST</p>
+            <span className="section-note">两次换宿 · 零次带大箱游览</span>
+          </div>
+          <div>
+            <h2 id="luggage-title">箱子先到位，<br />人再轻装出发。</h2>
+            <p>10 月 3 日先完成大阪酒店到京都酒店的物理迁移；10 月 6 日因伏见、奈良位于南下顺路方向，改由酒店前台提前把大箱送到大阪，避免当天先绕大阪再折返。</p>
+          </div>
+        </div>
+        <div className="luggage-plan-grid">
+          {luggagePlans.map((item) => (
+            <article key={item.date}>
+              <span>{item.date}</span>
+              <small>{item.label}</small>
+              <h3>{item.title}</h3>
+              <p>{item.body}</p>
+              <a href={item.href} target="_blank" rel="noreferrer">{item.cta} ↗</a>
+            </article>
+          ))}
+        </div>
+      </section>
+
       <section className="map-section shell" id="map" aria-labelledby="map-title">
         <div className="map-heading">
           <div>
@@ -305,6 +360,7 @@ export default function Home() {
               <div className="timeline-copy">
                 <h3>{item.title}</h3>
                 <p className="route-line">{item.route}</p>
+                {item.luggage && <p className="transit-line"><span>行李</span>{item.luggage}</p>}
                 <p className="transit-line"><span>作息</span>{item.rhythm}</p>
                 <p className="transit-line"><span>建议时间</span>{item.schedule}</p>
                 <p className="transit-line"><span>交通摘要</span>{item.transit}</p>
@@ -481,6 +537,7 @@ export default function Home() {
           <a href="https://inari.jp/en/access/" target="_blank" rel="noreferrer">伏见稻荷大社交通 ↗</a>
           <a href="https://nanzenji.or.jp/about_rinzaishu/visit" target="_blank" rel="noreferrer">南禅寺开放时间 ↗</a>
           <a href="https://www.kobeherb.com/en/" target="_blank" rel="noreferrer">神户布引香草园 ↗</a>
+          <a href="https://faq-en.kuronekoyamato.co.jp/app/answers/detail/a_id/6692/" target="_blank" rel="noreferrer">宅急便酒店到酒店行李规则 ↗</a>
           <a href="https://www.pref.nara.lg.jp/site/park/2587.html" target="_blank" rel="noreferrer">春日山原始林 ↗</a>
           <a href="https://guide.michelin.com/jp/ja/kyoto-region/kyoto/restaurants" target="_blank" rel="noreferrer">MICHELIN 京都餐厅 ↗</a>
           <a href="https://guide.michelin.com/jp/ja/osaka-region/osaka/restaurants" target="_blank" rel="noreferrer">MICHELIN 大阪餐厅 ↗</a>
