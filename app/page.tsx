@@ -176,33 +176,185 @@ const bookingCards = [
   },
   {
     number: "03",
-    urgency: "正式餐",
-    title: "料理屋まえかわ",
-    body: "本次只需要锁定 1–2 顿好餐。料理屋まえかわ固定优先放在 10 月 3 日岚山日，下午入住并休息后再赴约。",
-    meta: "Google Maps 4.7 · 50 条评价 · 需预约",
-    href: "https://ryouriya-maekawa.com/",
-    cta: "查看官方预约",
+    urgency: "3 人用餐",
+    title: "正式餐候选池",
+    body: "先比较 8 家 2026 米其林一星和 1 家神户牛专门店，再锁定 1–2 顿。页面已列出日期适配、预算、口碑、特色、预约方式和 3 人用餐条件。",
+    meta: "支持 3 人不等于指定日期仍有 3 个余位",
+    href: "#eat",
+    cta: "比较全部餐厅",
   },
 ];
 
 const restaurants = [
   {
-    city: "KYOTO · 日本料理",
+    city: "KYOTO · 清水五条",
     name: "料理屋まえかわ",
-    stars: "GOOGLE MAPS 4.7 · 50 条评价",
-    when: "建议 10.03 晚餐",
-    price: "午餐约 ¥10,000 · 晚餐约 ¥20,000",
-    description: "本次正式餐首选。15:20 左右从岚山回到京都、取房并休息后赴约；席位少且 18:30 固定开席，建议尽早确认。",
-    href: "https://ryouriya-maekawa.com/",
+    cuisine: "季节日本料理 · 创作割烹",
+    stars: "MICHELIN GUIDE 2026 · 一星",
+    status: "原选候选",
+    statusTone: "priority",
+    when: "10.03 18:30 · 岚山回酒店休息后",
+    price: "¥20,000–29,999 / 人",
+    rating: "Tabelog 3.80 · 122 条评价",
+    party: "3 人可 · 柜台 10 席；二楼包间为 4–8 人",
+    reservation: "完全预约制 · 18:30 同时开席 · 2026 年预约以电话为主",
+    feature: "祇园名店体系出身，传统技法里加入现代构思；鱼、季节蔬菜和收尾主食的完成度是主要看点。",
+    caution: "与岚山日衔接最好，但周六席位紧张；如未订到，可用和ごころ泉替换，不要同晚重复安排。",
+    mapHref: "https://www.google.com/maps/search/?api=1&query=%E6%96%99%E7%90%86%E5%B1%8B%E3%81%BE%E3%81%88%E3%81%8B%E3%82%8F%20%E4%BA%AC%E9%83%BD",
+    michelinHref: "https://guide.michelin.com/jp/en/kyoto-region/kyoto/restaurant/ryoriya-maekawa",
+    reviewHref: "https://tabelog.com/kyoto/A2601/A260201/26034300/",
+    bookingHref: "https://ryouriya-maekawa.com/",
   },
   {
-    city: "KOBE · 神户牛",
+    city: "KYOTO · 四条烏丸",
+    name: "和ごころ泉",
+    cuisine: "京怀石 · 季节料理",
+    stars: "MICHELIN GUIDE 2026 · 一星",
+    status: "京都备选",
+    statusTone: "candidate",
+    when: "10.03 晚餐 · 只能替换まえかわ；10.05 周一休息",
+    price: "¥20,790 起 / 人",
+    rating: "Tabelog 3.81 · 261 条评价",
+    party: "3 人可 · 共 24 席；线上资料显示最多可接 10 人",
+    reservation: "完全预约制 · OMAKASE JapanEatinerary 可英文申请 · 当前资料标注仅收现金",
+    feature: "京都本土怀石脉络清晰，季节器皿、椀物与细腻出汁是重点；比纯法餐更贴合这次偏好的日本料理。",
+    caution: "周一休息，因此不适合贵船当晚；最自然的用法是和料理屋まえかわ二选一。",
+    mapHref: "https://www.google.com/maps/search/?api=1&query=%E5%92%8C%E3%81%94%E3%81%93%E3%82%8D%E6%B3%89%20%E4%BA%AC%E9%83%BD",
+    michelinHref: "https://guide.michelin.com/jp/en/kyoto-region/kyoto/restaurant/wagokoro-izumi",
+    reviewHref: "https://tabelog.com/kyoto/A2601/A260201/26002281/",
+    bookingHref: "https://omakaseje.com/restaurants/hc541098",
+  },
+  {
+    city: "KYOTO · 祇园",
+    name: "鮨割烹なか一",
+    cuisine: "寿司 · 割烹",
+    stars: "MICHELIN GUIDE 2026 · 一星",
+    status: "贵船日晚餐候选",
+    statusTone: "recommended",
+    when: "10.05 18:30–19:00 · 贵船回酒店短休后",
+    price: "直订参考 ¥15,000–19,999；英文代订约 ¥28,000 起",
+    rating: "Tabelog 3.58 · 84 条；OMAKASE JE 5.0 · 6 条",
+    party: "3 人可 · 35 席；线上申请按餐厅确认",
+    reservation: "建议预约 · OMAKASE JapanEatinerary 提供英文支持 · 非即时确认",
+    feature: "把寿司与京都割烹结合，风格传统而不局限于纯寿司；祇园位置适合用作京都最后一晚的正式餐。",
+    caution: "英文代订渠道明显高于本地参考价；若酒店可协助电话预订，先比较总价再决定。",
+    mapHref: "https://www.google.com/maps/search/?api=1&query=%E9%AE%A8%E5%89%B2%E7%83%B9%E3%81%AA%E3%81%8B%E4%B8%80%20%E4%BA%AC%E9%83%BD",
+    michelinHref: "https://guide.michelin.com/jp/en/kyoto-region/kyoto/restaurant/sushi-kappo-nakaichi",
+    reviewHref: "https://tabelog.com/kyoto/A2601/A260301/26001062/",
+    bookingHref: "https://omakaseje.com/restaurants/jz370470",
+  },
+  {
+    city: "KYOTO · 西阵",
+    name: "天若",
+    cuisine: "天妇罗 · 怀石",
+    stars: "MICHELIN GUIDE 2026 · 一星",
+    status: "性价比候选",
+    statusTone: "recommended",
+    when: "10.05 18:00 · 贵船返城后直接前往，时间较紧",
+    price: "¥16,500 + 5% 服务费 ≈ ¥17,325 / 人",
+    rating: "Tabelog 3.60 · 25 条 · 天妇罗百名店 2025",
+    party: "3 人可申请 · 仅 8 席",
+    reservation: "TableCheck 预约 · 18:00 同时开席 · 周三休息",
+    feature: "天妇罗与小型怀石组合，价位在本轮一星里相对克制，适合想换一种日本料理风格。",
+    caution: "贵船预计 17:00–17:30 回到京都站附近，18:00 开席容错低；只有当天返程顺利才建议选。",
+    mapHref: "https://www.google.com/maps/search/?api=1&query=%E5%A4%A9%E8%8B%A5%20%E4%BA%AC%E9%83%BD%20%E5%A4%A9%E3%81%B7%E3%82%89",
+    michelinHref: "https://guide.michelin.com/jp/en/kyoto-region/kyoto/restaurant/tenjaku",
+    reviewHref: "https://tabelog.com/kyoto/A2601/A260202/26034377/",
+    bookingHref: "https://www.tablecheck.com/en/shops/tenjaku/reserve",
+  },
+  {
+    city: "KYOTO · 二条城前",
+    name: "二条城ふる田",
+    cuisine: "日本料理 · 割烹",
+    stars: "MICHELIN GUIDE 2026 · 一星",
+    status: "时间最稳",
+    statusTone: "recommended",
+    when: "10.05 19:00–19:30 · 贵船回酒店休息后",
+    price: "¥22,000 + 10% 服务费 ≈ ¥24,200 / 人",
+    rating: "Tabelog 3.73 · 88 条评价",
+    party: "3 人可在线预订 · 7 人以上才需电话",
+    reservation: "TableCheck 预约 · 建议提前锁定",
+    feature: "以京都季节食材和现代感摆盘为主，位置靠近二条城，贵船回城后时间弹性比 18:00 同时开席的店更好。",
+    caution: "价格高于天若，但对行程延误的容错更大；是 10.05 最稳妥的正式晚餐选择。",
+    mapHref: "https://www.google.com/maps/search/?api=1&query=%E4%BA%8C%E6%9D%A1%E5%9F%8E%E3%81%B5%E3%82%8B%E7%94%B0%20%E4%BA%AC%E9%83%BD",
+    michelinHref: "https://guide.michelin.com/jp/en/kyoto-region/kyoto/restaurant/nijojo-furuta",
+    reviewHref: "https://tabelog.com/kyoto/A2601/A260203/26030266/",
+    bookingHref: "https://www.tablecheck.com/en/shops/nijyoujyoufuruta/reserve",
+  },
+  {
+    city: "OSAKA · 西天满",
+    name: "ぬまた双",
+    cuisine: "日本料理 · 割烹",
+    stars: "MICHELIN GUIDE 2026 · 一星",
+    status: "大阪首选",
+    statusTone: "priority",
+    when: "10.06 晚餐 · 奈良回大阪入住后；以实际放位时间为准",
+    price: "¥22,000 + 5% 服务费 ≈ ¥23,100 / 人",
+    rating: "Tabelog 4.04 · 179 条 · 日本料理百名店",
+    party: "3 人可 · 普通柜台可订；包间柜台需 4–7 人",
+    reservation: "OMAKASE 预约 · 席位少，放位后尽快锁定",
+    feature: "口碑数和评分都很强，强调季节感与现场感；适合把最后一晚升级成大阪正式餐。",
+    caution: "奈良日预计 18:25 才入住大阪，不要订过早席；若当天只有早场，改选是しん或取消正式餐。",
+    mapHref: "https://www.google.com/maps/search/?api=1&query=%E3%81%AC%E3%81%BE%E3%81%9F%E5%8F%8C%20%E5%A4%A7%E9%98%AA",
+    michelinHref: "https://guide.michelin.com/jp/en/osaka-region/osaka/restaurant/numata-sou",
+    reviewHref: "https://tabelog.com/osaka/A2701/A270101/27124703/",
+    bookingHref: "https://omakase.in/ja/r/kl465761",
+  },
+  {
+    city: "OSAKA · 北新地",
+    name: "焼鳥市松",
+    cuisine: "烧鸟 · 鸡料理",
+    stars: "MICHELIN GUIDE 2026 · 一星",
+    status: "口碑最稳",
+    statusTone: "recommended",
+    when: "10.01 18:30 · USJ 后恢复日；需提前结束电电城",
+    price: "¥14,500；含 5 杯搭配约 ¥20,000 / 人",
+    rating: "Tabelog 4.01 · 821 条 · Bronze",
+    party: "3 人可 · 共 13 席",
+    reservation: "OMAKASE 预约 · 当前页面已开放至 2026.10.31",
+    feature: "本轮唯一烧鸟一星，评价基数远高于其他候选，价位也较温和；能明显拉开与两顿怀石的风格差异。",
+    caution: "选择这家就把 10.01 的电电城缩短或取消，17:40 左右从酒店出发，不要在恢复日继续硬塞景点。",
+    mapHref: "https://www.google.com/maps/search/?api=1&query=%E7%84%BC%E9%B3%A5%E5%B8%82%E6%9D%BE%20%E5%A4%A7%E9%98%AA",
+    michelinHref: "https://guide.michelin.com/jp/en/osaka-region/osaka/restaurant/yakitori-ichimatsu",
+    reviewHref: "https://tabelog.com/osaka/A2701/A270101/27016600/",
+    bookingHref: "https://omakase.in/r/ib508202",
+  },
+  {
+    city: "OSAKA · 西天满",
+    name: "是しん",
+    cuisine: "日本料理 · 割烹",
+    stars: "MICHELIN GUIDE 2026 · 一星",
+    status: "大阪稳妥备选",
+    statusTone: "candidate",
+    when: "10.06 19:30 左右 · 奈良回大阪入住后",
+    price: "¥26,620 / 人 · 含税与服务费",
+    rating: "Tabelog 约 3.90 · 约 410 条 · Bronze",
+    party: "3 人可在线预订 · 13 人以上才需电话",
+    reservation: "TableCheck 预约 · 当前资料标注仅收现金",
+    feature: "菜式稳健、评论量大，西天满位置适合从难波入住后前往；预约流程对外国游客相对清晰。",
+    caution: "预算是大阪候选中最高，且需准备现金；优势是时间选择通常比小型同时开席店更容易匹配。",
+    mapHref: "https://www.google.com/maps/search/?api=1&query=%E6%98%AF%E3%81%97%E3%82%93%20%E5%A4%A7%E9%98%AA",
+    michelinHref: "https://guide.michelin.com/jp/en/osaka-region/osaka/restaurant/zeshin",
+    reviewHref: "https://tabelog.com/osaka/A2701/A270101/27098799/",
+    bookingHref: "https://www.tablecheck.com/en/shops/zeshin/reserve",
+  },
+  {
+    city: "KOBE · 三宫",
     name: "Mouriya Honten",
-    stars: "GOOGLE MAPS 4.6 · 约 1,800 条评价",
-    when: "建议 10.02 午餐",
-    price: "约 ¥10,000 起",
-    description: "北野下坡到三宫后最顺路，也是用户备选中的神户牛餐厅。若同时预约料理屋まえかわ，这顿可选午间短套餐，避免两顿都过长。",
-    href: "https://www.mouriya.co.jp/en/head",
+    cuisine: "神户牛 · 铁板烧",
+    stars: "神户牛专项候选 · 非本轮一星筛选",
+    status: "神户日候选",
+    statusTone: "candidate",
+    when: "10.02 14:00 · 北野下坡到三宫后",
+    price: "约 ¥10,000 起 / 人；部分渠道另收 10% 服务费",
+    rating: "Google Maps 4.6 · 约 1,800 条评价",
+    party: "3 人明确可订 · 官网成人数量支持 1–6 人",
+    reservation: "官网可预约 · 多语言页面与礼宾支持",
+    feature: "神户牛主题最贴合当天城市体验，三宫本店从北野顺坡而下即可到，午餐后继续去港区。",
+    caution: "它不是本轮米其林一星候选；若正式餐只选 1–2 顿，可先在它与大阪／京都一星餐厅之间做预算取舍。",
+    mapHref: "https://www.google.com/maps/search/?api=1&query=Mouriya%20Honten%20Kobe",
+    reviewHref: "https://www.google.com/maps/search/?api=1&query=Mouriya%20Honten%20Kobe",
+    bookingHref: "https://www.mouriya.co.jp/en/reserve",
   },
 ];
 
@@ -442,8 +594,8 @@ export default function Home() {
               <h3>{card.title}</h3>
               <p>{card.body}</p>
               <small>{card.meta}</small>
-              <a className="text-link" href={card.href} target="_blank" rel="noreferrer">
-                {card.cta} <span>↗</span>
+              <a className="text-link" href={card.href} {...(!card.href.startsWith("#") ? { target: "_blank", rel: "noreferrer" } : {})}>
+                {card.cta} <span>{card.href.startsWith("#") ? "↓" : "↗"}</span>
               </a>
             </article>
           ))}
@@ -453,25 +605,42 @@ export default function Home() {
       <section className="dining" id="eat">
         <div className="shell">
           <div className="dining-heading">
-            <p className="eyebrow">ONE OR TWO GOOD MEALS</p>
-            <h2>京都认真吃一顿，<br />神户再选一顿牛排。</h2>
-            <p>正式餐首选料理屋まえかわ，放在 10 月 3 日岚山结束、入住休息之后；神户可预约 Mouriya 午餐。地图中其余餐厅按 Google Maps 评分与顺路程度作为灵活备选。</p>
+            <p className="eyebrow">DINING SHORTLIST · 3 GUESTS</p>
+            <h2>先把候选摆齐，<br />再决定哪一两顿值得订。</h2>
+            <p>当前共 9 家：8 家《京都・大阪米其林指南 2026》一星，加 1 家神户牛专门店。均具备接待 3 人的席位或预约规则，但“支持 3 人”不等于指定日期尚有 3 个余位；资料核对于 2026 年 9 月 3 日。</p>
+          </div>
+          <div className="dining-summary" aria-label="餐厅候选摘要">
+            <span><strong>9</strong>家候选</span>
+            <span><strong>8</strong>家 2026 一星</span>
+            <span><strong>3</strong>人用餐</span>
+            <span><strong>1–2</strong>顿最终锁定</span>
           </div>
           <div className="restaurant-list">
             {restaurants.map((restaurant) => (
-              <article className="restaurant" key={restaurant.name}>
-                <div>
+              <article className={`restaurant restaurant-${restaurant.statusTone}`} key={restaurant.name}>
+                <div className="restaurant-title-block">
                   <span className="restaurant-city">{restaurant.city}</span>
                   <h3>{restaurant.name}</h3>
+                  <p>{restaurant.cuisine}</p>
                   <strong>{restaurant.stars}</strong>
+                  <em>{restaurant.status}</em>
                 </div>
                 <div className="restaurant-detail">
-                  <span>{restaurant.when}</span>
-                  <span>{restaurant.price}</span>
-                  <p>{restaurant.description}</p>
-                  <a className="text-link light" href={restaurant.href} target="_blank" rel="noreferrer">
-                    官方菜单与预约 <span>↗</span>
-                  </a>
+                  <dl className="restaurant-facts">
+                    <div><dt>适合哪天</dt><dd>{restaurant.when}</dd></div>
+                    <div><dt>价格预算</dt><dd>{restaurant.price}</dd></div>
+                    <div><dt>评分评价</dt><dd>{restaurant.rating}</dd></div>
+                    <div><dt>3 人用餐</dt><dd>{restaurant.party}</dd></div>
+                    <div className="wide"><dt>预约要求</dt><dd>{restaurant.reservation}</dd></div>
+                  </dl>
+                  <p className="restaurant-feature"><b>特色</b>{restaurant.feature}</p>
+                  <p className="restaurant-caution"><b>怎么判断</b>{restaurant.caution}</p>
+                  <div className="restaurant-actions">
+                    <a href={restaurant.mapHref} target="_blank" rel="noreferrer">Google Maps ↗</a>
+                    {restaurant.michelinHref && <a href={restaurant.michelinHref} target="_blank" rel="noreferrer">米其林页面 ↗</a>}
+                    <a href={restaurant.reviewHref} target="_blank" rel="noreferrer">评价详情 ↗</a>
+                    <a className="restaurant-book" href={restaurant.bookingHref} target="_blank" rel="noreferrer">预约入口 ↗</a>
+                  </div>
                 </div>
               </article>
             ))}
