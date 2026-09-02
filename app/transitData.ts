@@ -1,4 +1,4 @@
-export type TransitLeg = {
+type TransitLegBase = {
   kind: "步行" | "铁路" | "铁路＋巴士" | "缆车＋步行";
   suggestedTime: string;
   duration: string;
@@ -11,14 +11,25 @@ export type TransitLeg = {
   sources?: Array<{ label: string; href: string }>;
 };
 
+type TransitTiming = {
+  departurePlan: string;
+  arrivalPlan: string;
+  stayPlan: string;
+  timingStatus: "已核班次" | "部分核实" | "预计时间";
+};
+
+export type TransitLeg = TransitLegBase & TransitTiming;
+
 const NANKAI_TIMETABLE = "https://www.nankai.co.jp/cn_railway/access-timetable/";
-const HANSHIN_NAMBA = "https://www.hanshin.co.jp/station/osakanamba.html";
+const HANSHIN_NAMBA = "https://eki.kintetsu.co.jp/norikae/T5?USR=IM&slCode=350-0&d=2&dw=0&time=0900";
 const JR_USJ_OUTBOUND = "https://timetable.jr-odekake.net/station-timetable/2836020001?date=20260930";
 const JR_USJ_RETURN = "https://timetable.jr-odekake.net/station-timetable/2957020002?date=20260930";
+const USJ_HOURS = "https://www.usj.co.jp/web/zh/tw/park-guide/schedule/park-hour2";
 const NUNOBIKI_HOURS = "https://www.kobeherb.com/en/hours-of-operation-and-fares/";
+const KOBE_SUBWAY_SANNOMIYA = "https://kotsu.city.kobe.lg.jp/subway/timetable1/sannomiya/";
 const JR_KOBE = "https://timetable.jr-odekake.net/station-timetable/2809012001?date=20261002";
 const OSAKA_METRO_UMEDA = "https://subway.osakametro.co.jp/station_guide/M/m16/index.php";
-const JR_SAGA_ARASHIYAMA = "https://timetable.jr-odekake.net/station-timetable/2875055002?date=20261003";
+const JR_SAGA_ARASHIYAMA = "https://timetable.jr-odekake.net/train-timetable/5471?date=20261003";
 const MAEKAWA_ACCESS = "https://ryouriya-maekawa.com/access.html";
 const KYOTO_BUS_7 = "https://www2.city.kyoto.lg.jp/kotsu/busdia/hyperdia/06121202.htm";
 const KYOTO_SUBWAY = "https://www2.city.kyoto.lg.jp/kotsu/tikadia/hyperdia/menu0221.htm";
@@ -27,17 +38,17 @@ const JOYO_EVENT = "https://www.city.joyo.kyoto.jp/joint/0000012600.html";
 const JR_NAGAIKE = "https://timetable.jr-odekake.net/station-timetable/3014064001?date=20261004";
 const KIFUNE_BUS_OUTBOUND = "https://www.kyotobus.jp/route/timetable/schedule.html?stop_id=6293_1";
 const KIFUNE_BUS_RETURN = "https://www.kyotobus.jp/route/timetable/schedule.html?stop_id=6292_1";
-const EIZAN_KIBUNEGUCHI = "https://eizandensha.co.jp/files/img/station/kibuneguchi/e16-2.pdf";
-const JR_KYOTO_INARI = "https://timetable.jr-odekake.net/station-timetable/2784064001?date=20261006";
-const JR_INARI_NARA = "https://timetable.jr-odekake.net/station-timetable/3021064001?date=20261006";
+const EIZAN_WEEKDAY_2026 = "https://eizandensha.co.jp/information/?di=20";
+const JR_KYOTO_INARI = "https://timetable.jr-odekake.net/train-timetable/12201?date=20261006";
+const JR_INARI_NARA = "https://timetable.jr-odekake.net/train-timetable/46111?date=20261006";
 const NARA_BUS_NOTICE = "https://www.narakotsu.co.jp/news/general/33910/";
-const KINTETSU_NARA = "https://eki.kintetsu.co.jp/norikae/T5?USR=PC&d=1&dir=0&dmode=simple&dw=0&pFlg=1&path=2026051984066&slCode=350-23";
+const KINTETSU_NARA = "https://eki.kintetsu.co.jp/norikae/T5?USR=IM&slCode=350-23&d=1&dw=0&time=1700";
 
 function key(date: string, from: string, to: string) {
   return `${date}:${from}>${to}`;
 }
 
-export const transitLegs: Record<string, TransitLeg> = {
+export const transitLegs: Record<string, TransitLegBase> = {
   [key("09.29", "kix", "osaka-stay")]: {
     kind: "铁路",
     suggestedTime: "15:20–16:00（出关取行李后）",
@@ -69,19 +80,20 @@ export const transitLegs: Record<string, TransitLeg> = {
 
   [key("09.30", "osaka-stay", "usj")]: {
     kind: "铁路",
-    suggestedTime: "07:00–07:30 离店",
-    duration: "约 30–40 分钟",
-    route: "阪神难波线：大阪难波 → 西九条；换 JR 梦咲线（樱岛线）：西九条 → 环球城。",
-    serviceBoundary: { label: "最早班次", detail: "大阪难波往尼崎方向首班 05:03；西九条 JR 梦咲线首班 05:19。实际首个可衔接组合以当天换乘查询为准。" },
+    suggestedTime: "06:30 离店；目标大阪难波 06:46",
+    duration: "约 41–45 分钟到园区闸口",
+    route: "阪神难波线 06:46 大阪难波 → 06:54 西九条；换 JR 梦咲线 07:05 西九条 → 07:11 环球城，步行约 4 分钟到园区闸口。",
+    serviceBoundary: { label: "班次参考", detail: "9/30 官方营业时间为 08:00–22:00，且 USJ 提醒可能早于标示时间开园；计划 07:15 左右排队。" },
     fallback: "阪神异常时坐大阪 Metro 千日前线到玉川，步行到 JR 野田换大阪环状线／梦咲线；全面停运则酒店直达出租车。",
     sources: [
       { label: "阪神大阪难波站", href: HANSHIN_NAMBA },
       { label: "JR 西九条 9/30 时刻", href: JR_USJ_OUTBOUND },
+      { label: "USJ 9/30 营业时间", href: USJ_HOURS },
     ],
   },
   [key("09.30", "usj", "osaka-stay")]: {
     kind: "铁路",
-    suggestedTime: "闭园后，建议 21:30–22:30 出发",
+    suggestedTime: "22:05–22:10 离开闸口；目标 22:12／22:20 JR",
     duration: "约 30–45 分钟",
     route: "JR 梦咲线：环球城 → 西九条；换阪神难波线到大阪难波，再步行回酒店。",
     serviceBoundary: { label: "最晚班次", detail: "建议把 23:12 作为能从容完成返难波换乘的最晚目标。JR 另有 23:37、00:02 从环球城开出，但后段可能只能从西九条打车。" },
@@ -89,6 +101,7 @@ export const transitLegs: Record<string, TransitLeg> = {
     sources: [
       { label: "JR 环球城 9/30 时刻", href: JR_USJ_RETURN },
       { label: "阪神大阪难波站", href: HANSHIN_NAMBA },
+      { label: "USJ 9/30 营业时间", href: USJ_HOURS },
     ],
   },
 
@@ -130,41 +143,42 @@ export const transitLegs: Record<string, TransitLeg> = {
 
   [key("10.02", "osaka-stay", "nunobiki")]: {
     kind: "铁路",
-    suggestedTime: "07:50–08:05 离店",
+    suggestedTime: "09:30 离店；目标大阪难波 09:52",
     duration: "约 75–90 分钟",
-    route: "阪神难波线／本线快速急行：大阪难波 → 神户三宫；换神户市营地铁西神・山手线：三宫 → 新神户；步行约 5 分钟到缆车站。",
-    serviceBoundary: { label: "最早班次", detail: "大阪难波往尼崎方向首班 05:03；但布引缆车 10 月平日 09:30 才开，提前太多没有意义。" },
+    route: "阪神快速急行 09:52 大阪难波 → 10:42 神户三宫；步行换乘神户市营地铁，约 10:54 三宫 → 10:56 新神户，再步行约 7 分钟到缆车站。",
+    serviceBoundary: { label: "班次参考", detail: "直达快速急行已核到分钟；地铁班次密集。布引缆车和香草园此时均已开放，约 11:05 到下站即可。" },
     fallback: "阪神异常时从大阪站坐 JR 神户线新快速到三之宫，再换地铁；布引缆车因风停运则直接步行去北野。",
     sources: [
       { label: "阪神大阪难波站", href: HANSHIN_NAMBA },
+      { label: "神户地铁三宫时刻", href: KOBE_SUBWAY_SANNOMIYA },
       { label: "布引缆车营业时间", href: NUNOBIKI_HOURS },
     ],
   },
   [key("10.02", "nunobiki", "kitano")]: {
-    kind: "缆车＋步行", suggestedTime: "11:00–11:20", duration: "约 25–35 分钟",
+    kind: "缆车＋步行", suggestedTime: "12:45–13:00", duration: "约 25–35 分钟",
     route: "从山顶／中间站搭布引缆车下到新神户，再沿北野通步行约 12–15 分钟到异人馆街。",
     serviceBoundary: { label: "班次参考", detail: "10 月平日缆车 09:30 开；通常末班上行 16:45、下行 17:15。当天中午下山不受末班压力。" },
     fallback: "缆车临时停运时不要徒步硬下山；按既定规则跳过香草园，从新神户直接步行或打车到北野。",
     sources: [{ label: "布引缆车营业时间", href: NUNOBIKI_HOURS }],
   },
   [key("10.02", "kitano", "mouriya")]: {
-    kind: "步行", suggestedTime: "12:15–12:30", duration: "约 15–20 分钟",
+    kind: "步行", suggestedTime: "13:45", duration: "约 15–20 分钟",
     route: "沿北野坂顺坡下行到三宫，前往 Mouriya 本店预约午餐。",
     fallback: "穿正式鞋、不便走坡路或遇大雨时，从北野打车到餐厅约 5–10 分钟。",
   },
   [key("10.02", "mouriya", "meriken")]: {
-    kind: "步行", suggestedTime: "14:30–15:00", duration: "约 22–30 分钟",
+    kind: "步行", suggestedTime: "15:30", duration: "约 22–30 分钟",
     route: "餐后经旧居留地向南步行到美利坚公园，沿途本身就是城市散步段。",
     fallback: "午餐结束晚于 15:30 时，从三宫／餐厅直接打车到美利坚公园，保住港区日落。",
   },
   [key("10.02", "meriken", "harborland")]: {
-    kind: "步行", suggestedTime: "17:30–18:00", duration: "约 12–15 分钟",
+    kind: "步行", suggestedTime: "17:45", duration: "约 12–15 分钟",
     route: "沿海港步道向西，经过 Mosaic 前往 Harborland。",
     fallback: "大风或暴雨时在 Meriken Park Oriental Hotel 一带打车到 Harborland／JR 神户站。",
   },
   [key("10.02", "harborland", "osaka-stay")]: {
     kind: "铁路",
-    suggestedTime: "19:00–19:15 出发",
+    suggestedTime: "19:15–19:30 出发",
     duration: "约 55–70 分钟",
     route: "步行到 JR 神户站，搭 JR 神户线新快速到大阪；步行到梅田站，换大阪 Metro 御堂筋线到难波。",
     serviceBoundary: { label: "最晚班次", detail: "JR 神户往大阪末班约 00:05，但梅田往难波地铁末班约 00:08，无法衔接。完整公共交通建议最晚约 23:00 从神户出发。" },
@@ -177,28 +191,28 @@ export const transitLegs: Record<string, TransitLeg> = {
 
   [key("10.03", "osaka-stay", "arashiyama-bamboo")]: {
     kind: "铁路",
-    suggestedTime: "06:50–07:05 退房",
+    suggestedTime: "07:50 退房",
     duration: "约 75–90 分钟",
     route: "大阪 Metro 御堂筋线：难波 → 梅田；步行到阪急大阪梅田，搭京都线特急到桂，换阪急岚山线到岚山，再步行 15–20 分钟到竹林。",
     serviceBoundary: { label: "最早班次", detail: "按难波区域估算，约 05:15 起可组成完整换乘；酒店地址确定后再核对首个可衔接班次。" },
     fallback: "阪急异常时改 JR：大阪 → 京都 → 嵯峨岚山；若大件行李未成功前送，先寄存在阪急岚山／JR 嵯峨岚山站。",
   },
   [key("10.03", "arashiyama-bamboo", "tenryuji")]: {
-    kind: "步行", suggestedTime: "09:15 前后", duration: "约 5–8 分钟",
+    kind: "步行", suggestedTime: "10:10", duration: "约 5–8 分钟",
     route: "从竹林主路经天龙寺北门进入庭园，避免绕回岚山大街。",
     fallback: "北门临时关闭时沿竹林小径回长辻通，从天龙寺正门进入。",
   },
   [key("10.03", "tenryuji", "togetsukyo")]: {
-    kind: "步行", suggestedTime: "11:00–11:30", duration: "约 10–12 分钟",
+    kind: "步行", suggestedTime: "11:45", duration: "约 10–12 分钟",
     route: "从天龙寺正门沿长辻通向南到渡月桥与桂川河岸。",
     fallback: "雨大或人流太密时在天龙寺门口打车到 JR 嵯峨岚山，直接结束岚山段。",
   },
   [key("10.03", "togetsukyo", "kyoto-stay")]: {
     kind: "铁路",
-    suggestedTime: "13:55–14:15",
+    suggestedTime: "14:00 离开河岸；目标 14:31 JR",
     duration: "约 35–45 分钟",
     route: "步行 12–15 分钟到 JR 嵯峨岚山，搭 JR 嵯峨野线直达京都站，再步行到酒店。",
-    serviceBoundary: { label: "班次参考", detail: "10/3 下午可优先看 14:02、14:17、14:31 左右班次；当天末班约 23:22，但完全没必要拖到晚上。" },
+    serviceBoundary: { label: "班次参考", detail: "10/3 优先搭 14:31 JR 嵯峨岚山 → 14:49 京都；若提前到站可搭 14:17 → 14:34。" },
     fallback: "JR 异常时从阪急岚山到桂换京都线至乌丸，再换京都地铁乌丸线到京都站。",
     sources: [{ label: "JR 嵯峨岚山 10/3 时刻", href: JR_SAGA_ARASHIYAMA }],
   },
@@ -219,21 +233,21 @@ export const transitLegs: Record<string, TransitLeg> = {
 
   [key("10.04", "kyoto-stay", "philosopher")]: {
     kind: "铁路＋巴士",
-    suggestedTime: "07:45 离店；优先 07:54 左右巴士",
+    suggestedTime: "08:50 离店",
     duration: "约 45–55 分钟",
     route: "京都站前搭京都市巴士 7 路到银阁寺道，步行约 8–10 分钟到哲学之道北端。",
-    serviceBoundary: { label: "最早班次", detail: "10/4 周日，京都站前 7 路首班 05:46；计划可选 07:54 左右班次。" },
-    fallback: "巴士拥挤时搭京都地铁乌丸线到今出川，换 203 路到银阁寺道；为保证 08:30 开始也可从京都站打车。",
+    serviceBoundary: { label: "班次参考", detail: "10/4 周日，市巴士白天班次可用；酒店地址未定，目标约 09:45 到哲学之道北端。" },
+    fallback: "巴士拥挤时搭京都地铁乌丸线到今出川，换 203 路到银阁寺道；若 09:00 后仍未上车，直接从京都站打车。",
     sources: [{ label: "京都市巴士 7 路 10/4", href: KYOTO_BUS_7 }],
   },
   [key("10.04", "philosopher", "nanzenji")]: {
-    kind: "步行", suggestedTime: "08:30–09:45", duration: "60–75 分钟（本身就是游览）",
+    kind: "步行", suggestedTime: "09:45–10:55", duration: "60–75 分钟（本身就是游览）",
     route: "沿疏水渠从哲学之道北端向南完整步行，再接南禅寺与水路阁。",
     fallback: "脚痛或雨势过大时在中段退出，打车约 10–15 分钟到南禅寺；不要因此压缩后面的宇治和烟火。",
   },
   [key("10.04", "nanzenji", "byodoin")]: {
     kind: "铁路",
-    suggestedTime: "11:00–11:10",
+    suggestedTime: "11:45 出发",
     duration: "约 50–65 分钟",
     route: "步行到蹴上，搭京都地铁东西线到六地藏；换 JR 奈良线到宇治，再步行约 10 分钟到平等院。",
     serviceBoundary: { label: "班次参考", detail: "白天约 10–15 分钟一班；京都站地铁方向的首末班不构成当天限制。" },
@@ -241,12 +255,12 @@ export const transitLegs: Record<string, TransitLeg> = {
     sources: [{ label: "京都地铁官方时刻入口", href: KYOTO_SUBWAY }],
   },
   [key("10.04", "byodoin", "nakamura-uji")]: {
-    kind: "步行", suggestedTime: "13:20–13:40", duration: "约 3–5 分钟",
+    kind: "步行", suggestedTime: "13:55–14:00", duration: "约 3–5 分钟",
     route: "从平等院表门沿表参道步行到中村藤吉平等院店。",
     fallback: "排队超过 20–30 分钟就外带或换沿街茶铺，不推迟 15:15 去长池。",
   },
   [key("10.04", "nakamura-uji", "uji-river")]: {
-    kind: "步行", suggestedTime: "14:15–14:30", duration: "约 5–10 分钟",
+    kind: "步行", suggestedTime: "14:35", duration: "约 5–10 分钟",
     route: "由平等院表参道向宇治川，步行到朝雾桥一带河岸。",
     fallback: "下雨时缩短为桥边短停；若已晚于 14:45，直接前往 JR 宇治站。",
   },
@@ -277,53 +291,53 @@ export const transitLegs: Record<string, TransitLeg> = {
 
   [key("10.05", "kyoto-stay", "kifune")]: {
     kind: "铁路＋巴士",
-    suggestedTime: "07:50–08:00 离店",
+    suggestedTime: "09:00 离店",
     duration: "约 85–100 分钟",
     route: "JR 奈良线：京都 → 东福寺；京阪本线：东福寺 → 出町柳；叡山电车鞍马线到贵船口；换京都巴士 33 路到贵船。",
-    serviceBoundary: { label: "最早班次", detail: "现行平日 33 路从叡电贵船口站前首班约 09:07，是整条路线真正的首班瓶颈；早到只会在站前等。" },
+    serviceBoundary: { label: "班次参考", detail: "目标叡山电车 09:52 出町柳 → 10:21 贵船口，再接 10:32 京都巴士 33 路；现行平日表已核对。" },
     fallback: "33 路满员或停运时，贵船口到本宫约 2.1 公里、步行 30–40 分钟；雨天或带长辈应提前预约出租车。",
     sources: [
       { label: "京都巴士 33 路去程", href: KIFUNE_BUS_OUTBOUND },
-      { label: "叡山电车贵船口时刻", href: EIZAN_KIBUNEGUCHI },
+      { label: "叡山电车 2026 平日时刻", href: EIZAN_WEEKDAY_2026 },
     ],
   },
   [key("10.05", "kifune", "kifune-okumiya")]: {
-    kind: "步行", suggestedTime: "10:15–10:30", duration: "约 20–25 分钟",
+    kind: "步行", suggestedTime: "11:30", duration: "约 20–25 分钟",
     route: "从贵船神社本宫沿贵船川缓坡北行到奥宫，机动车多时贴内侧行走。",
     fallback: "雨势很大或行动不便时，在本宫附近预约短程出租车；不要用鞍马翻山替代三社参拜。",
   },
   [key("10.05", "kifune-okumiya", "kifune-yui")]: {
-    kind: "步行", suggestedTime: "11:00–11:20", duration: "约 10–12 分钟",
+    kind: "步行", suggestedTime: "12:30", duration: "约 10–12 分钟",
     route: "由奥宫沿同一河谷道路南返，顺路到结社，不需要折返。",
     fallback: "路滑时放慢到 15–20 分钟；若天气达到警报级别，先打车回本宫／贵船口。",
   },
   [key("10.05", "kifune-yui", "kyoto-stay")]: {
     kind: "铁路＋巴士",
-    suggestedTime: "15:00–15:20 开始返程",
+    suggestedTime: "13:05 午餐；15:20 去站，目标 15:37 巴士",
     duration: "约 90–105 分钟",
     route: "步行到贵船巴士站，搭京都巴士 33 路到贵船口；换叡山电车到出町柳、京阪到东福寺、JR 奈良线到京都。",
     serviceBoundary: { label: "最晚班次", detail: "现行平日 33 路从贵船末班约 17:35；山里最需要盯的是这班巴士，不是后段电车。" },
     fallback: "错过 33 路后步行约 2.1 公里、30–40 分钟到贵船口，或提前预约出租车；山中临时叫车可能等很久。",
     sources: [
       { label: "京都巴士 33 路返程", href: KIFUNE_BUS_RETURN },
-      { label: "叡山电车贵船口时刻", href: EIZAN_KIBUNEGUCHI },
+      { label: "叡山电车 2026 平日时刻", href: EIZAN_WEEKDAY_2026 },
     ],
   },
 
   [key("10.06", "kyoto-stay", "fushimi-inari")]: {
     kind: "铁路",
-    suggestedTime: "06:45 退房；约 07:00 搭车",
+    suggestedTime: "08:05 退房；目标京都站 08:26 JR",
     duration: "约 10–15 分钟＋到站步行",
-    route: "JR 奈良线普通：京都 → 稻荷，出站即到伏见稻荷大社。不要误上不停稻荷的快速。",
-    serviceBoundary: { label: "最早班次", detail: "10/6 京都站 JR 奈良线首班 05:33；计划无需赶首班，约 07:00 出发即可。" },
+    route: "JR 奈良线普通 08:26 京都 → 08:32 稻荷，出站即到伏见稻荷大社。不要误上不停稻荷的快速。",
+    serviceBoundary: { label: "班次参考", detail: "10/6 计划用 08:26 普通列车，08:32 到稻荷；列车已按 JR 官方时刻核对。" },
     fallback: "JR 异常时从京都坐 JR／地铁到东福寺，再换京阪到伏见稻荷；赶时间则京都站直接打车。",
     sources: [{ label: "JR 京都 10/6 奈良线时刻", href: JR_KYOTO_INARI }],
   },
   [key("10.06", "fushimi-inari", "todaiji")]: {
     kind: "铁路＋巴士",
-    suggestedTime: "09:00 离开神社；目标 JR 稻荷 09:16",
+    suggestedTime: "10:00 离开神社；目标 JR 稻荷 10:32",
     duration: "约 80–95 分钟",
-    route: "JR 奈良线普通 09:16 从稻荷出发、10:16 到 JR 奈良；换奈良交通 2／77／97 等往东大寺方向巴士，在东大寺大佛殿・春日大社前一带下车。",
+    route: "JR 奈良线普通 10:32 从稻荷出发、11:40 到 JR 奈良；换奈良交通 2／77／97 等往东大寺方向巴士，在东大寺大佛殿・春日大社前一带下车。",
     serviceBoundary: { label: "班次参考", detail: "JR 班次已按 10/6 核对；奈良巴士 10 月观光季改线方案尚未最终发布，需在出发前再次确认站台与线路。" },
     fallback: "奈良巴士改线或拥挤时，从 JR 奈良站打车到东大寺；也可步行约 35–45 分钟，但会增加当天负担。",
     sources: [
@@ -332,26 +346,26 @@ export const transitLegs: Record<string, TransitLeg> = {
     ],
   },
   [key("10.06", "todaiji", "nigatsudo")]: {
-    kind: "步行", suggestedTime: "12:15 前后", duration: "约 15 分钟",
+    kind: "步行", suggestedTime: "13:30", duration: "约 15 分钟",
     route: "从东大寺大佛殿东侧沿寺内参道上行到二月堂。",
     fallback: "膝盖不适时跳过二月堂坡道，直接沿平路前往水谷茶屋／春日大社。",
   },
   [key("10.06", "nigatsudo", "mizuya")]: {
-    kind: "步行", suggestedTime: "13:00 前后", duration: "约 15–20 分钟",
+    kind: "步行", suggestedTime: "14:15", duration: "约 15–20 分钟",
     route: "由二月堂沿若草山脚与林间参道南行到水谷茶屋。",
     fallback: "水谷茶屋休息或排队过长时，在春日野园地周边用餐，不折返近铁奈良站。",
   },
   [key("10.06", "mizuya", "kasuga")]: {
-    kind: "步行", suggestedTime: "14:15–14:30", duration: "约 10–15 分钟",
+    kind: "步行", suggestedTime: "15:35", duration: "约 10–15 分钟",
     route: "沿石灯笼林间参道继续向南进入春日大社。",
     fallback: "脚力不足时缩短春日大社内部参拜，保留返回近铁奈良站的体力。",
   },
   [key("10.06", "kasuga", "osaka-stay")]: {
     kind: "铁路＋巴士",
-    suggestedTime: "16:10–16:30 开始返程",
+    suggestedTime: "16:35 离开神社；目标近铁奈良 17:12",
     duration: "约 70–90 分钟",
-    route: "从春日大社前搭奈良交通巴士或打车到近铁奈良，搭近铁奈良线快速急行直达大阪难波，再步行入住。",
-    serviceBoundary: { label: "最晚班次", detail: "近铁奈良直达大阪难波的快速急行末班约 23:06；计划 16 点多返程，余量充足。10 月巴士站位仍需复核。" },
+    route: "从春日大社前搭奈良交通巴士或打车到近铁奈良；搭快速急行 17:12 近铁奈良 → 17:49 大阪难波，再步行入住。",
+    serviceBoundary: { label: "最晚班次", detail: "17:12 直达快速急行已核到分钟；实际末班更晚。为稳妥衔接，16:35 离开春日大社，巴士等待过长就改打车。" },
     fallback: "巴士拥挤时打车或步行 25–30 分钟到近铁奈良；近铁异常时改 JR 奈良 → 天王寺／JR 难波。",
     sources: [
       { label: "近铁奈良平日時刻", href: KINTETSU_NARA },
@@ -370,6 +384,284 @@ export const transitLegs: Record<string, TransitLeg> = {
   },
 };
 
+const transitTimings: Record<string, TransitTiming> = {
+  [key("09.29", "kix", "osaka-stay")]: {
+    departurePlan: "关西机场到达层｜15:20–15:40 完成入境取行李后去南海站",
+    arrivalPlan: "难波站约 16:15–16:35｜酒店约 16:30–16:50",
+    stayPlan: "办理入住并休整 60–75 分钟；17:50 再出门",
+    timingStatus: "预计时间",
+  },
+  [key("09.29", "osaka-stay", "shinsaibashi")]: {
+    departurePlan: "大阪酒店｜17:50 出发",
+    arrivalPlan: "心斋桥筋约 18:05",
+    stayPlan: "逛街、补给约 55 分钟；19:00 向道顿堀移动",
+    timingStatus: "预计时间",
+  },
+  [key("09.29", "shinsaibashi", "dotonbori")]: {
+    departurePlan: "心斋桥筋｜19:00 出发",
+    arrivalPlan: "戎桥／道顿堀约 19:15",
+    stayPlan: "晚餐与夜景约 75 分钟；20:30 离开",
+    timingStatus: "预计时间",
+  },
+  [key("09.29", "dotonbori", "hozenji")]: {
+    departurePlan: "道顿堀｜20:30 出发",
+    arrivalPlan: "法善寺横丁约 20:38",
+    stayPlan: "石板巷与参拜约 20 分钟；21:00 前后回酒店",
+    timingStatus: "预计时间",
+  },
+  [key("09.29", "hozenji", "osaka-stay")]: {
+    departurePlan: "法善寺横丁｜21:00 出发",
+    arrivalPlan: "大阪酒店约 21:10",
+    stayPlan: "结束抵达日；尽量保证 8 小时以上睡眠",
+    timingStatus: "预计时间",
+  },
+
+  [key("09.30", "osaka-stay", "usj")]: {
+    departurePlan: "大阪酒店｜06:30 离店；大阪难波 06:46 上车",
+    arrivalPlan: "西九条 06:54｜环球城 07:11｜USJ 闸口约 07:15",
+    stayPlan: "官方 08:00–22:00；全天游玩，午后安排一次 30–45 分钟坐下休息",
+    timingStatus: "部分核实",
+  },
+  [key("09.30", "usj", "osaka-stay")]: {
+    departurePlan: "USJ 闸口｜22:05–22:10；目标环球城 22:12／22:20 JR",
+    arrivalPlan: "西九条约 22:17–22:25｜酒店约 22:50–23:05",
+    stayPlan: "回店即休息；次日 10:30 才出门作为恢复日",
+    timingStatus: "部分核实",
+  },
+
+  [key("10.01", "osaka-stay", "kuromon")]: {
+    departurePlan: "大阪酒店｜10:30 出发",
+    arrivalPlan: "黑门市场约 10:45",
+    stayPlan: "早午餐与市场慢逛约 75 分钟；12:00 离开",
+    timingStatus: "预计时间",
+  },
+  [key("10.01", "kuromon", "shitennoji")]: {
+    departurePlan: "黑门市场｜12:00–12:05 出发",
+    arrivalPlan: "四天王寺约 12:30–12:35",
+    stayPlan: "境内参拜约 90 分钟；14:05 离开",
+    timingStatus: "预计时间",
+  },
+  [key("10.01", "shitennoji", "tennoji-park")]: {
+    departurePlan: "四天王寺｜14:05 出发",
+    arrivalPlan: "慶泽园约 14:20",
+    stayPlan: "庭园休息约 70 分钟；15:30 离开",
+    timingStatus: "预计时间",
+  },
+  [key("10.01", "tennoji-park", "shinsekai")]: {
+    departurePlan: "慶泽园｜15:30 出发",
+    arrivalPlan: "新世界约 15:40",
+    stayPlan: "街区散步与小吃约 60 分钟；16:40 离开",
+    timingStatus: "预计时间",
+  },
+  [key("10.01", "shinsekai", "den-den-town")]: {
+    departurePlan: "新世界｜16:40 出发",
+    arrivalPlan: "电电城约 16:55",
+    stayPlan: "动漫、电器店约 50 分钟；17:45 离开",
+    timingStatus: "预计时间",
+  },
+  [key("10.01", "den-den-town", "wanaka")]: {
+    departurePlan: "电电城｜17:45 出发",
+    arrivalPlan: "わなか约 18:00",
+    stayPlan: "章鱼烧与坐下休息约 30 分钟；18:30 回酒店",
+    timingStatus: "预计时间",
+  },
+  [key("10.01", "wanaka", "osaka-stay")]: {
+    departurePlan: "わなか千日前｜18:30 出发",
+    arrivalPlan: "大阪酒店约 18:40",
+    stayPlan: "当晚不再加景点，为神户日保留体力",
+    timingStatus: "预计时间",
+  },
+
+  [key("10.02", "osaka-stay", "nunobiki")]: {
+    departurePlan: "大阪酒店｜09:30；大阪难波 09:52 快速急行",
+    arrivalPlan: "神户三宫 10:42｜新神户约 10:56｜缆车下站约 11:05",
+    stayPlan: "约 11:15 上山；香草园游览至 12:45",
+    timingStatus: "部分核实",
+  },
+  [key("10.02", "nunobiki", "kitano")]: {
+    departurePlan: "布引香草园｜12:45 下山",
+    arrivalPlan: "新神户约 13:00｜北野约 13:15",
+    stayPlan: "异人馆街慢走约 30 分钟；13:45 下坡赴餐厅",
+    timingStatus: "预计时间",
+  },
+  [key("10.02", "kitano", "mouriya")]: {
+    departurePlan: "北野｜13:45 出发",
+    arrivalPlan: "Mouriya 本店约 14:00",
+    stayPlan: "预约午餐 14:00–15:30，预留完整 90 分钟",
+    timingStatus: "预计时间",
+  },
+  [key("10.02", "mouriya", "meriken")]: {
+    departurePlan: "Mouriya｜15:30 出发",
+    arrivalPlan: "美利坚公园约 16:00",
+    stayPlan: "旧居留地与港区慢走、休息约 1 小时 45 分；17:45 离开",
+    timingStatus: "预计时间",
+  },
+  [key("10.02", "meriken", "harborland")]: {
+    departurePlan: "美利坚公园｜17:45 出发",
+    arrivalPlan: "Harborland 约 18:00",
+    stayPlan: "日落后夜景约 75 分钟；19:15 开始返程",
+    timingStatus: "预计时间",
+  },
+  [key("10.02", "harborland", "osaka-stay")]: {
+    departurePlan: "Harborland｜19:15；约 19:30 到 JR 神户站",
+    arrivalPlan: "大阪／梅田约 20:10｜酒店约 20:30–20:45",
+    stayPlan: "回店后只整理次日随身包；大件行李已前送京都",
+    timingStatus: "预计时间",
+  },
+
+  [key("10.03", "osaka-stay", "arashiyama-bamboo")]: {
+    departurePlan: "大阪酒店｜07:50 退房，仅带随身包",
+    arrivalPlan: "阪急岚山约 09:20｜竹林约 09:35–09:40",
+    stayPlan: "竹林只停留 30 分钟；10:10 前往天龙寺",
+    timingStatus: "预计时间",
+  },
+  [key("10.03", "arashiyama-bamboo", "tenryuji")]: {
+    departurePlan: "竹林｜10:10 出发",
+    arrivalPlan: "天龙寺北门约 10:15",
+    stayPlan: "庭园与寺院约 90 分钟；11:45 离开",
+    timingStatus: "预计时间",
+  },
+  [key("10.03", "tenryuji", "togetsukyo")]: {
+    departurePlan: "天龙寺｜11:45 出发",
+    arrivalPlan: "渡月桥／桂川约 12:00",
+    stayPlan: "河岸与午餐约 2 小时；14:00 去 JR 站",
+    timingStatus: "预计时间",
+  },
+  [key("10.03", "togetsukyo", "kyoto-stay")]: {
+    departurePlan: "渡月桥｜14:00；目标 JR 嵯峨岚山 14:31",
+    arrivalPlan: "京都站 14:49｜京都酒店约 15:05–15:20",
+    stayPlan: "入住并休息约 2 小时 30 分；17:45 再赴晚餐",
+    timingStatus: "部分核实",
+  },
+  [key("10.03", "kyoto-stay", "maekawa")]: {
+    departurePlan: "京都酒店｜17:45 出发",
+    arrivalPlan: "料理屋まえかわ约 18:15",
+    stayPlan: "18:30 预约晚餐，按 2.5–3 小时预留至约 21:30",
+    timingStatus: "预计时间",
+  },
+  [key("10.03", "maekawa", "kyoto-stay")]: {
+    departurePlan: "料理屋まえかわ｜约 21:30–22:00 离店",
+    arrivalPlan: "京都酒店约 22:15–22:35",
+    stayPlan: "回店休息；次日 08:50 出发",
+    timingStatus: "预计时间",
+  },
+
+  [key("10.04", "kyoto-stay", "philosopher")]: {
+    departurePlan: "京都酒店｜08:50；目标约 09:00 从京都站前出发",
+    arrivalPlan: "银阁寺道约 09:35｜哲学之道北端约 09:45",
+    stayPlan: "完整慢走约 70 分钟；10:55 到南端",
+    timingStatus: "部分核实",
+  },
+  [key("10.04", "philosopher", "nanzenji")]: {
+    departurePlan: "哲学之道北端｜09:45 开始向南步行",
+    arrivalPlan: "南禅寺区域约 10:55",
+    stayPlan: "南禅寺与水路阁约 50 分钟；11:45 离开",
+    timingStatus: "预计时间",
+  },
+  [key("10.04", "nanzenji", "byodoin")]: {
+    departurePlan: "南禅寺｜11:45 出发",
+    arrivalPlan: "JR 宇治约 12:35｜平等院约 12:45",
+    stayPlan: "只看庭园与博物馆约 70 分钟；13:55 离开",
+    timingStatus: "预计时间",
+  },
+  [key("10.04", "byodoin", "nakamura-uji")]: {
+    departurePlan: "平等院｜13:55 出发",
+    arrivalPlan: "中村藤吉平等院店约 14:00",
+    stayPlan: "茶餐／甜品约 35 分钟；排队超 15 分钟即外带",
+    timingStatus: "预计时间",
+  },
+  [key("10.04", "nakamura-uji", "uji-river")]: {
+    departurePlan: "中村藤吉｜14:35 出发",
+    arrivalPlan: "宇治川／朝雾桥约 14:40",
+    stayPlan: "河岸短停约 15 分钟；14:55 去 JR 宇治站",
+    timingStatus: "预计时间",
+  },
+  [key("10.04", "uji-river", "joyo")]: {
+    departurePlan: "宇治川｜14:55；目标 JR 宇治 15:26",
+    arrivalPlan: "JR 长池 15:37｜烟火会场约 15:45–16:00",
+    stayPlan: "先取位、休息与用餐；19:00–19:40 看烟火",
+    timingStatus: "部分核实",
+  },
+  [key("10.04", "joyo", "kyoto-stay")]: {
+    departurePlan: "会场｜19:50 起随人流离场；目标 JR 长池 20:50",
+    arrivalPlan: "京都站 21:23｜酒店约 21:35–21:45",
+    stayPlan: "回店即休息；次日贵船不安排更早班次",
+    timingStatus: "部分核实",
+  },
+
+  [key("10.05", "kyoto-stay", "kifune")]: {
+    departurePlan: "京都酒店｜09:00；09:42 前到出町柳",
+    arrivalPlan: "出町柳 09:52 → 贵船口 10:21；33 路 10:32 → 贵船约 10:37",
+    stayPlan: "本宫 10:45–11:30，含参拜、御守与短休",
+    timingStatus: "部分核实",
+  },
+  [key("10.05", "kifune", "kifune-okumiya")]: {
+    departurePlan: "贵船神社本宫｜11:30 出发",
+    arrivalPlan: "奥宫约 11:55",
+    stayPlan: "林间参拜约 35 分钟；12:30 返程",
+    timingStatus: "预计时间",
+  },
+  [key("10.05", "kifune-okumiya", "kifune-yui")]: {
+    departurePlan: "贵船神社奥宫｜12:30 出发",
+    arrivalPlan: "结社约 12:45",
+    stayPlan: "参拜约 20 分钟；13:05 开始午餐与河畔休息",
+    timingStatus: "预计时间",
+  },
+  [key("10.05", "kifune-yui", "kyoto-stay")]: {
+    departurePlan: "结社周边｜13:05 午餐；15:20 去站，目标 15:37 巴士",
+    arrivalPlan: "贵船口约 15:42｜京都酒店约 17:00–17:30",
+    stayPlan: "回店后不再排景点；33 路 17:35 末班仅作兜底",
+    timingStatus: "部分核实",
+  },
+
+  [key("10.06", "kyoto-stay", "fushimi-inari")]: {
+    departurePlan: "京都酒店｜08:05 退房；京都站 08:26 JR",
+    arrivalPlan: "JR 稻荷 08:32｜神社入口约 08:35",
+    stayPlan: "本殿、千本鸟居、奥社短线约 85 分钟；10:00 下山",
+    timingStatus: "部分核实",
+  },
+  [key("10.06", "fushimi-inari", "todaiji")]: {
+    departurePlan: "伏见稻荷｜10:00 下山；目标 JR 稻荷 10:32",
+    arrivalPlan: "JR 奈良 11:40｜东大寺约 12:05",
+    stayPlan: "南大门与大佛殿约 85 分钟；13:30 前往二月堂",
+    timingStatus: "部分核实",
+  },
+  [key("10.06", "todaiji", "nigatsudo")]: {
+    departurePlan: "东大寺大佛殿｜13:30 出发",
+    arrivalPlan: "二月堂约 13:45",
+    stayPlan: "登高、眺望与休息约 30 分钟；14:15 离开",
+    timingStatus: "预计时间",
+  },
+  [key("10.06", "nigatsudo", "mizuya")]: {
+    departurePlan: "二月堂｜14:15 出发",
+    arrivalPlan: "水谷茶屋约 14:35",
+    stayPlan: "午餐约 60 分钟；若排队长，改春日野园地简餐",
+    timingStatus: "预计时间",
+  },
+  [key("10.06", "mizuya", "kasuga")]: {
+    departurePlan: "水谷茶屋｜15:35 出发",
+    arrivalPlan: "春日大社约 15:50",
+    stayPlan: "林间参道与参拜约 45 分钟；16:35 离开",
+    timingStatus: "预计时间",
+  },
+  [key("10.06", "kasuga", "osaka-stay")]: {
+    departurePlan: "春日大社｜16:35；目标近铁奈良 17:12 快速急行",
+    arrivalPlan: "大阪难波 17:49｜酒店约 18:05–18:25",
+    stayPlan: "入住、取前送行李并在难波轻松晚餐；不再加跨区景点",
+    timingStatus: "部分核实",
+  },
+
+  [key("10.07", "osaka-stay", "kix")]: {
+    departurePlan: "难波酒店 07:40｜心斋桥酒店 07:25；目标南海难波 08:00",
+    arrivalPlan: "Rapi:t 08:00 → 关西机场 08:39｜航站楼约 08:50",
+    stayPlan: "预留约 3 小时 10 分钟办理值机、安检与出境；12:00 起飞",
+    timingStatus: "部分核实",
+  },
+};
+
 export function getTransitLeg(date: string, fromId: string, toId: string) {
-  return transitLegs[key(date, fromId, toId)];
+  const legKey = key(date, fromId, toId);
+  const transit = transitLegs[legKey];
+  const timing = transitTimings[legKey];
+  return transit && timing ? { ...transit, ...timing } : undefined;
 }

@@ -36,6 +36,15 @@ test("server-renders the Kansai travel guide", async () => {
   assert.match(html, /相邻两点 Google Maps 导航/);
   assert.match(html, /首末班约束/);
   assert.match(html, /无法乘坐时的备用方案/);
+  assert.match(html, /从哪里几点出发/);
+  assert.match(html, /预计几点到/);
+  assert.match(html, /到达后游览 \/ 停留/);
+  assert.match(html, /部分核实/);
+  assert.match(html, /06:46 阪神/);
+  assert.match(html, /作息/);
+  assert.match(html, /常规作息 · 09:30 离店/);
+  assert.match(html, /正常作息 · 09:00 离店/);
+  assert.match(html, /08:26–08:32 JR/);
   assert.match(html, /料理屋まえかわ/);
   assert.match(html, /Mouriya Honten/);
   assert.match(html, /Google Maps 4\.8 · 16,590 条评价/);
@@ -49,7 +58,7 @@ test("server-renders the Kansai travel guide", async () => {
   assert.match(html, /参考旧行程/);
   assert.match(html, /伏见稻荷顺移到奈良当天/);
   assert.match(html, /USJ 后睡到自然醒，再慢走大阪南区/);
-  assert.match(html, /清晨伏见稻荷，沿 JR 奈良线继续南下/);
+  assert.match(html, /伏见稻荷之后，沿 JR 奈良线继续南下/);
   assert.doesNotMatch(html, /任天堂博物馆|Nintendo Museum/);
   assert.doesNotMatch(html, /彩色虚线|行程先后顺序/);
   assert.doesNotMatch(html, /09\.28|十日关西/);
@@ -58,11 +67,15 @@ test("server-renders the Kansai travel guide", async () => {
 
 test("covers every consecutive itinerary leg with transit guidance", async () => {
   const source = await readFile(new URL("../app/transitData.ts", import.meta.url), "utf8");
-  assert.equal(source.match(/\[key\("/g)?.length, 44);
+  assert.equal(source.match(/^ {4}kind: "/gm)?.length, 44);
   assert.equal(source.match(/suggestedTime: "/g)?.length, 44);
   assert.equal(source.match(/duration: "/g)?.length, 44);
   assert.equal(source.match(/route: "/g)?.length, 44);
   assert.equal(source.match(/fallback: "/g)?.length, 44);
+  assert.equal(source.match(/departurePlan: "/g)?.length, 44);
+  assert.equal(source.match(/arrivalPlan: "/g)?.length, 44);
+  assert.equal(source.match(/stayPlan: "/g)?.length, 44);
+  assert.equal(source.match(/^ {4}timingStatus: "/gm)?.length, 44);
   assert.match(source, /最早班次/);
   assert.match(source, /最晚班次/);
   assert.match(source, /JR 长池/);

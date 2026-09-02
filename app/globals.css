@@ -171,6 +171,11 @@ a:focus-visible { outline: 3px solid var(--gold); outline-offset: 5px; border-ra
 .leg-walk .day-leg-heading em { color: #8b4128; background: #f3ded5; }
 .day-leg-facts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .day-leg-facts span { padding: 9px 10px; color: var(--ink); background: #f4efe4; border-radius: 5px; font-size: 9px; line-height: 1.55; }
+.day-leg-facts .stay-fact, .day-leg-facts .duration-fact { grid-column: 1 / -1; }
+.timing-status { display: inline-block; margin-left: 7px; padding: 2px 6px; border-radius: 999px; font-size: 8px; font-style: normal; font-weight: 900; white-space: nowrap; }
+.timing-status.status-verified { color: #fff; background: var(--moss); }
+.timing-status.status-partial { color: #72581d; background: #ead8a8; }
+.timing-status.status-estimated { color: #7a4a39; background: #eadad3; }
 .day-leg-facts b, .day-leg-route b, .day-leg-boundary b, .day-leg-fallback b { display: block; margin-bottom: 3px; color: var(--muted); font-size: 8px; letter-spacing: .08em; }
 .day-leg-route, .day-leg-boundary, .day-leg-fallback, .day-leg-missing { margin: 0; color: #494d48; font-size: 10px; line-height: 1.65; }
 .day-leg-boundary { padding: 10px 11px; color: #31523c; background: #e4eee2; border-radius: 5px; }

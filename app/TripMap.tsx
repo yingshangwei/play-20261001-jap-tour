@@ -37,34 +37,34 @@ const spots: MapPoint[] = [
   { id: "shinsaibashi", name: "心斋桥筋", area: "osaka", category: "spot", position: [34.6748, 135.5012], dates: ["09.29", "10.06"], meta: "首晚必到 · 最后一晚可补购物", googleQuery: "Shinsaibashi-suji Shopping Street Osaka" },
   { id: "dotonbori", name: "道顿堀", area: "osaka", category: "spot", position: [34.6687, 135.5013], dates: ["09.29", "10.06"], meta: "夜景与美食街", googleQuery: "Dotonbori Osaka" },
   { id: "hozenji", name: "法善寺横丁", area: "osaka", category: "spot", position: [34.6676, 135.5027], dates: ["09.29", "10.06"], meta: "道顿堀旁的石板小巷", googleQuery: "Hozenji Yokocho Osaka" },
-  { id: "usj", name: "USJ", area: "osaka", category: "spot", position: [34.6656, 135.4325], dates: ["09.30"], meta: "全天 · 2026 万圣节活动期", googleQuery: "Universal Studios Japan" },
-  { id: "kuromon", name: "黑门市场", area: "osaka", category: "spot", position: [34.6654, 135.5064], dates: ["10.01"], meta: "10:30 左右慢慢吃早午餐", googleQuery: "Kuromon Ichiba Market Osaka" },
-  { id: "shitennoji", name: "四天王寺", area: "osaka", category: "spot", position: [34.6545, 135.5165], dates: ["10.01"], meta: "大阪南区安静古寺", googleQuery: "Shitennoji Temple Osaka" },
-  { id: "tennoji-park", name: "天王寺公园 · 慶泽园", area: "osaka", category: "spot", position: [34.651, 135.5107], dates: ["10.01"], meta: "USJ 后的松弛散步", googleQuery: "Keitakuen Garden Osaka" },
+  { id: "usj", name: "USJ", area: "osaka", category: "spot", position: [34.6656, 135.4325], dates: ["09.30"], meta: "07:15 到闸口 · 官方 08:00–22:00", googleQuery: "Universal Studios Japan" },
+  { id: "kuromon", name: "黑门市场", area: "osaka", category: "spot", position: [34.6654, 135.5064], dates: ["10.01"], meta: "10:45–12:00 早午餐", googleQuery: "Kuromon Ichiba Market Osaka" },
+  { id: "shitennoji", name: "四天王寺", area: "osaka", category: "spot", position: [34.6545, 135.5165], dates: ["10.01"], meta: "12:35–14:05 · 安静古寺", googleQuery: "Shitennoji Temple Osaka" },
+  { id: "tennoji-park", name: "天王寺公园 · 慶泽园", area: "osaka", category: "spot", position: [34.651, 135.5107], dates: ["10.01"], meta: "14:20–15:30 · 松弛散步", googleQuery: "Keitakuen Garden Osaka" },
   { id: "shinsekai", name: "新世界 · 通天阁", area: "osaka", category: "spot", position: [34.6525, 135.5063], dates: ["10.01"], meta: "街景、炸串，可不上塔", googleQuery: "Tsutenkaku Shinsekai Osaka" },
   { id: "den-den-town", name: "日本桥电电城", area: "osaka", category: "spot", position: [34.6592, 135.5062], dates: ["10.01"], meta: "动漫、电器与模型店", googleQuery: "Nipponbashi Denden Town Osaka" },
 
-  { id: "nunobiki", name: "布引香草园 · 缆车", area: "kobe", category: "spot", position: [34.7179, 135.1903], dates: ["10.02"], meta: "09:30 缆车 · 神户自然主线", googleQuery: "Kobe Nunobiki Herb Gardens", guide: "Google Maps 4.5 · 约 6,200 条评价", fit: "山景与花园是神户日的主要体验；遇强风停运则直接去北野。", official: "https://www.kobeherb.com/en/" },
+  { id: "nunobiki", name: "布引香草园 · 缆车", area: "kobe", category: "spot", position: [34.7179, 135.1903], dates: ["10.02"], meta: "11:15–12:45 · 神户自然主线", googleQuery: "Kobe Nunobiki Herb Gardens", guide: "Google Maps 4.5 · 约 6,200 条评价", fit: "山景与花园是神户日的主要体验；遇强风停运则直接去北野。", official: "https://www.kobeherb.com/en/" },
   { id: "kitano", name: "北野异人馆街", area: "kobe", category: "spot", position: [34.7008, 135.1897], dates: ["10.02"], meta: "从山侧顺坡下行", googleQuery: "Kitano Ijinkan-Gai Kobe" },
   { id: "meriken", name: "美利坚公园", area: "kobe", category: "spot", position: [34.6826, 135.1871], dates: ["10.02"], meta: "港口散步与地标建筑", googleQuery: "Meriken Park Kobe" },
   { id: "harborland", name: "神户 Harborland", area: "kobe", category: "spot", position: [34.6796, 135.1789], dates: ["10.02"], meta: "看日落后回大阪", googleQuery: "Kobe Harborland" },
 
-  { id: "arashiyama-bamboo", name: "岚山竹林小径", area: "kyoto", category: "spot", position: [35.017, 135.6713], dates: ["10.03"], meta: "只留 30 分钟 · 09:00 前后到", googleQuery: "Arashiyama Bamboo Forest Kyoto", guide: "Google Maps 4.4 · 约 2.4 万条评价", fit: "最常见负面反馈是拥挤且主路很短；早到、拍完即走，不把它当半日主景点。" },
+  { id: "arashiyama-bamboo", name: "岚山竹林小径", area: "kyoto", category: "spot", position: [35.017, 135.6713], dates: ["10.03"], meta: "09:40–10:10 · 只留 30 分钟", googleQuery: "Arashiyama Bamboo Forest Kyoto", guide: "Google Maps 4.4 · 约 2.4 万条评价", fit: "最常见负面反馈是拥挤且主路很短；到达后拍照即走，不把它当半日主景点。" },
   { id: "tenryuji", name: "天龙寺庭园", area: "kyoto", category: "spot", position: [35.0158, 135.6738], dates: ["10.03"], meta: "08:30 开门 · 岚山主景点", googleQuery: "Tenryu-ji Kyoto", guide: "Google Maps 4.5 · 约 1.7 万条评价", fit: "庭园体验比竹林更完整，且可从北门自然衔接竹林。", official: "https://www.tenryuji.com/en/visit/index.html" },
   { id: "togetsukyo", name: "渡月桥・桂川", area: "kyoto", category: "spot", position: [35.0135, 135.6778], dates: ["10.03"], meta: "河岸休息 · 看山景", googleQuery: "Togetsukyo Bridge Kyoto", guide: "Google Maps 4.5", fit: "与天龙寺同一核心区，作为午后低强度收尾，不追加猴子公园爬坡。" },
 
-  { id: "philosopher", name: "哲学之道", area: "kyoto", category: "spot", position: [35.0202, 135.7958], dates: ["10.04"], meta: "不可删除 · 08:30 开始", googleQuery: "Philosopher's Path Kyoto", guide: "Google Maps 4.6", fit: "本次京都硬约束；约 2 公里，预留 60–75 分钟而不是当作景点间通道。" },
-  { id: "nanzenji", name: "南禅寺 · 水路阁", area: "kyoto", category: "spot", position: [35.0114, 135.793], dates: ["10.04"], meta: "11:00 前离开", googleQuery: "Nanzenji Temple Suirokaku Kyoto", guide: "Google Maps 4.5 · 约 1.3 万条评价", fit: "直接承接哲学之道，结束后转往宇治。", official: "https://nanzenji.or.jp/about_rinzaishu/visit" },
+  { id: "philosopher", name: "哲学之道", area: "kyoto", category: "spot", position: [35.0202, 135.7958], dates: ["10.04"], meta: "不可删除 · 09:45–10:55", googleQuery: "Philosopher's Path Kyoto", guide: "Google Maps 4.6", fit: "本次京都硬约束；约 2 公里，预留 60–75 分钟而不是当作景点间通道。" },
+  { id: "nanzenji", name: "南禅寺 · 水路阁", area: "kyoto", category: "spot", position: [35.0114, 135.793], dates: ["10.04"], meta: "11:45 前离开", googleQuery: "Nanzenji Temple Suirokaku Kyoto", guide: "Google Maps 4.5 · 约 1.3 万条评价", fit: "直接承接哲学之道，结束后转往宇治。", official: "https://nanzenji.or.jp/about_rinzaishu/visit" },
 
   { id: "byodoin", name: "平等院", area: "kyoto", category: "spot", position: [34.8893, 135.8077], dates: ["10.04"], meta: "只看庭园与博物馆", googleQuery: "Byodoin Temple Uji", guide: "Google Maps 4.5 · 约 2.2 万条评价", fit: "宇治最值得保留的核心景点；烟火日不等待凤凰堂内部参观。", official: "https://www.byodoin.or.jp/en/guide/" },
   { id: "uji-river", name: "宇治川 · 朝雾桥", area: "kyoto", category: "spot", position: [34.8917, 135.8101], dates: ["10.04"], meta: "河岸散步", googleQuery: "Asagiri Bridge Uji" },
   { id: "joyo", name: "城阳秋花火", area: "kyoto", category: "spot", position: [34.8445, 135.7972], dates: ["10.04"], meta: "19:00 开始 · JR 长池站步行约 5 分钟", googleQuery: "Kizugawa Athletic Park Joyo Kyoto" },
 
-  { id: "kifune", name: "贵船神社 本宫", area: "kyoto", category: "spot", position: [35.1219, 135.7629], dates: ["10.05"], meta: "不可删除 · 石阶灯笼", googleQuery: "Kifune Shrine Kyoto", guide: "Google Maps 4.5 · 约 1.2 万条评价", fit: "本次旅行的自然与神社硬约束；雨天也改乘巴士直达，不取消。", official: "https://kifunejinja.jp/en/info/" },
+  { id: "kifune", name: "贵船神社 本宫", area: "kyoto", category: "spot", position: [35.1219, 135.7629], dates: ["10.05"], meta: "不可删除 · 10:45–11:30", googleQuery: "Kifune Shrine Kyoto", guide: "Google Maps 4.5 · 约 1.2 万条评价", fit: "本次旅行的自然与神社硬约束；雨天也改乘巴士直达，不取消。", official: "https://kifunejinja.jp/en/info/" },
   { id: "kifune-okumiya", name: "贵船神社 奥宫", area: "kyoto", category: "spot", position: [35.1262, 135.7621], dates: ["10.05"], meta: "三社参拜 · 林间最深处", googleQuery: "Kifune Shrine Okumiya Kyoto", guide: "Google Maps 4.5 · 约 2,900 条评价", fit: "从本宫沿河缓坡前往，保留完整贵船体验。" },
   { id: "kifune-yui", name: "贵船神社 结社", area: "kyoto", category: "spot", position: [35.1241, 135.7624], dates: ["10.05"], meta: "三社参拜收尾", googleQuery: "Kifune Shrine Yui no Yashiro Kyoto", guide: "Google Maps 4.4 · 约 600 条评价", fit: "奥宫返回本宫方向时顺路停靠，不额外跨区。" },
 
-  { id: "fushimi-inari", name: "伏见稻荷大社 · 千本鸟居", area: "kyoto", category: "spot", position: [34.9671, 135.7727], dates: ["10.06"], meta: "不可删除 · 清晨只走到奥社奉拜所", googleQuery: "Fushimi Inari Taisha Kyoto", guide: "Google Maps 4.6 · 约 8.6 万条评价", fit: "清晨避开主客流，走本殿、千本鸟居与奥社短线；不登稻荷山，之后沿 JR 奈良线去奈良。", official: "https://inari.jp/en/access/" },
+  { id: "fushimi-inari", name: "伏见稻荷大社 · 千本鸟居", area: "kyoto", category: "spot", position: [34.9671, 135.7727], dates: ["10.06"], meta: "不可删除 · 08:35–10:00 短线", googleQuery: "Fushimi Inari Taisha Kyoto", guide: "Google Maps 4.6 · 约 8.6 万条评价", fit: "为保护睡眠接受稍多客流，走本殿、千本鸟居与奥社短线；不登稻荷山，之后沿 JR 奈良线去奈良。", official: "https://inari.jp/en/access/" },
   { id: "todaiji", name: "东大寺 · 大佛殿", area: "nara", category: "spot", position: [34.689, 135.8398], dates: ["10.06"], meta: "预留 90–120 分钟", googleQuery: "Todai-ji Daibutsuden Nara", guide: "Google Maps 4.7 · 约 3 万条评价", fit: "奈良不可替代的核心景点，不能压缩成拍照停留。", official: "https://www.todaiji.or.jp/en/information/haikan/" },
   { id: "nigatsudo", name: "二月堂", area: "nara", category: "spot", position: [34.6894, 135.8454], dates: ["10.06"], meta: "东大寺后顺路登高", googleQuery: "Nigatsudo Nara", guide: "Google Maps 4.6 · 约 3,300 条评价", fit: "距离东大寺近，视野与氛围回报高。" },
   { id: "kasuga", name: "春日大社", area: "nara", category: "spot", position: [34.6814, 135.8484], dates: ["10.06"], meta: "石灯笼与林间参道", googleQuery: "Kasuga Taisha Nara", guide: "Google Maps 4.5 · 约 1.5 万条评价", fit: "与奈良公园林间路线连续，结束后坐巴士回站。", official: "https://www.kasugataisha.or.jp/en/about_en/basic/" },
@@ -116,7 +116,7 @@ const daySegments: Record<ItineraryDate, DaySegment[]> = {
     { label: "贵船 → 返回住宿", note: "午餐和河畔休息后原路返回京都住宿。", pointIds: ["kifune-yui", "kyoto-stay"], mode: "transit" },
   ],
   "10.06": [
-    { label: "京都退房 → 伏见", note: "从京都住宿退房后清晨前往伏见稻荷；大件行李已提前寄往大阪。", pointIds: ["kyoto-stay", "fushimi-inari"], mode: "transit" },
+    { label: "京都退房 → 伏见", note: "从京都住宿 08:05 退房后前往伏见稻荷；大件行李已提前寄往大阪。", pointIds: ["kyoto-stay", "fushimi-inari"], mode: "transit" },
     { label: "伏见 → 奈良", note: "伏见只走到奥社奉拜所、不登稻荷山，随后沿 JR 奈良线继续南下。", pointIds: ["fushimi-inari", "todaiji"], mode: "transit" },
     { label: "奈良公园 · 只留核心", note: "东大寺、二月堂、林间午餐和春日大社连续步行；结束后坐巴士回近铁奈良站。", pointIds: ["todaiji", "nigatsudo", "mizuya", "kasuga"], mode: "walking", drawOnMap: true },
     { label: "奈良 → 大阪住宿", note: "傍晚返回大阪并入住，移动日从京都住宿开始、以大阪住宿结束。", pointIds: ["kasuga", "osaka-stay"], mode: "transit" },
@@ -295,15 +295,15 @@ export default function TripMap() {
       </div>
       <div className="map-legend real-legend" aria-label="地图图例"><span><i className="real-legend-dot spot-dot" />景点</span><span><i className="real-legend-dot restaurant-dot" />餐厅</span><span><i className="real-legend-dot stay-dot" />住宿</span><span>日期筛选后，行程内景点和餐厅按顺序编号</span><span className={`map-arrow-state state-${arrowState}`}>{arrowState === "idle" ? "选中某天后显示片区箭头" : arrowState === "visible" ? "片区箭头已显示" : "继续放大到片区查看箭头"}</span></div>
       <div className="leaflet-map" ref={mapElement} aria-label="关西景点、住宿与餐厅交互地图" />
-      <p className="map-disclaimer">底图使用 OpenStreetMap；选中某天并放大到片区后，粗黑弧形箭头表示当天区域内的游览顺序。跨城交通不画长线，住宿首尾和每一段真实导航都在下方列出。双指滚动或捏合可缩放地图，点击标记可打开 Google Maps。</p>
+      <p className="map-disclaimer">底图使用 OpenStreetMap；选中某天并放大到片区后，粗黑弧形箭头表示当天区域内的游览顺序。跨城交通不画长线，住宿首尾和每一段真实导航都在下方列出；时刻卡区分已核班次、部分核实与预计时间。双指滚动或捏合可缩放地图，点击标记可打开 Google Maps。</p>
 
       <section className="day-route-detail" aria-label="当天详细行程">
-        {selectedDate === "all" ? <div className="day-route-empty"><strong>选择上方某一天</strong><p>即可查看当天每一次地点更换的推荐方式、线路、建议时间、首末班约束与无法乘坐时的备用方案。</p></div> : (
+        {selectedDate === "all" ? <div className="day-route-empty"><strong>选择上方某一天</strong><p>即可查看从哪里几点出发、建议班次、预计几点到、到达后游览 / 停留多久，以及每一段的 Google Maps 导航、首末班约束与无法乘坐时的备用方案。</p></div> : (
           <>
             <div className="day-route-header"><div><span>{selectedDate}</span><h3>{dayTitles[selectedDate]}</h3></div><small>每一段都可打开 Google Maps；公共交通卡另附运营方时刻入口</small></div>
             <div className="transit-audit-note">
               <strong>班次核对说明</strong>
-              <p>时刻资料核对于 2026-09-02。酒店地址尚未锁定，住宿相关步行与接驳时间均为区域估算；临时停运、活动加开车与 10 月换季时刻仍需在出发前两周及当天复查。</p>
+              <p>时刻资料核对于 2026-09-02。“已核班次”是运营方公布到分钟的车次；“部分核实”表示主车次已核、酒店步行或换乘仍为估算；“预计时间”统一按 5–15 分钟粒度表达。酒店地址尚未锁定，出发前两周及当天还需复查。</p>
             </div>
             {selectedSegments.map((segment) => {
               const segmentPoints = segment.pointIds.map((id) => pointById.get(id)).filter((point): point is MapPoint => Boolean(point));
@@ -330,7 +330,12 @@ export default function TripMap() {
                         <em>{detail?.kind ?? "待补"}</em>
                       </div>
                       {detail ? <>
-                        <div className="day-leg-facts"><span><b>建议</b>{detail.suggestedTime}</span><span><b>耗时</b>{detail.duration}</span></div>
+                        <div className="day-leg-facts">
+                          <span><b>从哪里 / 何时出发</b>{detail.departurePlan}</span>
+                          <span><b>预计几点到</b>{detail.arrivalPlan}</span>
+                          <span className="stay-fact"><b>到达后游览 / 停留</b>{detail.stayPlan}</span>
+                          <span className="duration-fact"><b>这一段交通耗时</b>{detail.duration}<i className={`timing-status status-${detail.timingStatus === "已核班次" ? "verified" : detail.timingStatus === "部分核实" ? "partial" : "estimated"}`}>{detail.timingStatus}</i></span>
+                        </div>
                         <p className="day-leg-route"><b>怎么走</b>{detail.route}</p>
                         {detail.serviceBoundary && <p className={`day-leg-boundary boundary-${detail.serviceBoundary.label === "最晚班次" ? "last" : detail.serviceBoundary.label === "最早班次" ? "first" : "reference"}`}><b>{detail.serviceBoundary.label}</b>{detail.serviceBoundary.detail}</p>}
                         <p className="day-leg-fallback"><b>无法乘坐 / 行走</b>{detail.fallback}</p>
