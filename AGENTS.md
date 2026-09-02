@@ -36,6 +36,8 @@ These instructions apply to the whole repository. Preserve them when editing the
 ## Editing rules
 
 - `app/page.tsx`, `app/TripMap.tsx`, and any detailed day page must describe the same date, stop order, lodging base, and return time.
+- Treat each day as a complete door-to-door journey. Normal sightseeing days start and end at that night's lodging; arrival day starts at KIX and ends at the Osaka lodging; moving days start at the old lodging and end at the new lodging; departure day starts at the Osaka lodging and ends at KIX.
+- Map arrows are contextual, not cross-region route lines: show them only after a single date is selected and the map is zoomed into a local cluster. Keep long-distance transfers in the detailed flow and Google Maps links instead of drawing them across the map.
 - When adding a place, state what it replaces. Do not add a stop only because it has a high rating; geography, opening time, walking load, and return-to-hotel safety take priority.
 - Moving days require the luggage solution before sightseeing. Japan hotel-to-hotel luggage forwarding is usually next-day; keep an overnight kit and confirm that both hotels accept forwarding.
 - Preserve per-date map filtering and keyless Google Maps links. Within an area, use walking directions; cross-region transport should be described separately.
