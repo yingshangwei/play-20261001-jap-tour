@@ -29,7 +29,12 @@ test("server-renders the Kansai travel guide", async () => {
   assert.match(html, /真实地图/);
   assert.match(html, /OpenStreetMap/);
   assert.match(html, /Google Maps/);
-  assert.match(html, /Google Maps 高评价餐厅/);
+  assert.match(html, /餐厅候选与顺路备选/);
+  assert.match(html, /让整段旅程/);
+  assert.match(html, /47 个阶段 · 可按天播放/);
+  assert.match(html, /上海出发机场 · 待确认/);
+  assert.match(html, /选择动画阶段/);
+  assert.match(html, /播放速度/);
   assert.match(html, /地图日期筛选/);
   assert.match(html, /全部日期/);
   assert.match(html, /10月4日/);

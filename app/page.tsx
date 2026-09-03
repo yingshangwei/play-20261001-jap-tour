@@ -1,4 +1,5 @@
 import TripMap from "./TripMap";
+import JourneyPlayer from "./JourneyPlayer";
 
 export const dynamic = "force-static";
 
@@ -415,6 +416,7 @@ export default function Home() {
             <span>KANSAI 2026</span>
           </a>
           <div className="nav-menu">
+            <a href="#journey">旅程动画</a>
             <a href="#map">线路地图</a>
             <a href="#route">逐日路线</a>
             <a href="#reference">文档复盘</a>
@@ -455,6 +457,8 @@ export default function Home() {
           <strong>USJ · 神户 · 岚山 · 哲学之道 · 贵船 · 伏见 · 烟火</strong>
         </article>
       </section>
+
+      <JourneyPlayer />
 
       <section className="luggage-plan shell" aria-labelledby="luggage-title">
         <div className="luggage-plan-heading">

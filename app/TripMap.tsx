@@ -6,10 +6,10 @@ import { getTransitLeg } from "./transitData";
 
 type Area = "kansai" | "osaka" | "kobe" | "kyoto" | "nara";
 type Category = "all" | "spot" | "restaurant" | "stay";
-type ItineraryDate = "09.29" | "09.30" | "10.01" | "10.02" | "10.03" | "10.04" | "10.05" | "10.06" | "10.07";
+export type ItineraryDate = "09.29" | "09.30" | "10.01" | "10.02" | "10.03" | "10.04" | "10.05" | "10.06" | "10.07";
 type DateFilter = "all" | ItineraryDate;
 
-type MapPoint = {
+export type MapPoint = {
   id: string;
   name: string;
   area: Area;
@@ -25,11 +25,11 @@ type MapPoint = {
 };
 
 type TransportMode = "walking" | "transit";
-type DaySegment = { label: string; note: string; pointIds: string[]; mode: TransportMode; drawOnMap?: boolean };
+export type DaySegment = { label: string; note: string; pointIds: string[]; mode: TransportMode; drawOnMap?: boolean };
 
 const ROUTE_ARROW_MIN_ZOOM = 12;
 
-const spots: MapPoint[] = [
+export const spots: MapPoint[] = [
   { id: "kix", name: "关西国际机场", area: "kansai", category: "spot", position: [34.4359, 135.2435], dates: ["09.29", "10.07"], meta: "抵达 / 返程", googleQuery: "Kansai International Airport" },
   { id: "osaka-stay", name: "大阪住宿 · 难波 / 心斋桥", area: "osaka", category: "stay", position: [34.6676, 135.5012], dates: ["09.29", "09.30", "10.01", "10.02", "10.06", "10.07"], meta: "前段 4 晚 · 最后一晚再住大阪", googleQuery: "Namba Osaka" },
   { id: "kyoto-stay", name: "京都住宿 · 京都站附近", area: "kyoto", category: "stay", position: [34.9858, 135.7588], dates: ["10.03", "10.04", "10.05", "10.06"], meta: "10.03–10.06 · 3 晚", googleQuery: "Kyoto Station" },
@@ -89,10 +89,10 @@ export const restaurantPoints: MapPoint[] = [
   { id: "maguro-koya", name: "まぐろ小屋 / Maguro Koya", area: "nara", category: "restaurant", position: [34.68548, 135.828858], dates: ["10.06"], meta: "金枪鱼料理 · ¥2,000–3,000", googleQuery: "Maguro Koya Nara", guide: "Google Maps 4.5 · 1,451 条评价", fit: "靠近近铁奈良站，适合进景区前或返程前吃。", fitLevel: "备选" },
 ];
 
-const allPoints = [...spots, ...restaurantPoints];
+export const allPoints = [...spots, ...restaurantPoints];
 const pointById = new Map(allPoints.map((point) => [point.id, point]));
 
-const daySegments: Record<ItineraryDate, DaySegment[]> = {
+export const daySegments: Record<ItineraryDate, DaySegment[]> = {
   "09.29": [
     { label: "机场进城", note: "抵达日从关西机场前往大阪住宿；这是跨区域交通，不在地图上画箭头。", pointIds: ["kix", "osaka-stay"], mode: "transit" },
     { label: "难波夜行 · 回到住宿", note: "住宿点目前是难波／心斋桥区域中心，实际酒店确定后再校准首尾步行距离。", pointIds: ["osaka-stay", "shinsaibashi", "dotonbori", "hozenji", "osaka-stay"], mode: "walking", drawOnMap: true },
@@ -138,7 +138,7 @@ const missingTransitLegs = Object.entries(daySegments).flatMap(([date, segments]
 })));
 if (missingTransitLegs.length > 0) throw new Error(`Missing transit details: ${missingTransitLegs.join(", ")}`);
 
-const dayTitles: Record<ItineraryDate, string> = {
+export const dayTitles: Record<ItineraryDate, string> = {
   "09.29": "抵达大阪 · 只走难波夜线", "09.30": "USJ 全天", "10.01": "USJ 后的轻松大阪", "10.02": "神户山海一日",
   "10.03": "岚山核心与入住京都", "10.04": "哲学之道、宇治与城阳烟火", "10.05": "贵船神社三社", "10.06": "伏见稻荷与奈良后回大阪", "10.07": "难波前往关西机场",
 };
