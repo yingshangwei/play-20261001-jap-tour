@@ -35,6 +35,10 @@ test("server-renders the Kansai travel guide", async () => {
   assert.match(html, /上海出发机场 · 待确认/);
   assert.match(html, /选择动画阶段/);
   assert.match(html, /播放速度/);
+  assert.match(html, /目的地实景/);
+  assert.match(html, /\/journey-photos\/kix\.jpg/);
+  assert.match(html, /Wikimedia Commons|commons\.wikimedia\.org/);
+  assert.match(html, /正在前往/);
   assert.match(html, /地图日期筛选/);
   assert.match(html, /全部日期/);
   assert.match(html, /10月4日/);

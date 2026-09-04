@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { LayerGroup, Map as LeafletMap, Marker } from "leaflet";
 import { allPoints, daySegments, dayTitles, type ItineraryDate, type MapPoint } from "./TripMap";
+import { getJourneyMedia } from "./journeyMedia";
 import { getTransitLeg } from "./transitData";
 
 type PlayerScope = "all" | ItineraryDate;
@@ -136,6 +137,16 @@ function statusClass(status: JourneyStep["timingStatus"]) {
   return status === "已核班次" ? "verified" : status === "部分核实" ? "partial" : "estimated";
 }
 
+function escapeHtml(value: string) {
+  return value.replace(/[&<>"']/g, (character) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;",
+  })[character] ?? character);
+}
+
 export default function JourneyPlayer() {
   const mapElement = useRef<HTMLDivElement | null>(null);
   const mapInstance = useRef<LeafletMap | null>(null);
@@ -160,10 +171,18 @@ export default function JourneyPlayer() {
   const currentDayStep = visibleSteps.slice(0, currentIndex + 1).filter((step) => step.date === currentStep.date).length;
   const currentDayTotal = visibleSteps.filter((step) => step.date === currentStep.date).length;
   const recentSteps = visibleSteps.slice(Math.max(0, currentIndex - 2), Math.min(visibleSteps.length, currentIndex + 3));
+  const currentMedia = getJourneyMedia(currentStep.to.id);
 
   useEffect(() => {
     reducedMotion.current = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   }, []);
+
+  useEffect(() => {
+    visibleSteps.slice(currentIndex, currentIndex + 4).forEach((step) => {
+      const image = new window.Image();
+      image.src = getJourneyMedia(step.to.id).src;
+    });
+  }, [currentIndex, visibleSteps]);
 
   useEffect(() => {
     let disposed = false;
@@ -259,7 +278,12 @@ export default function JourneyPlayer() {
       iconSize: [42, 42],
       iconAnchor: [21, 21],
     });
-    const marker = L.marker(currentStep.from.position, { icon, interactive: false, keyboard: false }).addTo(layer);
+    const marker = L.marker(currentStep.from.position, { icon, interactive: false, keyboard: false })
+      .bindTooltip(
+        `<span>正在前往</span><strong>${escapeHtml(currentStep.to.name)}</strong><small>${escapeHtml(primaryTime(currentStep.arrivalPlan))} 预计抵达</small>`,
+        { permanent: true, direction: "top", offset: [0, -24], opacity: 1, className: "journey-moving-tooltip" },
+      )
+      .addTo(layer);
     travelerMarker.current = marker;
 
     const bounds = L.latLngBounds([currentStep.from.position, currentStep.to.position]);
@@ -328,9 +352,9 @@ export default function JourneyPlayer() {
         <div className="journey-map-stage">
           <div className="journey-map" ref={mapElement} aria-label="渐进式旅行过程地图" />
           <div className="journey-map-caption">
-            <span>{currentStep.date} · {dayMeta[currentStep.date].weekday}</span>
-            <strong>{dayTitles[currentStep.date]}</strong>
-            <small>路线为动画示意，实际步行与换乘请使用下方 Google Maps 导航</small>
+            <span>{currentStep.date} · {dayMeta[currentStep.date].weekday} · 正在前往</span>
+            <strong>{currentStep.to.name}</strong>
+            <small>{dayTitles[currentStep.date]} · {currentStep.arrivalPlan}</small>
           </div>
         </div>
 
@@ -360,6 +384,15 @@ export default function JourneyPlayer() {
               <span>DAY {dayOrder.indexOf(currentStep.date) + 1} · STEP {currentDayStep}/{currentDayTotal}</span>
               <em className={`timing-status status-${statusClass(currentStep.timingStatus)}`}>{currentStep.timingStatus}</em>
             </div>
+            <figure className="journey-place-photo" key={currentStep.id}>
+              <img src={currentMedia.src} alt={currentMedia.alt} style={{ objectPosition: currentMedia.objectPosition ?? "center" }} />
+              <figcaption>
+                <span>{currentMedia.label}</span>
+                <strong>{currentStep.to.name}</strong>
+                <small>{currentMedia.caption}</small>
+                <a href={currentMedia.sourceHref} target="_blank" rel="noreferrer">照片：{currentMedia.credit} · {currentMedia.license} ↗</a>
+              </figcaption>
+            </figure>
             <div className="journey-clock">{primaryTime(currentStep.departurePlan)}</div>
             <p className="journey-segment-label">{currentStep.segment}</p>
             <div className="journey-place-line">

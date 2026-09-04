@@ -88,6 +88,12 @@ a:focus-visible { outline: 3px solid var(--gold); outline-offset: 5px; border-ra
 .journey-map-caption span { margin-bottom: 5px; color: var(--gold); font-size: 10px; font-weight: 900; letter-spacing: .11em; }
 .journey-map-caption strong { font: 500 22px/1.35 Georgia, "Noto Serif SC", serif; }
 .journey-map-caption small { margin-top: 8px; color: rgba(255,250,240,.58); font-size: 9px; line-height: 1.55; }
+.journey-moving-tooltip.leaflet-tooltip { min-width: 145px; padding: 9px 12px; color: #fffdf8; background: rgba(23,42,37,.95); border: 1px solid rgba(255,255,255,.38); border-radius: 0; box-shadow: 0 10px 26px rgba(22,35,30,.24); text-align: center; }
+.journey-moving-tooltip.leaflet-tooltip::before { border-top-color: rgba(23,42,37,.95); }
+.journey-moving-tooltip span, .journey-moving-tooltip strong, .journey-moving-tooltip small { display: block; }
+.journey-moving-tooltip span { color: var(--gold); font-size: 7px; font-weight: 900; letter-spacing: .13em; }
+.journey-moving-tooltip strong { margin-top: 3px; font: 600 12px/1.3 Georgia, "Noto Serif SC", serif; }
+.journey-moving-tooltip small { margin-top: 3px; color: rgba(255,253,248,.66); font-size: 7px; }
 .journey-traveler-icon { display: grid; place-items: center; border: 0; background: transparent; }
 .journey-traveler-icon span { display: grid; place-items: center; width: 42px; height: 42px; color: var(--ink); background: var(--gold); border: 4px solid #fffdf8; border-radius: 50%; box-shadow: 0 8px 24px rgba(22,35,30,.3); font-size: 17px; font-weight: 900; }
 .journey-console { min-width: 0; max-height: 800px; padding: 22px; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; }
@@ -107,6 +113,16 @@ a:focus-visible { outline: 3px solid var(--gold); outline-offset: 5px; border-ra
 .journey-current-card { padding: 23px 0 21px; border-bottom: 1px solid var(--line); }
 .journey-step-topline { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .journey-step-topline > span { color: var(--orange); font-size: 9px; font-weight: 900; letter-spacing: .12em; }
+.journey-place-photo { position: relative; height: 235px; margin: 16px 0 22px; overflow: hidden; color: #fffdf8; background: var(--deep-moss); animation: journey-photo-in .48s ease both; }
+.journey-place-photo::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(10,22,17,.04) 26%, rgba(10,22,17,.9) 100%); pointer-events: none; }
+.journey-place-photo img { width: 100%; height: 100%; display: block; object-fit: cover; transform: scale(1.015); }
+.journey-place-photo figcaption { position: absolute; z-index: 2; left: 16px; right: 16px; bottom: 14px; }
+.journey-place-photo figcaption > span, .journey-place-photo figcaption > strong, .journey-place-photo figcaption > small { display: block; }
+.journey-place-photo figcaption > span { color: var(--gold); font-size: 8px; font-weight: 900; letter-spacing: .1em; }
+.journey-place-photo figcaption > strong { margin-top: 4px; font: 600 18px/1.25 Georgia, "Noto Serif SC", serif; }
+.journey-place-photo figcaption > small { margin-top: 5px; color: rgba(255,253,248,.72); font-size: 8px; line-height: 1.45; }
+.journey-place-photo figcaption > a { display: inline-block; margin-top: 6px; color: rgba(255,253,248,.62); border-bottom: 1px solid rgba(255,255,255,.28); font-size: 7px; }
+@keyframes journey-photo-in { from { opacity: .3; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 .journey-clock { margin: 22px 0 3px; color: var(--moss); font: 500 clamp(50px, 5vw, 72px)/.9 Georgia, serif; letter-spacing: -.05em; }
 .journey-segment-label { margin: 11px 0 18px; color: var(--muted); font-size: 11px; font-weight: 800; }
 .journey-place-line { display: grid; grid-template-columns: minmax(0,1fr) 110px minmax(0,1fr); gap: 12px; align-items: center; padding: 17px 0; border-block: 1px solid var(--line); }
@@ -543,7 +559,9 @@ footer { padding: 75px 0; color: #fffaf0; background: var(--ink); }
   .journey-map-stage { min-height: 440px; }
   .journey-map-caption { left: 14px; right: 14px; bottom: 14px; padding: 14px; }
   .journey-map-caption strong { font-size: 18px; }
+  .journey-moving-tooltip.leaflet-tooltip { min-width: 124px; padding: 7px 9px; }
   .journey-console { padding: 14px; }
+  .journey-place-photo { height: 218px; }
   .journey-place-line { grid-template-columns: minmax(0,1fr) 76px minmax(0,1fr); gap: 7px; }
   .journey-place-line > strong { font-size: 13px; }
   .journey-place-line > span small { display: none; }
