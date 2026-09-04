@@ -6,6 +6,8 @@ sources:
   - MAP.md
   - README.md
   - docs/requirements/index.md
+  - docs/requirements/bar-search/requirements.md
+  - docs/requirements/day-journals/weather-module.md
   - docs/development/index.md
   - docs/exec_plan/index.md
   - docs/research/index.md
@@ -32,6 +34,8 @@ sources:
 
 - [攻略平台需求](requirements/guide-platform/requirements.md)
 - [Day 2–9 每日手账需求](requirements/day-journals/requirements.md)
+- [手账子模块：天气](requirements/day-journals/weather-module.md)
+- [酒吧搜索需求](requirements/bar-search/requirements.md)
 - [酒店调研需求](requirements/hotels/requirements.md)
 - [页面文案去 AI 味需求](requirements/copy-editing/requirements.md)
 - [配置化架构设计](development/guide-platform-architecture.md)

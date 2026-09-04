@@ -7,6 +7,7 @@ sources:
   - AGENTS.md
   - guides/kansai-2026/guide.ts
   - app/page.tsx
+  - docs/requirements/day-journals/weather-module.md
   - user-request-2026-09-04
 ---
 
@@ -18,6 +19,7 @@ sources:
 - [需求文档索引](../index.md)
 - [手账与多攻略架构](../../development/guide-platform-architecture.md)
 - [配置化重构计划](../../exec_plan/guide-config-refactor.md)
+- [手账天气子模块](weather-module.md)
 
 ## 当前缺口
 
@@ -47,6 +49,13 @@ sources:
 9. 可直接打开的地图链接、官方来源和资料核对日期。
 10. 选择 `presentation.template`；内容模型保持通用，样式可以不同。
 
+## 天气子模块
+
+- 每篇手账承载自己的天气模块，使用当前日期、时区、主要活动区域和时间线，不另建脱离手账的天气页面。
+- 天气摘要位于路线摘要之后、时间线之前；分时和地点影响按需展开。
+- 天气模块的完整状态、异常、无障碍和验收要求见 [每日手账天气模块需求](weather-module.md)。
+- 天气只能触发既有雨备、交通备选和可选段删减，不能自行移动或删除固定锚点。
+
 ## 内容边界
 
 - 日期、停靠顺序、住宿地和返程时间必须与首页、地图和动画一致。
@@ -60,5 +69,6 @@ sources:
 - `journalDays` 包含 9 个日期，且日期和 ID 不重复。
 - Day 2–9 都能通过统一路由加载，并生成独立 metadata。
 - 每篇手账通过 Schema 校验、静态渲染测试和本地资源检查。
+- 每篇手账可关联同日期、同地点范围的天气状态；天气不可用时不阻断静态内容。
 - 桌面与移动端无横向溢出；导航、折叠区和外部链接可用。
 - 至少抽查每篇手账的起点、终点、固定锚点、行李安排和最后安全返程。

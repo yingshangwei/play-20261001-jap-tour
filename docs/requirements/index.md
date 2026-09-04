@@ -7,6 +7,8 @@ sources:
   - docs/index.md
   - docs/requirements/guide-platform/requirements.md
   - docs/requirements/day-journals/requirements.md
+  - docs/requirements/day-journals/weather-module.md
+  - docs/requirements/bar-search/requirements.md
   - docs/requirements/hotels/requirements.md
   - docs/requirements/copy-editing/requirements.md
 ---
@@ -24,5 +26,7 @@ sources:
 | --- | --- | --- |
 | 多攻略配置平台 | [guide-platform/requirements.md](guide-platform/requirements.md) | Active |
 | Day 2–9 每日手账 | [day-journals/requirements.md](day-journals/requirements.md) | Active |
+| └─ 手账天气子模块 | [day-journals/weather-module.md](day-journals/weather-module.md) | Draft |
+| 酒吧搜索 | [bar-search/requirements.md](bar-search/requirements.md) | Draft |
 | 酒店调研 | [hotels/requirements.md](hotels/requirements.md) | Draft |
 | 页面文案去 AI 味 | [copy-editing/requirements.md](copy-editing/requirements.md) | Active |

@@ -8,6 +8,8 @@
 | --- | --- | --- |
 | 行程固定事实与编辑约束 | [AGENTS.md](AGENTS.md) | Active |
 | 攻略平台业务需求 | [docs/requirements/guide-platform/requirements.md](docs/requirements/guide-platform/requirements.md) | Active |
+| 酒吧搜索功能需求 | [docs/requirements/bar-search/requirements.md](docs/requirements/bar-search/requirements.md) | Draft |
+| 每日手账天气子模块 | [docs/requirements/day-journals/weather-module.md](docs/requirements/day-journals/weather-module.md) | Draft |
 | 配置化架构与数据边界 | [docs/development/guide-platform-architecture.md](docs/development/guide-platform-architecture.md) | Active |
 | 配置化重构阶段计划 | [docs/exec_plan/guide-config-refactor.md](docs/exec_plan/guide-config-refactor.md) | Active |
 | 完整文档索引 | [docs/index.md](docs/index.md) | Active |
