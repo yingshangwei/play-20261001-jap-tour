@@ -70,6 +70,7 @@ function TimelineSection({ section, labels }: {
               <div className={styles.itemMeta}>
                 {item.price ? <span>{item.price}</span> : null}
                 {item.timingStatus === "estimated" ? <span>{labels.estimatedTiming}</span> : null}
+                {item.timingStatus === "partial" ? <span>{labels.partiallyVerifiedTiming}</span> : null}
                 {item.hasAlternative ? <span>{labels.hasAlternative}</span> : null}
               </div>
               {item.note ? <p>{item.note}</p> : null}
@@ -78,6 +79,48 @@ function TimelineSection({ section, labels }: {
           </li>
         ))}
       </ol>
+    </section>
+  );
+}
+
+function TransportSection({ section, labels }: {
+  section: Extract<DayJournalSection, { kind: "transport" }>;
+  labels: DayJournalConfig["labels"];
+}) {
+  return (
+    <section className={styles.transportSection} aria-labelledby={`${section.id}-title`}>
+      <div className={styles.transportHeading}>
+        <div>
+          <p>{section.eyebrow}</p>
+          <h2 id={`${section.id}-title`}><JournalTitle lines={section.titleLines} /></h2>
+        </div>
+        {section.note ? <span>{section.note}</span> : null}
+      </div>
+      <div className={styles.transportGrid}>
+        {section.items.map((item, index) => (
+          <article className={styles.transportCard} key={`${item.from}-${item.to}`}>
+            <div className={styles.transportRoute}>
+              <span>{String(index + 1).padStart(2, "0")}</span>
+              <strong>{item.from}</strong>
+              <i aria-hidden="true">→</i>
+              <strong>{item.to}</strong>
+            </div>
+            <dl>
+              <div><dt>出发</dt><dd>{item.depart}</dd></div>
+              <div><dt>到达</dt><dd>{item.arrive}</dd></div>
+              <div><dt>耗时</dt><dd>{item.duration}</dd></div>
+              <div><dt>方式</dt><dd>{item.mode}</dd></div>
+            </dl>
+            <p>{item.route}</p>
+            <div className={styles.transportMeta}>
+              <span>{item.timingStatus === "verified" ? "已核时刻" : item.timingStatus === "partial" ? labels.partiallyVerifiedTiming : labels.estimatedTiming}</span>
+              <span>{item.serviceBoundary}</span>
+            </div>
+            <small><strong>异常备选：</strong>{item.fallback}</small>
+            <a href={item.href} target="_blank" rel="noreferrer">打开这一段导航 ↗</a>
+          </article>
+        ))}
+      </div>
     </section>
   );
 }
@@ -188,6 +231,8 @@ function JournalSectionView({ section, assetPrefix, labels }: {
       return <TimelineSection section={section} labels={labels} />;
     case "recommendations":
       return <RecommendationSection section={section} labels={labels} />;
+    case "transport":
+      return <TransportSection section={section} labels={labels} />;
     case "notes":
       return <NotesSection section={section} />;
     case "links":
@@ -214,7 +259,7 @@ function HandJournalTemplate({ config, backHref, assetPrefix }: TemplateProps) {
             <span>{config.navigation.badge}</span>
           </nav>
 
-          <div className={styles.coverGrid}>
+          <div className={`${styles.coverGrid} ${image ? "" : styles.coverGridNoImage}`}>
             <div className={styles.coverCopy}>
               <p className={styles.kicker}>{config.hero.kicker}</p>
               <h1><JournalTitle lines={config.hero.titleLines} /></h1>

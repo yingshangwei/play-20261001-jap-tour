@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>Day 2 · Osaka to USJ · 2026-09-30</name>
+    <description>大阪住宿点尚未确定；大阪难波仅为住宿区域占位。园内路线请使用 USJ 官方 App。</description>
+    <Style id="start">
+      <IconStyle><color>ff496238</color><scale>1.1</scale></IconStyle>
+    </Style>
+    <Style id="anchor">
+      <IconStyle><color>ff3857b0</color><scale>1.2</scale></IconStyle>
+    </Style>
+    <Placemark>
+      <name>大阪难波站（住宿区域占位）</name>
+      <description>酒店未定；订房后替换为实际酒店坐标。</description>
+      <styleUrl>#start</styleUrl>
+      <Point><coordinates>135.5019,34.6659,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>环球城站</name>
+      <description>JR 梦咲线；步行约 4 分钟到 USJ 入口。</description>
+      <styleUrl>#anchor</styleUrl>
+      <Point><coordinates>135.4380,34.6678,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>Universal Studios Japan</name>
+      <description>2026-09-30 官方营业时间 08:00–22:00；可能提前开园。</description>
+      <styleUrl>#anchor</styleUrl>
+      <Point><coordinates>135.4323,34.6654,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>SUPER NINTENDO WORLD</name>
+      <description>限流时需要入场确约券或 App 整理券；离开后通常不能再次入区。</description>
+      <styleUrl>#anchor</styleUrl>
+      <Point><coordinates>135.4286,34.6624,0</coordinates></Point>
+    </Placemark>
+  </Document>
+</kml>

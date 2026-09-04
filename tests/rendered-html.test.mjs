@@ -106,3 +106,20 @@ test("server-renders the Day 1 Osaka journal", async () => {
   assert.match(html, /南海官方时刻表/);
   assert.match(html, /不建偏好库/);
 });
+
+test("server-renders the Day 2 USJ journal from guide configuration", async () => {
+  const response = await render("/day-2");
+  assert.equal(response.status, 200);
+  assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
+
+  const html = await response.text();
+  assert.match(html, /从开园/);
+  assert.match(html, /SUPER NINTENDO WORLD/);
+  assert.match(html, /大阪难波 05:03/);
+  assert.match(html, /23:12 作为完整返程/);
+  assert.match(html, /Kinopio&#x27;s Cafe|Kinopio's Cafe/);
+  assert.match(html, /Street Zombies/);
+  assert.match(html, /下载 Day 2 离线 KML/);
+  assert.match(html, /部分核实/);
+  assert.doesNotMatch(html, /任天堂博物馆|Nintendo Museum/);
+});

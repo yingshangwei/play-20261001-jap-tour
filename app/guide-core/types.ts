@@ -35,8 +35,22 @@ export type DayJournalTimelineItem = {
   note?: string;
   price?: string;
   hasAlternative?: boolean;
-  timingStatus?: "verified" | "estimated";
+  timingStatus?: "verified" | "partial" | "estimated";
   href?: string;
+};
+
+export type DayJournalTransportLeg = {
+  from: string;
+  to: string;
+  depart: string;
+  arrive: string;
+  duration: string;
+  mode: string;
+  route: string;
+  timingStatus: "verified" | "partial" | "estimated";
+  serviceBoundary: string;
+  fallback: string;
+  href: string;
 };
 
 export type DayJournalRecommendation = {
@@ -84,6 +98,14 @@ export type DayJournalSection =
       items: DayJournalRecommendation[];
     }
   | {
+      kind: "transport";
+      id: string;
+      eyebrow: string;
+      titleLines: string[];
+      note?: string;
+      items: DayJournalTransportLeg[];
+    }
+  | {
       kind: "notes";
       id: string;
       eyebrow: string;
@@ -125,6 +147,7 @@ export type DayJournalConfig = {
   labels: {
     statsAriaLabel: string;
     estimatedTiming: string;
+    partiallyVerifiedTiming: string;
     hasAlternative: string;
     recommendationSource: string;
     recommendationMap: string;

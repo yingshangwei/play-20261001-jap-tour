@@ -3,7 +3,9 @@ import JourneyPlayer from "./JourneyPlayer";
 
 export const dynamic = "force-static";
 
-const dayOneHref = process.env.GITHUB_ACTIONS === "true" ? "./day-1.html" : "/day-1";
+const journalHrefs = ["day-1", "day-2"].map((slug) => (
+  process.env.GITHUB_ACTIONS === "true" ? `./${slug}.html` : `/${slug}`
+));
 
 const days = [
   {
@@ -521,9 +523,9 @@ export default function Home() {
                 <p className="transit-line"><span>建议时间</span>{item.schedule}</p>
                 <p className="transit-line"><span>交通摘要</span>{item.transit}</p>
                 <p>{item.note}</p>
-                {index === 0 && (
-                  <a className="day-detail-link" href={dayOneHref}>
-                    打开第一天手账 <span>↗</span>
+                {journalHrefs[index] && (
+                  <a className="day-detail-link" href={journalHrefs[index]}>
+                    打开第 {index + 1} 天手账 <span>↗</span>
                   </a>
                 )}
               </div>

@@ -54,6 +54,7 @@ export const kansaiDayOneJournal = defineDayJournal({
   labels: {
     statsAriaLabel: "当天关键数据",
     estimatedTiming: "时间为估算",
+    partiallyVerifiedTiming: "部分核实",
     hasAlternative: "有备选",
     recommendationSource: "资料 / 官方",
     recommendationMap: "地图",

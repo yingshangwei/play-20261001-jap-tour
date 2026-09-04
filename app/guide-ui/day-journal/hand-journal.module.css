@@ -76,6 +76,20 @@
   padding-top: 68px;
 }
 
+.coverGridNoImage {
+  grid-template-columns: 1fr;
+  min-height: 570px;
+  align-content: center;
+}
+
+.coverGridNoImage .coverCopy {
+  max-width: 800px;
+}
+
+.coverGridNoImage .lead {
+  max-width: 650px;
+}
+
 .coverCopy { position: relative; z-index: 3; }
 .kicker,
 .sectionIntro > div > p,
@@ -214,6 +228,7 @@
 .firstRule > a { padding-bottom: 5px; border-bottom: 1px solid #7a5f42; font-size: 12px; font-weight: 700; }
 
 .schedule,
+.transportSection,
 .foodSection,
 .contingency,
 .mapKit,
@@ -222,6 +237,7 @@
 }
 
 .sectionIntro,
+.transportHeading,
 .contingency,
 .mapKit {
   display: grid;
@@ -230,6 +246,7 @@
 }
 
 .sectionIntro h2,
+.transportHeading h2,
 .foodHeading h2,
 .contingency h2,
 .mapKit h2 {
@@ -303,6 +320,72 @@
 .hop .kind { color: #315b49; }
 .meal { background: rgba(179, 92, 55, .045); }
 .meal .kind { color: #b05738; }
+
+.transportSection {
+  color: #f8efdc;
+  background: #263c3a;
+}
+
+.transportHeading {
+  align-items: end;
+}
+
+.transportHeading > div > p {
+  margin: 0 0 18px;
+  color: #f0b867;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .15em;
+}
+
+.transportHeading > span {
+  max-width: 520px;
+  color: rgba(248, 239, 220, .68);
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+.transportGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 64px;
+}
+
+.transportCard {
+  display: flex;
+  min-height: 560px;
+  padding: 32px;
+  flex-direction: column;
+  border: 1px solid rgba(248, 239, 220, .22);
+  background: rgba(248, 239, 220, .035);
+}
+
+.transportRoute {
+  display: grid;
+  grid-template-columns: auto 1fr auto 1fr;
+  gap: 12px;
+  align-items: center;
+  padding-bottom: 24px;
+  border-bottom: 1px dashed rgba(248, 239, 220, .3);
+}
+
+.transportRoute span { color: #f0b867; font: italic 15px Georgia, serif; }
+.transportRoute strong { font-size: 17px; font-weight: 600; }
+.transportRoute i { color: #f0b867; font-style: normal; }
+
+.transportCard dl { margin: 24px 0 0; }
+.transportCard dl div { display: grid; grid-template-columns: 58px 1fr; gap: 14px; padding: 7px 0; }
+.transportCard dt { color: rgba(248, 239, 220, .54); font-size: 10px; }
+.transportCard dd { margin: 0; font-size: 12px; }
+.transportCard > p { margin: 24px 0 0; color: rgba(248, 239, 220, .78); font-size: 13px; line-height: 1.85; }
+
+.transportMeta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+.transportMeta span { padding: 5px 8px; color: #2b2a26; background: #e8c37f; font-size: 9px; font-weight: 800; }
+.transportCard small { margin: 20px 0 0; color: rgba(248, 239, 220, .62); font-size: 11px; line-height: 1.75; }
+.transportCard small strong { color: #f8efdc; }
+.transportCard > a { width: fit-content; margin-top: auto; padding-top: 28px; padding-bottom: 4px; border-bottom: 1px solid rgba(248, 239, 220, .5); font-size: 11px; font-weight: 800; }
 
 .foodSection {
   color: #f8efdc;
@@ -390,12 +473,15 @@
 @media (max-width: 900px) {
   .coverGrid,
   .sectionIntro,
+  .transportHeading,
   .contingency,
   .mapKit { grid-template-columns: 1fr; gap: 42px; }
   .coverCopy { padding-right: 8%; }
   .photoBlock { width: min(600px, 92%); justify-self: center; }
   .foodHeading { grid-template-columns: 1fr; gap: 22px; }
   .foodGrid { grid-template-columns: 1fr; }
+  .transportGrid { grid-template-columns: 1fr; }
+  .transportCard { min-height: 500px; }
   .foodCard { min-height: 390px; }
   .mapNote { grid-column: 1; }
 }
@@ -404,6 +490,7 @@
   .desk { padding: 0; }
   .cover,
   .schedule,
+  .transportSection,
   .foodSection,
   .contingency,
   .mapKit,
@@ -421,6 +508,7 @@
   .contingency,
   .mapKit { padding-top: 76px; padding-bottom: 76px; }
   .sectionIntro h2,
+  .transportHeading h2,
   .foodHeading h2,
   .contingency h2,
   .mapKit h2 { font-size: 46px; }
@@ -429,6 +517,9 @@
   .timeColumn span { margin: 0; }
   .timelineBody { padding: 0 0 26px; }
   .timelineBody h3 { font-size: 18px; }
+  .transportCard { min-height: 0; padding: 25px 20px; }
+  .transportRoute { grid-template-columns: auto 1fr; }
+  .transportRoute i { display: none; }
   .foodCard { min-height: 430px; padding: 25px 20px; }
   .noteStack article { grid-template-columns: 1fr; gap: 10px; }
   .mapActions,

@@ -73,7 +73,7 @@ sources:
 
 ## 关联内容工作
 
-- [Day 2–9 每日手账](../requirements/day-journals/requirements.md)：在 Phase 2 的点位、路线和交通模型稳定后开始，避免再维护一套重复数据。
+- [Day 2–9 每日手账](../requirements/day-journals/requirements.md)：Day 2 已完成调研、配置页、通用交通卡和离线 KML；剩余 7 天在 Phase 2 点位与交通模型稳定后继续，避免再维护一套重复数据。
 - [酒店调研](../requirements/hotels/requirements.md)：可与框架重构并行，但必须在酒店坐标、步行时间和行李交通最终验收前完成。
 - [页面文案去 AI 味](../requirements/copy-editing/requirements.md)：在 Phase 4 首页内容迁入配置后集中改写，避免先改硬编码、迁移时再改一次。
 
