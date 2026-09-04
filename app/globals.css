@@ -232,6 +232,25 @@ a:focus-visible { outline: 3px solid var(--gold); outline-offset: 5px; border-ra
 .day-route-header span { color: var(--orange); font: italic 15px Georgia, serif; }
 .day-route-header h3 { margin: 0; font: 600 27px/1.2 Georgia, "Noto Serif SC", serif; }
 .day-route-header small { max-width: 320px; color: var(--muted); font-size: 10px; line-height: 1.6; text-align: right; }
+.day-full-route { margin: 18px 24px 0; overflow: hidden; color: #fff8ec; background: var(--deep-moss); border-radius: 10px; box-shadow: 0 16px 35px rgba(22,35,30,.12); }
+.day-full-route-intro { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 28px; align-items: center; padding: 20px; }
+.day-full-route-intro > div { min-width: 0; }
+.day-full-route-intro div > span { display: block; margin-bottom: 7px; color: var(--gold); font-size: 9px; font-weight: 900; letter-spacing: .13em; }
+.day-full-route-intro strong { display: block; font: 600 18px/1.35 Georgia, "Noto Serif SC", serif; }
+.day-full-route-intro p { max-width: 700px; margin: 8px 0 0; color: rgba(255,248,236,.67); font-size: 10px; line-height: 1.65; }
+.day-full-route-button { display: inline-flex; align-items: center; justify-content: space-between; gap: 18px; min-width: 230px; padding: 13px 15px; color: var(--ink); background: var(--gold); border-radius: 6px; font-size: 10px; font-weight: 900; }
+.day-full-route-button:hover { transform: translateY(-2px); box-shadow: 0 8px 18px rgba(0,0,0,.18); }
+.day-full-route-button span { font-size: 15px; }
+.day-full-route-stops { display: flex; margin: 0; padding: 0 20px 18px; overflow-x: auto; overscroll-behavior-inline: contain; list-style: none; scrollbar-width: thin; }
+.day-full-route-stops li { position: relative; flex: 0 0 auto; width: 145px; min-height: 66px; padding: 11px 25px 11px 12px; display: flex; flex-direction: column; gap: 7px; background: rgba(255,255,255,.075); border: 1px solid rgba(255,255,255,.13); }
+.day-full-route-stops li:not(:last-child)::after { content: "→"; position: absolute; z-index: 1; right: -13px; top: 22px; display: grid; place-items: center; width: 26px; height: 26px; color: var(--gold); background: var(--deep-moss); border-radius: 50%; font: 16px Georgia, serif; }
+.day-full-route-stops b { color: var(--gold); font: italic 10px Georgia, serif; }
+.day-full-route-stops span { font: 600 11px/1.4 Georgia, "Noto Serif SC", serif; }
+.day-mobile-routes { padding: 14px 20px 18px; border-top: 1px solid rgba(255,255,255,.13); }
+.day-mobile-routes p { margin: 0 0 9px; color: rgba(255,248,236,.62); font-size: 9px; line-height: 1.55; }
+.day-mobile-routes > div { display: flex; flex-wrap: wrap; gap: 7px; }
+.day-mobile-routes a { padding: 8px 10px; color: #fff8ec; border: 1px solid rgba(245,185,76,.48); border-radius: 5px; font-size: 9px; font-weight: 800; }
+.day-mobile-routes a:hover { color: var(--ink); background: var(--gold); }
 .transit-audit-note { margin: 18px 24px 0; padding: 14px 16px; display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: start; color: #625c52; background: #f0e9db; border-left: 3px solid var(--orange); }
 .transit-audit-note strong { color: var(--ink); font-size: 10px; letter-spacing: .08em; white-space: nowrap; }
 .transit-audit-note p { margin: 0; font-size: 10px; line-height: 1.65; }
@@ -590,6 +609,13 @@ footer { padding: 75px 0; color: #fffaf0; background: var(--ink); }
   .day-route-header > div { align-items: flex-start; flex-direction: column; gap: 7px; }
   .day-route-header h3 { font-size: 23px; }
   .day-route-header small { text-align: left; }
+  .day-full-route { margin-inline: 14px; }
+  .day-full-route-intro { grid-template-columns: 1fr; gap: 15px; padding: 17px 14px; }
+  .day-full-route-button { width: 100%; min-width: 0; }
+  .day-full-route-stops { padding-inline: 14px; }
+  .day-full-route-stops li { width: 132px; }
+  .day-mobile-routes { padding-inline: 14px; }
+  .day-mobile-routes > div { flex-direction: column; }
   .transit-audit-note { margin-inline: 14px; grid-template-columns: 1fr; gap: 6px; }
   .day-segment { padding: 20px 14px; }
   .day-segment-title { align-items: flex-start; flex-direction: column; gap: 12px; }

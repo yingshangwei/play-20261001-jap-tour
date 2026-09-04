@@ -490,7 +490,7 @@ export default function Home() {
         <div className="map-heading">
           <div>
             <p className="eyebrow dark">ROUTE MAP</p>
-            <span className="section-note">按日期筛选 · 相邻两点 Google Maps 导航</span>
+            <span className="section-note">按日期筛选 · Google Maps 全天路线 + 逐段导航</span>
           </div>
           <h2 id="map-title">真实地图，<br />一眼看清是否顺路。</h2>
         </div>

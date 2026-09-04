@@ -42,7 +42,7 @@ test("server-renders the Kansai travel guide", async () => {
   assert.match(html, /地图日期筛选/);
   assert.match(html, /全部日期/);
   assert.match(html, /10月4日/);
-  assert.match(html, /相邻两点 Google Maps 导航/);
+  assert.match(html, /Google Maps 全天路线 \+ 逐段导航/);
   assert.match(html, /首末班约束/);
   assert.match(html, /无法乘坐时的备用方案/);
   assert.match(html, /从哪里几点出发/);
@@ -78,6 +78,16 @@ test("server-renders the Kansai travel guide", async () => {
   assert.doesNotMatch(html, /彩色虚线|行程先后顺序/);
   assert.doesNotMatch(html, /09\.28|十日关西/);
   assert.doesNotMatch(html, /codex-preview|SkeletonPreview/);
+});
+
+test("offers an ordered full-day Google Maps route with a mobile fallback", async () => {
+  const source = await readFile(new URL("../app/TripMap.tsx", import.meta.url), "utf8");
+  assert.match(source, /function pointsForDay/);
+  assert.match(source, /orderedPoints\.at\(-1\)\?\.id !== point\.id/);
+  assert.match(source, /在 Google Maps 打开全天路线图/);
+  assert.match(source, /全天路线顺序/);
+  assert.match(source, /手机浏览器最多支持 3 个途经点/);
+  assert.match(source, /splitRouteForMobile\(selectedDayPoints\)/);
 });
 
 test("covers every consecutive itinerary leg with transit guidance", async () => {

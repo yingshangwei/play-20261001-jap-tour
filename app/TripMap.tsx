@@ -156,8 +156,9 @@ const dateOptions: Array<[DateFilter, string]> = [
 ];
 
 function googleSearch(query: string) { return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`; }
-function googleDirections(origin: string, destination: string, waypoints: string[] = [], mode: TransportMode = "walking") {
-  const base = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}&travelmode=${mode}`;
+function googleDirections(origin: string, destination: string, waypoints: string[] = [], mode?: TransportMode) {
+  const travelMode = mode ? `&travelmode=${mode}` : "";
+  const base = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}${travelMode}`;
   return waypoints.length ? `${base}&waypoints=${encodeURIComponent(waypoints.join("|"))}` : base;
 }
 function popupHtml(point: MapPoint) {
@@ -172,6 +173,24 @@ function orderForPoint(date: DateFilter, pointId: string) {
     .filter((id, index, ids) => pointById.get(id)?.category !== "stay" && ids.indexOf(id) === index);
   const index = orderedPointIds.indexOf(pointId);
   return index >= 0 ? index + 1 : null;
+}
+
+function pointsForDay(date: ItineraryDate) {
+  return daySegments[date].reduce<MapPoint[]>((orderedPoints, segment) => {
+    segment.pointIds.forEach((pointId) => {
+      const point = pointById.get(pointId);
+      if (point && orderedPoints.at(-1)?.id !== point.id) orderedPoints.push(point);
+    });
+    return orderedPoints;
+  }, []);
+}
+
+function splitRouteForMobile(points: MapPoint[], maxPoints = 5) {
+  const parts: MapPoint[][] = [];
+  for (let start = 0; start < points.length - 1; start += maxPoints - 1) {
+    parts.push(points.slice(start, start + maxPoints));
+  }
+  return parts;
 }
 
 export default function TripMap() {
@@ -290,6 +309,11 @@ export default function TripMap() {
   const visiblePointCount = allPoints.filter((point) => (category === "all" || point.category === category) && (selectedDate === "all" || point.dates.includes(selectedDate))).length;
   const visibleRestaurants = selectedDate === "all" ? restaurantPoints : restaurantPoints.filter((restaurant) => restaurant.dates.includes(selectedDate));
   const selectedSegments = selectedDate === "all" ? [] : daySegments[selectedDate];
+  const selectedDayPoints = selectedDate === "all" ? [] : pointsForDay(selectedDate);
+  const selectedDayRoute = selectedDayPoints.length > 1
+    ? googleDirections(selectedDayPoints[0].googleQuery, selectedDayPoints.at(-1)!.googleQuery, selectedDayPoints.slice(1, -1).map((point) => point.googleQuery))
+    : null;
+  const mobileRouteParts = selectedDayPoints.length > 5 ? splitRouteForMobile(selectedDayPoints) : [];
 
   return (
     <div className="real-map-panel">
@@ -303,12 +327,34 @@ export default function TripMap() {
       </div>
       <div className="map-legend real-legend" aria-label="地图图例"><span><i className="real-legend-dot spot-dot" />景点</span><span><i className="real-legend-dot restaurant-dot" />餐厅</span><span><i className="real-legend-dot stay-dot" />住宿</span><span>日期筛选后，行程内景点和餐厅按顺序编号</span><span className={`map-arrow-state state-${arrowState}`}>{arrowState === "idle" ? "选中某天后显示片区箭头" : arrowState === "visible" ? "片区箭头已显示" : "继续放大到片区查看箭头"}</span></div>
       <div className="leaflet-map" ref={mapElement} aria-label="关西景点、住宿与餐厅交互地图" />
-      <p className="map-disclaimer">底图使用 OpenStreetMap；选中某天并放大到片区后，粗黑弧形箭头表示当天区域内的游览顺序。跨城交通不画长线，住宿首尾和每一段真实导航都在下方列出；时刻卡区分已核班次、部分核实与预计时间。双指滚动或捏合可缩放地图，点击标记可打开 Google Maps。</p>
+      <p className="map-disclaimer">底图使用 OpenStreetMap；选中某天并放大到片区后，粗黑弧形箭头表示当天区域内的游览顺序。跨城交通不画长线；下方可一键打开住宿／起点 → 景点 → 餐厅 → 当晚住宿的 Google Maps 全天路线，也保留每一段的准确交通导航。双指滚动或捏合可缩放地图，点击标记可打开 Google Maps。</p>
 
       <section className="day-route-detail" aria-label="当天详细行程">
         {selectedDate === "all" ? <div className="day-route-empty"><strong>选择上方某一天</strong><p>即可查看从哪里几点出发、建议班次、预计几点到、到达后游览 / 停留多久，以及每一段的 Google Maps 导航、首末班约束与无法乘坐时的备用方案。</p></div> : (
           <>
-            <div className="day-route-header"><div><span>{selectedDate}</span><h3>{dayTitles[selectedDate]}</h3></div><small>每一段都可打开 Google Maps；公共交通卡另附运营方时刻入口</small></div>
+            <div className="day-route-header"><div><span>{selectedDate}</span><h3>{dayTitles[selectedDate]}</h3></div><small>先看全天 A → B → C 顺序，再用下方逐段导航确认交通方式</small></div>
+            <div className="day-full-route">
+              <div className="day-full-route-intro">
+                <div>
+                  <span>GOOGLE MAPS · 全天总览</span>
+                  <strong>{selectedDayPoints[0]?.id === selectedDayPoints.at(-1)?.id ? "从住宿出发，最后回到同一住宿" : "从当天起点，一路到当晚落脚点"}</strong>
+                  <p>全天按钮会按实际游览顺序传入全部停靠点。因为同一天会混合铁路、公交和步行，全天总览不锁定单一交通方式；准确乘法仍以下方逐段卡片为准。</p>
+                </div>
+                {selectedDayRoute && <a className="day-full-route-button" href={selectedDayRoute} target="_blank" rel="noreferrer">在 Google Maps 打开全天路线图 <span>↗</span></a>}
+              </div>
+              <ol className="day-full-route-stops" aria-label={`${selectedDate} 全天路线顺序`}>
+                {selectedDayPoints.map((point, index) => <li key={`${point.id}-${index}`}>
+                  <b>{String(index + 1).padStart(2, "0")}</b>
+                  <span>{point.name}</span>
+                </li>)}
+              </ol>
+              {mobileRouteParts.length > 1 && <div className="day-mobile-routes">
+                <p>手机浏览器最多支持 3 个途经点。若全天链接没有保留全部站点，请按顺序打开下面的连续分段：</p>
+                <div>{mobileRouteParts.map((part, index) => <a href={googleDirections(part[0].googleQuery, part.at(-1)!.googleQuery, part.slice(1, -1).map((point) => point.googleQuery))} target="_blank" rel="noreferrer" key={`${part[0].id}-${part.at(-1)!.id}`}>
+                  手机路线 {index + 1}/{mobileRouteParts.length} · {part[0].name} → {part.at(-1)!.name} <span>↗</span>
+                </a>)}</div>
+              </div>}
+            </div>
             <div className="transit-audit-note">
               <strong>班次核对说明</strong>
               <p>时刻资料核对于 2026-09-02。“已核班次”是运营方公布到分钟的车次；“部分核实”表示主车次已核、酒店步行或换乘仍为估算；“预计时间”统一按 5–15 分钟粒度表达。酒店地址尚未锁定，出发前两周及当天还需复查。</p>
