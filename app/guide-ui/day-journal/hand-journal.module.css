@@ -145,7 +145,7 @@
   aspect-ratio: 4 / 5;
   background:
     linear-gradient(140deg, rgba(28, 42, 47, .18), transparent 46%),
-    var(--day-one-journal-art) center / cover no-repeat,
+    var(--journal-hero-art) center / cover no-repeat,
     linear-gradient(155deg, #e4c593 0 24%, #536967 25% 49%, #cf6d3f 50% 71%, #263c3a 72%);
   filter: saturate(.92) contrast(.97);
 }

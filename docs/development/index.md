@@ -1,0 +1,21 @@
+---
+status: Active
+owner: jap-tour
+last_verified: 2026-09-04
+sources:
+  - MAP.md
+  - docs/index.md
+---
+
+# 开发文档索引
+
+## 文档入口
+
+- [仓库文档地图](../../MAP.md)
+- [项目文档索引](../index.md)
+
+开发文档记录数据模型、代码边界、实现路线和已经确认的技术决策。
+
+| 专题 | 文档 | 状态 |
+| --- | --- | --- |
+| 多攻略配置架构 | [guide-platform-architecture.md](guide-platform-architecture.md) | Active |
