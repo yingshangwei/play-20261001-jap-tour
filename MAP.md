@@ -6,12 +6,13 @@
 
 | 主题 | 权威文档 | 状态 |
 | --- | --- | --- |
-| 行程固定事实与编辑约束 | [AGENTS.md](AGENTS.md) | Active |
+| 开工范围、修改边界与验证要求 | [AGENTS.md](AGENTS.md) | Active |
+| 关西固定日期、必保留项目与行李约束 | [docs/requirements/kansai-2026/constraints.md](docs/requirements/kansai-2026/constraints.md) | Active |
 | 配置 2 行程复盘 | [docs/research/plan-2-review.md](docs/research/plan-2-review.md) | Active |
 | 攻略平台业务需求 | [docs/requirements/guide-platform/requirements.md](docs/requirements/guide-platform/requirements.md) | Active |
 | 酒吧搜索功能需求 | [docs/requirements/bar-search/requirements.md](docs/requirements/bar-search/requirements.md) | Draft |
 | 每日手账天气子模块 | [docs/requirements/day-journals/weather-module.md](docs/requirements/day-journals/weather-module.md) | Draft |
-| 配置化架构与数据边界 | [docs/development/guide-platform-architecture.md](docs/development/guide-platform-architecture.md) | Active |
+| 配置驱动设计、两份配置位置与继承关系 | [docs/development/guide-platform-architecture.md](docs/development/guide-platform-architecture.md) | Active |
 | 配置化重构阶段计划 | [docs/exec_plan/guide-config-refactor.md](docs/exec_plan/guide-config-refactor.md) | Active |
 | 完整文档索引 | [docs/index.md](docs/index.md) | Active |
 
@@ -27,7 +28,7 @@
 | 位置 | 职责 |
 | --- | --- |
 | `README.md` | 项目简介、当前状态和最短启动路径 |
-| `AGENTS.md` | 行程不可变事实、编辑约束和禁止事项 |
+| `AGENTS.md` | 简短的执行规则与必读文档入口，不复制详细设计或日程 |
 | `docs/requirements/` | 目标、范围、功能要求、约束和验收标准 |
 | `docs/development/` | 架构、数据模型、代码边界和技术决策 |
 | `docs/exec_plan/` | 阶段计划、已完成事实、验证结果和阻塞项 |

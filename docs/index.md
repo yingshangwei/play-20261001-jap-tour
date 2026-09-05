@@ -1,7 +1,7 @@
 ---
 status: Active
 owner: jap-tour
-last_verified: 2026-09-04
+last_verified: 2026-09-05
 sources:
   - MAP.md
   - README.md
@@ -19,7 +19,7 @@ sources:
 
 - [仓库文档地图](../MAP.md)
 - [项目说明](../README.md)
-- [行程固定事实与编辑约束](../AGENTS.md)
+- [仓库协作规则](../AGENTS.md)
 
 ## 分区
 
@@ -38,5 +38,6 @@ sources:
 - [酒吧搜索需求](requirements/bar-search/requirements.md)
 - [酒店调研需求](requirements/hotels/requirements.md)
 - [页面文案去 AI 味需求](requirements/copy-editing/requirements.md)
-- [配置化架构设计](development/guide-platform-architecture.md)
+- [配置驱动设计与两份配置位置](development/guide-platform-architecture.md)
+- [关西旅行约束](requirements/kansai-2026/constraints.md)
 - [配置化重构执行计划](exec_plan/guide-config-refactor.md)

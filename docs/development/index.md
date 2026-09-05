@@ -1,7 +1,7 @@
 ---
 status: Active
 owner: jap-tour
-last_verified: 2026-09-04
+last_verified: 2026-09-05
 sources:
   - MAP.md
   - docs/index.md
@@ -18,4 +18,4 @@ sources:
 
 | 专题 | 文档 | 状态 |
 | --- | --- | --- |
-| 多攻略配置架构 | [guide-platform-architecture.md](guide-platform-architecture.md) | Active |
+| 配置驱动设计、配置位置与继承关系 | [guide-platform-architecture.md](guide-platform-architecture.md) | Active |

@@ -1,53 +1,33 @@
-# Kansai 2026 trip invariants
+# 仓库协作规则
 
-These instructions apply to the whole repository. Preserve them when editing the itinerary, map, day pages, restaurant dates, or hosting copy.
+本文件只保留执行规则。配置或界面改动前先读 [配置化架构](docs/development/guide-platform-architecture.md)，其他文档见 [文档地图](MAP.md)。
 
-## Fixed trip facts
+## 开工前确认范围
 
-- The travelers arrive at Kansai International Airport on **2026-09-29 at about 14:00**. Do not move the arrival to September 28 and do not invent an extra day.
-- The return flight leaves Kansai International Airport on **2026-10-07 at 12:00**. Plan to reach KIX at about 09:00; leave a Namba hotel around 07:45–08:00 or a Shinsaibashi hotel around 07:30.
-- The trip is **9 days / 8 nights**, using public transport and walking. The preferred pace is relaxed and nature-leaning: normally no more than 3 meaningful anchors, no more than 2 heavy anchors, and about 8 km walking maximum per day.
-- The travelers' normal wake-up clock is **about 09:00–10:00**. Treat departures before 08:00 as a scarce resource, not the default: the current plan uses them only for USJ (09.30) and the return flight (10.07). Do not introduce another pre-08:00 hotel departure without stating what fixed constraint requires it.
-- On every lodging-change day, solve the large suitcase before the first attraction. Prefer a direct lodging-to-lodging handoff over station lockers or attraction storage. The current fixed solution is: physically take luggage only from the Osaka hotel to the Kyoto hotel before Arashiyama on 10.03; send the large suitcase from the Kyoto hotel to the final Osaka hotel on 10.04 for the 10.06 check-in, while carrying a two-night essentials bag. Both hotels must have staffed front desks and confirm acceptance in advance.
-- Current lodging rhythm: Osaka Namba/Shinsaibashi **09.29–10.03 (4 nights)**, Kyoto Station area **10.03–10.06 (3 nights)**, Osaka Namba/Shinsaibashi **10.06 (1 night)**.
+- 先看相关需求和 `git status`，保护已有修改。区分本次是改攻略内容、共享界面，还是框架能力。
+- 改内容前说明目标配置、`guideId` 和日期；已明确就沿用，不明确就先问。不能把当前浏览器标签或默认首页当成用户选择。
+- 改共享界面前说明受影响的组件、模板和配置；不要只修正在预览的那一套。
 
-## Non-negotiable itinerary anchors
+## 内容与界面分开改
 
-- **USJ — 2026-09-30, full day. Never delete or move it without an explicit user request.** The official schedule checked on 2026-09-02 shows 08:00–22:00. Leave the Osaka hotel about 06:30 and target the gate about 07:15; USJ may open before the published time. The booking recommendation must retain a dated Studio Pass and an Express Pass or timed-entry solution covering SUPER NINTENDO WORLD. Recheck exact hours and attraction schedules shortly before travel.
-- **Kobe — 2026-10-02. Never delete it.** Keep it as an Osaka round trip. The default core is Nunobiki Herb Gardens → Kitano → reserved Kobe-beef lunch → Meriken Park → Harborland. Ikuta Shrine is removed. If the Nunobiki ropeway closes for wind, skip the garden and continue with Kitano and the port; do not delete Kobe.
-- **Arashiyama — 2026-10-03. Never delete it.** It is the Osaka-to-Kyoto moving day. Keep the short bamboo-grove visit, Tenryu-ji garden, and Togetsukyo riverfront. Do not add the monkey park or Sagano train by default.
-- **Philosopher's Path (哲学之道) — 2026-10-04. Never delete it.** Treat the roughly 2 km canal walk as a 60–75 minute experience, not merely a transfer between temples. The reduced default cluster is Philosopher's Path → Nanzen-ji; Ginkaku-ji and repeat East Kyoto temples are removed.
-- **Joyo Autumn Fireworks — 2026-10-04. Never delete or move it.** The fixed event anchor is 19:00 for about 40 minutes at Kizugawa Athletic Park near JR Nagaike. Entry requires an advance ticket and there is no same-day sale. Reach the venue around 16:00. After crowd exit, target the 20:50 JR Nara Line departure from Nagaike (21:23 at Kyoto) and retain time for a roughly 21:30–22:00 return to the Kyoto hotel.
-- **Kifune Shrine (贵船神社) — 2026-10-05. Never delete it, including in rain plans.** The safe default is Eizan Railway to Kibuneguchi plus bus 33, then Main Shrine → Rear Shrine → Yui-no-Yashiro. From May through November the Main Shrine is normally open 06:00–20:00 and the amulet/seal counter 09:00–17:00; recheck official notices. The Kurama-to-Kifune hike is optional only when weather, trail conditions, and energy are all good. It must never replace or endanger the shrine visit.
-- **Fushimi Inari Taisha (伏见稻荷大社) — 2026-10-06. Never delete it.** Visit early after Kyoto checkout and before Nara. The default short route is Main Shrine → Senbon Torii → Okusha Hohaisho; do not climb to the summit. Continue south by JR Nara Line so it does not create a cross-city detour.
-- **Shinsaibashi — arrival evening on 2026-09-29. Keep it.**
-- Nintendo Museum was explicitly removed by the user and must not be reintroduced unless requested.
+- 行程、时间、点位、交通、餐厅、文案和图片说明改目标配置及其资源；统一布局、样式和交互改共享组件或模板。不要求所有样式都放进全局样式文件。
+- 通用组件不导入具体攻略包，不按攻略标识、日期、地名或路由写特例。注册表和路由只负责加载配置、装配页面和生成页面元信息。
+- 配置可选择已注册模板和有类型约束的展示选项，不能塞组件代码、任意标记或样式凑界面。需要新能力时，扩展通用模型、渲染器和测试；保留已有模板的合理差异。
 
-## Current time skeleton
+## 防止配置串改
 
-- **09.29 Osaka arrival:** 14:00 land → 15:20–15:40 leave the arrivals area → hotel about 16:30–16:50 → 17:50–21:10 Shinsaibashi, Dotonbori, Hozenji.
-- **09.30 USJ:** 06:30 leave hotel → Osaka-Namba 06:46 → Nishikujo 06:54 → JR 07:05 → Universal City 07:11 → gate about 07:15 → official park hours 08:00–22:00 → hotel about 22:50–23:05.
-- **10.01 relaxed Osaka:** 10:30 leave hotel → 10:45–12:00 Kuromon → 12:35–14:05 Shitenno-ji → 14:20–15:30 Keitakuen → Shinsekai → Denden Town → hotel about 18:40. Any late stop is droppable.
-- **10.02 Kobe round trip:** leave the large suitcase at the Osaka hotel all day; 09:30 leave hotel → Osaka-Namba 09:52 → Kobe-Sannomiya 10:42 → ropeway lower station about 11:05 → 11:15–12:45 Nunobiki → 13:15 Kitano → reserved Kobe-beef lunch 14:00–15:30 → Meriken Park 16:00–17:45 → Harborland 18:00–19:15 → Osaka hotel about 20:30–20:45. Pack for the lodging move after returning.
-- **10.03 move to Kyoto before Arashiyama:** 08:15 checkout with the suitcase → Kyoto Station area hotel about 09:45–10:00 → hand the suitcase to the staffed front desk by about 10:05 → Kyoto 10:27 → Saga-Arashiyama 10:44 → bamboo grove about 10:55–11:25 → Tenryu-ji 11:30–13:00 → Togetsukyo and lunch 13:15–14:35 → Saga-Arashiyama 15:02 → Kyoto 15:20 → hotel about 15:30. Ryoriya Maekawa has a fixed 18:30 dinner start, leaving about 2 hours 15 minutes of hotel rest.
-- **10.04 Philosopher's Path/Uji/fireworks:** 08:50 departure → 09:45–10:55 Philosopher's Path → Nanzen-ji until about 11:45 → Byodo-in garden/museum about 12:45–13:55 → Uji tea and riverside until 14:55 → JR Uji 15:26 → Nagaike 15:37 → venue by 16:00 → fireworks 19:00–19:40 → target Nagaike 20:50 train → Kyoto 21:23 → hotel about 21:35–21:45. Skip the Phoenix Hall interior if its queue threatens the event.
-- **10.05 Kifune:** 09:00 departure → Demachiyanagi 09:52 Eizan Railway → Kibuneguchi 10:21 → bus 33 at 10:32 → Main Shrine 10:45–11:30 → Rear Shrine → Yui-no-Yashiro → lunch and riverside break → target 15:37 return bus → Kyoto hotel about 17:00–17:30.
-- **10.06 Fushimi Inari and Nara to Osaka:** the large suitcase was handed to the Kyoto hotel front desk on 10.04 for hotel-to-hotel delivery to the final Osaka hotel; checkout with only a two-night essentials bag → Kyoto 08:26 → Inari 08:32 → 08:35–10:00 Fushimi Inari short route → Inari 10:32 → Nara 11:40 → Todai-ji about 12:05–13:30 → Nigatsu-do → lunch → Kasuga Taisha until about 16:35 → Kintetsu-Nara 17:12 → Osaka-Namba 17:49 → hotel about 18:05–18:25. Do not use Fushimi or Nara lockers. Kofuku-ji, Naramachi, and Tuesday-closed Isuien are not part of this day.
-- **10.07 departure:** leave a Shinsaibashi hotel about 07:25 or a Namba hotel about 07:40 → Nankai Namba 08:00 Rapi:t → KIX 08:39 → terminal about 08:50 → flight 12:00.
+- 配置 2 继承配置 1 的部分数据。改共享源前检查引用；只改一个版本时，保证另一版本最终内容不变。
+- 对共享对象和数组使用不可变更新，嵌套修改也复制对应层级；新增版本复用稳定数据，只覆盖必要差异。
+- 点位、每日顺序和交通各有一个权威来源，地图、动画及可派生手账从中生成；同步核对摘要、餐厅日期、照片和下载文件。
+- 切换配置后，详情、返回链接、页面元信息、地图筛选和播放状态必须属于当前版本；开发示例不能混入关西专属内容。
 
-## Editing rules
+## 修改关西行程前必读
 
-- `guides/kansai-2026/` is the source of truth for homepage copy, places, days, transit, journey presentation, and detailed journals. `GuideHome`, `TripMap`, and `JourneyPlayer` must remain guide-agnostic and receive only typed configuration or derived view models.
-- The animation must derive every on-the-ground leg from `GuideDay` plus `TransitLeg`; tests must calculate expected counts from the selected guide instead of hard-coding 45 or 47. The two Shanghai flight placeholders belong in the Kansai journey configuration, not in the player component.
-- The journey animation must keep the current destination visible on the moving map and pair each stage with a credited real-location photograph when available. Never present an area photo as a confirmed hotel or restaurant storefront: label lodging and dining imagery as an area placeholder until the exact property is booked, and label non-event fireworks imagery as atmosphere reference rather than the Joyo venue.
-- Treat each day as a complete door-to-door journey. Normal sightseeing days start and end at that night's lodging; arrival day starts at KIX and ends at the Osaka lodging; moving days start at the old lodging and end at the new lodging; departure day starts at the Osaka lodging and ends at KIX.
-- Every consecutive place pair in the detailed flow must have a transport card. State the recommended mode, approximate departure time and duration, exact operator/line for public transport, the first service for early-morning public-transport legs, the last practical complete-route service for late-evening legs, and a fallback for disruption, missed service, severe weather, or inability to walk.
-- Distinguish a line's technical final departure from the last itinerary-safe connection. If the final train reaches only an interchange after onward service ends, label the earlier complete-route cutoff as the practical last service and describe the taxi fallback.
-- Map arrows are contextual, not cross-region route lines: show them only after a single date is selected and the map is zoomed into a local cluster. Keep long-distance transfers in the detailed flow and Google Maps links instead of drawing them across the map.
-- When adding a place, state what it replaces. Do not add a stop only because it has a high rating; geography, opening time, walking load, and return-to-hotel safety take priority.
-- Moving days require the luggage solution before sightseeing. Do not route a suitcase through an attraction and do not use a station locker as the default. On 10.03, take the suitcase directly from the old lodging to the new lodging and require the Kyoto hotel to accept it before check-in. On 10.06, avoid the geographically wasteful Kyoto→Osaka→Fushimi backtrack by forwarding the large suitcase hotel-to-hotel on 10.04. Yamato's current conservative accommodation guidance says to hand it over by the cutoff at least two days before check-in; confirm the actual cutoff, transit time, payment, and acceptance with both hotels after booking.
-- Preserve per-date map filtering and keyless Google Maps links. Within an area, use walking directions; cross-region transport should be described separately.
-- Exact hotel addresses are not fixed yet. Until they are, hotel-related transit times remain estimates and must not be labeled verified.
-- Minute-exact public-transport times may be shown as verified only when checked against the operator. Mixed legs with a verified main train but estimated hotel walking or interchange time must be labeled partially verified; all other timings should use 5–15 minute estimates instead of false precision.
-- When refining times, preserve the current recovery rhythm: late start on 10.01, normal starts on 10.02/10.05, and no new early start after the late fireworks return on 10.04. If an attraction must be shortened to protect sleep, shorten an optional or repeat stop before moving a non-negotiable anchor.
-- Do not publish or deploy the site unless the user explicitly asks.
+必须先读 [关西旅行约束](docs/requirements/kansai-2026/constraints.md)。固定日期、必保留项目、作息和行李安排不能自行改变；具体时间以选中配置为准，保留用户已确认的版本差异。这些旅行约束不适用于其他旅行或开发示例。
+
+## 验证与交付
+
+- 代码或内容配置变更运行 `pnpm run check`，补充相关回归；单版本检查是否误改另一版本，共享改动覆盖所有注册配置和受影响模板。
+- 界面改动检查受影响的桌面、移动端和交互；涉及路由或资源时检查静态导出及部署前缀。未做浏览器验证要说明，不能用构建通过代替交互验证。
+- 仅改文档时检查差异、链接和一致性即可。说明改了什么、验证了什么、还有什么待确认；不直接编辑构建产物，未经明确要求不发布或部署。
+- 设计、研究、执行记录分别写入对应 `docs/`，在索引中链接；本文件不维护完整日程、目录清单或任务流水账。

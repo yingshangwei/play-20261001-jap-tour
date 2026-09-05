@@ -5,6 +5,7 @@ last_verified: 2026-09-04
 sources:
   - MAP.md
   - AGENTS.md
+  - docs/requirements/kansai-2026/constraints.md
   - user-request-2026-09-04
 ---
 
@@ -42,7 +43,7 @@ sources:
 
 ## 约束
 
-- 关西攻略的固定事实和不可移动锚点以 [AGENTS.md](../../../AGENTS.md) 为准。
+- 关西攻略的固定日期与必保留项目以 [旅行约束](../kansai-2026/constraints.md) 为准。
 - 迁移期间保留现有 `/` 与 `/day-1` URL，避免一次性重写全部页面。
 - 未经用户明确要求，不发布或部署。
 - 具体酒店未确定前，相关时间不得标为已验证。

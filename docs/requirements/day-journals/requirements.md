@@ -5,6 +5,7 @@ last_verified: 2026-09-04
 sources:
   - MAP.md
   - AGENTS.md
+  - docs/requirements/kansai-2026/constraints.md
   - guides/kansai-2026/guide.ts
   - app/page.tsx
   - docs/requirements/day-journals/weather-module.md
@@ -59,7 +60,7 @@ sources:
 ## 内容边界
 
 - 日期、停靠顺序、住宿地和返程时间必须与首页、地图和动画一致。
-- 每天遵守 [AGENTS.md](../../../AGENTS.md) 中的固定锚点、作息和行李要求。
+- 每天遵守 [旅行约束](../kansai-2026/constraints.md) 中的固定项目、作息和行李要求。
 - 未核对到运营方的分钟级时刻只能标为预计；混合已核班次和估算步行时，标为部分核实。
 - 酒店地址未定前，酒店相关步行时间和坐标只作为区域估算。
 - 新增地点必须说明替换了什么；不能只因为评分高就加进路线。

@@ -14,7 +14,7 @@ sources:
 
 - [仓库文档地图](../../MAP.md)
 - [研究索引](index.md)
-- [固定事实和不可移动锚点](../../AGENTS.md)
+- [固定日期与必保留项目](../requirements/kansai-2026/constraints.md)
 - [配置架构](../development/guide-platform-architecture.md)
 
 ## 结论

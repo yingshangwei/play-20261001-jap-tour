@@ -5,6 +5,7 @@ last_verified: 2026-09-04
 sources:
   - MAP.md
   - AGENTS.md
+  - docs/requirements/kansai-2026/constraints.md
   - app/page.tsx
   - app/TripMap.tsx
   - user-request-2026-09-04
@@ -17,7 +18,7 @@ sources:
 - [仓库文档地图](../../../MAP.md)
 - [需求文档索引](../index.md)
 - [Day 2–9 手账需求](../day-journals/requirements.md)
-- [行程固定约束](../../../AGENTS.md)
+- [关西旅行约束](../kansai-2026/constraints.md)
 
 ## 当前缺口
 
