@@ -74,6 +74,17 @@ a:focus-visible { outline: 3px solid var(--gold); outline-offset: 5px; border-ra
 .overview span { color: #7d887f; font-size: 12px; letter-spacing: .08em; }
 .overview strong { font-family: Georgia, "Noto Serif SC", serif; font-size: 20px; font-weight: 500; }
 
+.guide-configurations { position: relative; z-index: 3; padding-top: 24px; }
+.guide-configurations > span { display: block; margin-bottom: 10px; font-size: 14px; color: rgba(255,250,240,.8); }
+.guide-configuration-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; max-width: 800px; }
+.guide-configuration-options a { display: grid; gap: 8px; padding: 16px 20px; border: 1px solid rgba(255,250,240,.4); border-radius: 12px; background: var(--deep-moss); }
+.guide-configuration-options a:hover { border-color: var(--gold); }
+.guide-configuration-options a[aria-current="page"] { color: var(--ink); background: var(--cream); border-color: var(--cream); }
+.guide-configuration-options strong { font-size: 16px; }
+.guide-configuration-options small { font-size: 14px; line-height: 1.5; }
+.configuration-state { font-size: 12px; font-weight: 700; }
+.guide-configurations + .hero-content { padding-top: 48px; padding-bottom: 92px; }
+
 .journey-player { margin-top: 112px; padding: 122px 0 132px; color: #fffaf0; background: #172a25; scroll-margin-top: 20px; }
 .journey-player-heading { display: grid; grid-template-columns: .42fr 1fr; gap: 50px; align-items: start; margin-bottom: 58px; }
 .journey-player-heading .section-note { color: rgba(255,250,240,.5); }
@@ -537,6 +548,9 @@ footer { padding: 75px 0; color: #fffaf0; background: var(--ink); }
   .sun-disc { right: -120px; bottom: -70px; width: 300px; height: 300px; font-size: 43px; }
   .overview { grid-template-columns: 1fr; margin-top: -28px; }
   .overview article { min-height: 108px; padding: 25px; border-right: 0; border-bottom: 1px solid var(--line); }
+  .guide-configuration-options { grid-template-columns: 1fr; gap: 8px; }
+  .guide-configuration-options a { padding: 14px 16px; }
+  .guide-configurations + .hero-content { padding-top: 36px; }
   .journey-player { margin-top: 78px; padding: 88px 0 98px; }
   .journey-player-heading { margin-bottom: 38px; }
   .journey-player-heading h2 { font-size: 43px; }

@@ -1,3 +1,5 @@
+import type { TransitLeg } from "@/app/guide-core/types";
+
 type TransitLegBase = {
   kind: "步行" | "铁路" | "铁路＋巴士" | "缆车＋步行";
   suggestedTime: string;
@@ -17,8 +19,6 @@ type TransitTiming = {
   stayPlan: string;
   timingStatus: "已核班次" | "部分核实" | "预计时间";
 };
-
-export type TransitLeg = TransitLegBase & TransitTiming;
 
 const NANKAI_TIMETABLE = "https://www.nankai.co.jp/cn_railway/access-timetable/";
 const HANSHIN_NAMBA = "https://eki.kintetsu.co.jp/norikae/T5?USR=IM&slCode=350-0&d=2&dw=0&time=0900";
@@ -49,7 +49,7 @@ function key(date: string, from: string, to: string) {
   return `${date}:${from}>${to}`;
 }
 
-export const transitLegs: Record<string, TransitLegBase> = {
+const transitDetails: Record<string, TransitLegBase> = {
   [key("09.29", "kix", "osaka-stay")]: {
     kind: "铁路",
     suggestedTime: "15:20–16:00（出关取行李后）",
@@ -675,9 +675,17 @@ const transitTimings: Record<string, TransitTiming> = {
   },
 };
 
-export function getTransitLeg(date: string, fromId: string, toId: string) {
-  const legKey = key(date, fromId, toId);
-  const transit = transitLegs[legKey];
-  const timing = transitTimings[legKey];
-  return transit && timing ? { ...transit, ...timing } : undefined;
-}
+export const kansaiTransitLegs: TransitLeg[] = Object.entries(transitDetails).map(([id, detail]) => {
+  const match = /^([^:]+):([^>]+)>(.+)$/.exec(id);
+  const timing = transitTimings[id];
+  if (!match || !timing) throw new Error(`Incomplete transit configuration: ${id}`);
+
+  return {
+    id,
+    dayId: match[1],
+    fromPlaceId: match[2],
+    toPlaceId: match[3],
+    ...detail,
+    ...timing,
+  };
+});

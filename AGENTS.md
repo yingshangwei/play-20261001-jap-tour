@@ -37,7 +37,8 @@ These instructions apply to the whole repository. Preserve them when editing the
 
 ## Editing rules
 
-- `app/page.tsx`, `app/TripMap.tsx`, `app/JourneyPlayer.tsx`, and any detailed day page must describe the same date, stop order, lodging base, and return time. The animation must continue deriving its 45 on-the-ground legs from `daySegments` plus `getTransitLeg`; only the two Shanghai flight placeholders may be animation-specific.
+- `guides/kansai-2026/` is the source of truth for homepage copy, places, days, transit, journey presentation, and detailed journals. `GuideHome`, `TripMap`, and `JourneyPlayer` must remain guide-agnostic and receive only typed configuration or derived view models.
+- The animation must derive every on-the-ground leg from `GuideDay` plus `TransitLeg`; tests must calculate expected counts from the selected guide instead of hard-coding 45 or 47. The two Shanghai flight placeholders belong in the Kansai journey configuration, not in the player component.
 - Treat each day as a complete door-to-door journey. Normal sightseeing days start and end at that night's lodging; arrival day starts at KIX and ends at the Osaka lodging; moving days start at the old lodging and end at the new lodging; departure day starts at the Osaka lodging and ends at KIX.
 - Every consecutive place pair in the detailed flow must have a transport card. State the recommended mode, approximate departure time and duration, exact operator/line for public transport, the first service for early-morning public-transport legs, the last practical complete-route service for late-evening legs, and a fallback for disruption, missed service, severe weather, or inability to walk.
 - Distinguish a line's technical final departure from the last itinerary-safe connection. If the final train reaches only an interchange after onward service ends, label the earlier complete-route cutoff as the practical last service and describe the taxi fallback.

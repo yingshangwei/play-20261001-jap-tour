@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { access, readFile, readdir } from "node:fs/promises";
 import test from "node:test";
 
 async function render(pathname = "/") {
@@ -12,6 +12,26 @@ async function render(pathname = "/") {
     { ASSETS: { fetch: async () => new Response("Not found", { status: 404 }) } },
     { waitUntil() {}, passThroughOnException() {} },
   );
+}
+
+async function configuredJourneyCounts() {
+  const [daysSource, journeySource] = await Promise.all([
+    readFile(new URL("../guides/kansai-2026/days.ts", import.meta.url), "utf8"),
+    readFile(new URL("../guides/kansai-2026/journey.ts", import.meta.url), "utf8"),
+  ]);
+  const groundSteps = [...daysSource.matchAll(/pointIds: \[([^\]]+)\]/g)]
+    .reduce((count, match) => count + Math.max(0, (match[1].match(/"/g)?.length ?? 0) / 2 - 1), 0);
+  const beforeSource = journeySource.slice(
+    journeySource.indexOf("beforeSteps:"),
+    journeySource.indexOf("afterSteps:"),
+  );
+  const afterSource = journeySource.slice(
+    journeySource.indexOf("afterSteps:"),
+    journeySource.indexOf("placeholderLabels:"),
+  );
+  const configuredSteps = (beforeSource.match(/^ {6}id: "/gm)?.length ?? 0)
+    + (afterSource.match(/^ {6}id: "/gm)?.length ?? 0);
+  return { groundSteps, totalSteps: groundSteps + configuredSteps };
 }
 
 test("server-renders the Kansai travel guide", async () => {
@@ -76,21 +96,154 @@ test("server-renders the Kansai travel guide", async () => {
   assert.doesNotMatch(html, /codex-preview|SkeletonPreview/);
 });
 
-test("covers every consecutive itinerary leg with transit guidance", async () => {
-  const source = await readFile(new URL("../app/transitData.ts", import.meta.url), "utf8");
-  assert.equal(source.match(/^ {4}kind: "/gm)?.length, 45);
-  assert.equal(source.match(/suggestedTime: "/g)?.length, 45);
-  assert.equal(source.match(/duration: "/g)?.length, 45);
-  assert.equal(source.match(/route: "/g)?.length, 45);
-  assert.equal(source.match(/fallback: "/g)?.length, 45);
-  assert.equal(source.match(/departurePlan: "/g)?.length, 45);
-  assert.equal(source.match(/arrivalPlan: "/g)?.length, 45);
-  assert.equal(source.match(/stayPlan: "/g)?.length, 45);
-  assert.equal(source.match(/^ {4}timingStatus: "/gm)?.length, 45);
+test("covers every configured itinerary leg with transit guidance", async () => {
+  const source = await readFile(new URL("../guides/kansai-2026/transit.ts", import.meta.url), "utf8");
+  const { groundSteps } = await configuredJourneyCounts();
+  assert.equal(source.match(/^ {4}kind: "/gm)?.length, groundSteps);
+  assert.equal(source.match(/suggestedTime: "/g)?.length, groundSteps);
+  assert.equal(source.match(/duration: "/g)?.length, groundSteps);
+  assert.equal(source.match(/route: "/g)?.length, groundSteps);
+  assert.equal(source.match(/fallback: "/g)?.length, groundSteps);
+  assert.equal(source.match(/departurePlan: "/g)?.length, groundSteps);
+  assert.equal(source.match(/arrivalPlan: "/g)?.length, groundSteps);
+  assert.equal(source.match(/stayPlan: "/g)?.length, groundSteps);
+  assert.equal(source.match(/^ {4}timingStatus: "/gm)?.length, groundSteps);
   assert.match(source, /最早班次/);
   assert.match(source, /最晚班次/);
   assert.match(source, /JR 长池/);
   assert.match(source, /京都巴士 33 路/);
+});
+
+test("derives the journey player stage count from the selected guide", async () => {
+  const [{ totalSteps }, response, playerSource] = await Promise.all([
+    configuredJourneyCounts(),
+    render(),
+    readFile(new URL("../app/JourneyPlayer.tsx", import.meta.url), "utf8"),
+  ]);
+  const html = await response.text();
+  assert.match(html, new RegExp(`${totalSteps} 个阶段 · 可按天播放`));
+  assert.match(playerSource, /JourneyModel/);
+  assert.doesNotMatch(playerSource, /GuideRouteModel|getTransitLeg|buildJourneySteps/);
+  assert.doesNotMatch(playerSource, /kix|shanghai|大阪|京都|神户|奈良|关西/i);
+  assert.doesNotMatch(playerSource, /\b(?:45|47)\b/);
+});
+
+test("keeps the map component decoupled from the Kansai guide package", async () => {
+  const source = await readFile(new URL("../app/TripMap.tsx", import.meta.url), "utf8");
+  assert.match(source, /GuideRouteModel/);
+  assert.doesNotMatch(source, /guides\/kansai-2026|transitData|daySegments|allPoints|dayTitles/);
+  assert.doesNotMatch(source, /大阪|京都|神户|奈良|关西/);
+});
+
+test("renders the home page from the selected guide configuration", async () => {
+  const [pageSource, rootPageSource, layoutSource, homeSource, response] = await Promise.all([
+    readFile(new URL("../app/guide-ui/GuideHome.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../guides/kansai-2026/home.ts", import.meta.url), "utf8"),
+    render(),
+  ]);
+  const html = await response.text();
+  assert.match(pageSource, /const home = guide\.home/);
+  assert.doesNotMatch(pageSource, /const (?:days|luggagePlans|bookingCards|restaurants|referenceReview|practical)\s*=/);
+  assert.doesNotMatch(pageSource, /大阪|京都|神户|奈良|贵船|伏见|城阳/);
+  assert.doesNotMatch(layoutSource, /大阪|京都|神户|奈良|关西|KANSAI/);
+  assert.match(rootPageSource, /<GuideHome guideId="kansai-2026"/);
+  assert.match(homeSource, /九日关西/);
+  assert.match(homeSource, /journalPaths:/);
+  assert.match(html, /<meta name="description" content="9 月 29 日至 10 月 7 日大阪、神户、京都与奈良九日路线：USJ、贵船神社与城阳秋花火。"/);
+});
+
+test("server-renders every registered guide and the second journal template", async () => {
+  const [kansaiResponse, sampleResponse, sampleDayResponse] = await Promise.all([
+    render("/guides/kansai-2026"),
+    render("/guides/sample-weekend"),
+    render("/guides/sample-weekend/days/day-1"),
+  ]);
+  assert.equal(kansaiResponse.status, 200);
+  assert.equal(sampleResponse.status, 200);
+  assert.equal(sampleDayResponse.status, 200);
+
+  const [kansaiHtml, sampleHtml, sampleDayHtml] = await Promise.all([
+    kansaiResponse.text(), sampleResponse.text(), sampleDayResponse.text(),
+  ]);
+  assert.match(kansaiHtml, /九日关西/);
+  assert.match(kansaiHtml, /\/guides\/kansai-2026\/days\/2026-09-29/);
+  assert.match(sampleHtml, /一日城市周末/);
+  assert.match(sampleHtml, /1 个阶段 · 按日播放/);
+  assert.match(sampleHtml, /城市中央站/);
+  assert.match(sampleDayHtml, /COMPACT TEMPLATE/);
+  assert.match(sampleDayHtml, /紧凑手账/);
+  assert.match(sampleDayHtml, /模板验证说明/);
+});
+
+test("keeps the reusable guide home independent from registered guide packages", async () => {
+  const source = await readFile(new URL("../app/guide-ui/GuideHome.tsx", import.meta.url), "utf8");
+  assert.doesNotMatch(source, /guides\/kansai-2026|guides\/sample-weekend/);
+  assert.doesNotMatch(source, /大阪|京都|神户|奈良|贵船|伏见|城阳/);
+  assert.match(source, /guideCatalog\.filter/);
+});
+
+test("switches between real Kansai configurations and keeps their routes separate", async () => {
+  const [original, optimized] = await Promise.all([render("/"), render("/guides/kansai-2026-plan-2")]);
+  const originalHtml = await original.text();
+  const optimizedHtml = await optimized.text();
+  for (const html of [originalHtml, optimizedHtml]) {
+    const switcher = html.match(/<nav class="guide-configurations[\s\S]*?<\/nav>/)?.[0];
+    assert.ok(switcher, "configuration switcher is visible in the hero");
+    assert.match(switcher, /配置 1 · 原行程/);
+    assert.match(switcher, /配置 2 · 从容版/);
+    assert.doesNotMatch(switcher, /sample-weekend/);
+    assert.equal((switcher.match(/aria-current="page"/g) ?? []).length, 1);
+  }
+  assert.match(originalHtml, /USJ 后睡到自然醒，再慢走大阪南区/);
+  assert.doesNotMatch(originalHtml, /恢复日做到一半/);
+  assert.match(optimizedHtml, /恢复日做到一半，就安心回酒店/);
+  assert.match(optimizedHtml, /先吃午餐再进大佛殿/);
+  assert.match(optimizedHtml, /17:21/);
+  assert.match(optimizedHtml, /08:26–08:32 JR/);
+  const journals = [...optimizedHtml.matchAll(/href="([^"]*\/guides\/kansai-2026-plan-2\/days\/[^"]+)"/g)].map((match) => match[1]);
+  assert.equal(new Set(journals).size, 9, "all nine days link to this configuration's journals");
+  const responses = await Promise.all(journals.map((href) => render(href.slice(href.indexOf("/guides/")).replace(/\.html$/, ""))));
+  for (const response of responses) {
+    assert.equal(response.status, 200);
+    assert.match(await response.text(), /返回配置 2 总行程/);
+  }
+});
+
+test("Day 3 compatibility page follows the recovery day and Day 8 keeps Fushimi before Nara", async () => {
+  const [third, eighth] = await Promise.all([render("/day-3"), render("/guides/kansai-2026-plan-2/days/2026-10-06")]);
+  const thirdHtml = await third.text();
+  const eighthHtml = await eighth.text();
+  assert.match(thirdHtml, /10:30/);
+  assert.match(thirdHtml, /慶泽园/);
+  assert.doesNotMatch(thirdHtml, /11–12 km|07:25|原始林/);
+  assert.match(eighthHtml, /12:05–12:40/);
+  assert.match(eighthHtml, /大箱已由京都酒店直送大阪酒店/);
+  assert.match(eighthHtml, /特别参拜 16:00 结束/);
+  assert.match(eighthHtml, /京都住宿.*伏见稻荷.*东大寺/s);
+});
+
+test("server-renders every guide registered in the catalog", async () => {
+  const registry = await readFile(new URL("../guides/registry.ts", import.meta.url), "utf8");
+  const catalogSource = registry.slice(registry.indexOf("guideCatalog"), registry.indexOf("guideLoaders"));
+  const guideIds = [...catalogSource.matchAll(/id: "([^"]+)"/g)].map((match) => match[1]);
+  assert.ok(guideIds.length > 1);
+  const responses = await Promise.all(guideIds.map((guideId) => render(`/guides/${guideId}`)));
+  responses.forEach((response, index) => assert.equal(response.status, 200, guideIds[index]));
+});
+
+test("keeps every guide-owned static asset resolvable from public", async () => {
+  const guidesDirectory = new URL("../guides/", import.meta.url);
+  const sourcePaths = (await readdir(guidesDirectory, { recursive: true }))
+    .filter((path) => path.endsWith(".ts"));
+  const assets = new Set();
+  for (const sourcePath of sourcePaths) {
+    const source = await readFile(new URL(sourcePath.replaceAll("\\", "/"), guidesDirectory), "utf8");
+    for (const match of source.matchAll(/["'](\/[^"'?#]+\.(?:png|jpe?g|webp|svg|kml|pdf))["']/gi)) assets.add(match[1]);
+  }
+  assert.ok(assets.size > 0);
+  await Promise.all([...assets].map((asset) => access(new URL(`../public${asset}`, import.meta.url))));
 });
 
 test("server-renders the Day 1 Osaka journal", async () => {

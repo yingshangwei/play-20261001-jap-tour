@@ -7,6 +7,7 @@
 | 主题 | 权威文档 | 状态 |
 | --- | --- | --- |
 | 行程固定事实与编辑约束 | [AGENTS.md](AGENTS.md) | Active |
+| 配置 2 行程复盘 | [docs/research/plan-2-review.md](docs/research/plan-2-review.md) | Active |
 | 攻略平台业务需求 | [docs/requirements/guide-platform/requirements.md](docs/requirements/guide-platform/requirements.md) | Active |
 | 酒吧搜索功能需求 | [docs/requirements/bar-search/requirements.md](docs/requirements/bar-search/requirements.md) | Draft |
 | 每日手账天气子模块 | [docs/requirements/day-journals/weather-module.md](docs/requirements/day-journals/weather-module.md) | Draft |

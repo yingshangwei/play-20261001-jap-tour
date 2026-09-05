@@ -1,0 +1,60 @@
+.desk { min-height: 100vh; padding: 28px 18px 60px; overflow-x: auto; color: #28291f; background: #1b211c; font-family: "Microsoft YaHei", "PingFang SC", sans-serif; }
+.toolbar { width: 210mm; margin: 0 auto 14px; display: flex; align-items: center; justify-content: space-between; gap: 20px; color: #f4eddc; font-size: 12px; }
+.toolbar div { display: flex; gap: 18px; }
+.toolbar a { padding-block: 5px; border-bottom: 1px solid rgba(244, 237, 220, .55); }
+.sheet { box-sizing: border-box; width: 210mm; height: 297mm; margin: 0 auto; padding: 9mm 11mm 8mm; overflow: hidden; position: relative; display: grid; grid-template-rows: auto auto 95mm 1fr auto; gap: 3.2mm; background: linear-gradient(rgba(65, 73, 51, .035) 1px, transparent 1px), radial-gradient(circle at 11% 3%, rgba(147, 82, 48, .08), transparent 22%), #f7f1e3; background-size: 100% 7mm, auto, auto; box-shadow: 0 24px 80px rgba(0, 0, 0, .42); isolation: isolate; }
+.sheet::after { content: ""; position: absolute; inset: 4mm; z-index: -1; border: 1px solid rgba(65, 73, 51, .22); pointer-events: none; }
+.header { display: grid; grid-template-columns: auto 1fr auto; gap: 6mm; align-items: center; padding-bottom: 3mm; border-bottom: 1px solid rgba(54, 67, 50, .36); }
+.dateBlock strong { display: block; color: #a54831; font: 500 14mm/.86 Georgia, "Times New Roman", serif; letter-spacing: -.06em; }
+.dateBlock span, .sectionTitle span, .notes section > span { color: #68705c; font-size: 2.25mm; font-weight: 800; letter-spacing: .12em; }
+.titleBlock h1 { margin: 0; font-family: "STKaiti", "KaiTi", "Noto Serif SC", serif; font-size: 8.2mm; font-weight: 700; line-height: 1.15; letter-spacing: -.055em; }
+.titleBlock p { margin: 2mm 0 0; color: #666555; font-size: 2.55mm; }
+.seal { width: 15mm; height: 15mm; display: grid; place-items: center; color: #a54831; border: .6mm double #a54831; font-family: "STKaiti", "KaiTi", serif; font-size: 3.1mm; line-height: 1.2; text-align: center; transform: rotate(2deg); }
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); border-block: 1px dashed rgba(71, 82, 61, .25); }
+.stats span { padding: 2.2mm 3mm; color: #5d604f; font-size: 2.6mm; text-align: center; }
+.stats span + span { border-left: 1px solid rgba(71, 82, 61, .22); }
+.stats b { margin-right: 1.5mm; color: #35563f; font-family: Georgia, serif; font-size: 3.5mm; }
+.photoGrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(2, minmax(0, 1fr)); gap: 3.3mm 4mm; }
+.photoCard { min-width: 0; margin: 0; position: relative; padding: 1.6mm 1.6mm 8.6mm; background: #fffaf0; border: 1px solid rgba(65, 55, 37, .18); box-shadow: 1.5mm 1.5mm 0 rgba(72, 79, 59, .09); }
+.photoCard:nth-child(1), .photoCard:nth-child(4) { transform: rotate(-.22deg); }
+.photoCard:nth-child(2), .photoCard:nth-child(3) { transform: rotate(.18deg); }
+.photo { height: 100%; background-image: url("/day-3-nara-places.png"); background-repeat: no-repeat; background-size: 201% 201%; filter: saturate(.9) contrast(.98); }
+.todai { background-position: left top; }
+.nigatsu { background-position: right top; }
+.kasuga { background-position: left bottom; }
+.forest { background-position: right bottom; }
+.photoCard figcaption { position: absolute; inset: auto 2mm 1.6mm; display: flex; align-items: baseline; justify-content: space-between; gap: 2mm; }
+.photoCard figcaption strong { font-family: "STKaiti", "KaiTi", serif; font-size: 3.35mm; line-height: 1; }
+.photoCard figcaption span { flex: 0 0 auto; color: #7d6f58; font-size: 2.1mm; }
+.lowerGrid { min-height: 0; display: grid; grid-template-columns: 1.14fr .86fr; gap: 5mm; padding-top: .8mm; }
+.sectionTitle { display: flex; align-items: baseline; justify-content: space-between; padding-bottom: 2mm; border-bottom: 1px solid #395840; }
+.sectionTitle h2, .notes h2 { margin: 0; font-family: "STKaiti", "KaiTi", serif; font-weight: 700; }
+.sectionTitle h2 { font-size: 4.6mm; }
+.schedule ol { margin: 0; padding: 0; list-style: none; }
+.schedule li { display: grid; grid-template-columns: 6mm 15mm 1fr; gap: 2mm; align-items: start; padding: 1.65mm 0; border-bottom: 1px dotted rgba(61, 76, 55, .28); }
+.kind { width: 5mm; height: 5mm; display: grid; place-items: center; color: #f7f1e3; background: #3e6048; border-radius: 50%; font-family: "STKaiti", "KaiTi", serif; font-size: 2.5mm; }
+.schedule time { padding-top: .35mm; color: #a54831; font: 700 3mm/1 Georgia, serif; }
+.schedule li strong { display: block; font-size: 2.85mm; line-height: 1.2; }
+.schedule li p { margin: .65mm 0 0; color: #6c6959; font-size: 2.05mm; line-height: 1.35; }
+.notes { min-height: 0; display: grid; grid-template-rows: auto auto 1fr; gap: 2.6mm; }
+.notes section { padding: 3.4mm 4mm; }
+.notes h2 { margin-top: 1mm; font-size: 4mm; line-height: 1.2; }
+.keyBox { border: .65mm double #47644a; background: rgba(71, 100, 74, .055); }
+.keyBox ul { margin: 2.5mm 0 0; padding: 0; list-style: none; }
+.keyBox li { padding: .8mm 0; color: #525748; font-size: 2.35mm; line-height: 1.35; }
+.keyBox li + li { border-top: 1px dotted rgba(71, 100, 74, .32); }
+.keyBox b { color: #2d4935; }
+.rainBox { color: #863b2d; border: .65mm double #a54831; background: rgba(165, 72, 49, .045); }
+.rainBox > span { color: #a54831 !important; }
+.rainBox p { margin: 1.7mm 0 0; font-size: 2.4mm; line-height: 1.5; }
+.routeBox { border-left: 1mm solid #d09b43; background: rgba(209, 158, 70, .09); }
+.routeBox p { margin: 1.7mm 0 0; color: #555548; font-size: 2.25mm; line-height: 1.5; }
+.routeWarning { padding-top: 1.8mm; border-top: 1px dotted rgba(83, 84, 66, .35); }
+.footer { display: grid; grid-template-columns: 1.3fr .7fr; gap: 4mm; align-items: center; padding-top: 2.4mm; border-top: 1px solid rgba(58, 72, 52, .4); }
+.footer div { display: flex; align-items: center; gap: 3mm; }
+.footer div > span { color: #a54831; font-size: 2.15mm; font-weight: 800; }
+.footer a { color: #35563f; font-size: 2.2mm; font-weight: 700; border-bottom: 1px solid rgba(53, 86, 63, .35); }
+.footer p { margin: 0; color: #777160; font-size: 1.9mm; line-height: 1.4; text-align: right; }
+.desk a:focus-visible { outline: 3px solid #d9a84f; outline-offset: 3px; }
+@media (max-width: 850px) { .desk { padding-inline: 12px; } .toolbar { margin-inline: 0; } }
+@media print { @page { size: A4 portrait; margin: 0; } .desk { min-height: 0; padding: 0; overflow: visible; background: white; } .toolbar { display: none; } .sheet { margin: 0; box-shadow: none; print-color-adjust: exact; -webkit-print-color-adjust: exact; } }

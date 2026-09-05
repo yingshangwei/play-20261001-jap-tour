@@ -7,6 +7,7 @@ import type {
   DayJournalTemplateId,
 } from "@/app/guide-core/types";
 import styles from "./hand-journal.module.css";
+import compactStyles from "./compact-journal.module.css";
 
 type DayJournalProps = {
   config: DayJournalConfig;
@@ -310,8 +311,49 @@ function HandJournalTemplate({ config, backHref, assetPrefix }: TemplateProps) {
   );
 }
 
+function CompactJournalTemplate({ config, backHref, assetPrefix }: TemplateProps) {
+  return (
+    <main className={compactStyles.page}>
+      <article className={compactStyles.sheet}>
+        <nav className={compactStyles.topbar} aria-label={config.navigation.ariaLabel}>
+          <a href={backHref}>← {config.navigation.backLabel}</a>
+          <span>{config.navigation.badge}</span>
+        </nav>
+        <header className={compactStyles.hero}>
+          <p>{config.hero.kicker}</p>
+          <h1><JournalTitle lines={config.hero.titleLines} /></h1>
+          <p className={compactStyles.heroLead}>{config.hero.lead}</p>
+          <div className={compactStyles.stats} aria-label={config.labels.statsAriaLabel}>
+            {config.hero.stats.map((stat) => <span key={stat.label}><strong>{stat.value}</strong>{stat.label}</span>)}
+          </div>
+          <div className={compactStyles.route}>
+            <span>{config.route.label}</span>
+            <strong>{config.route.summary}</strong>
+          </div>
+        </header>
+        {config.primaryRule ? (
+          <section className={compactStyles.rule} aria-label={config.primaryRule.ariaLabel}>
+            <strong>{config.primaryRule.title}</strong>
+            <p>{config.primaryRule.body}</p>
+          </section>
+        ) : null}
+        <div className={compactStyles.sections}>
+          {config.sections.map((section) => (
+            <JournalSectionView section={section} assetPrefix={assetPrefix} labels={config.labels} key={section.id} />
+          ))}
+        </div>
+        <footer className={compactStyles.footer}>
+          <p><strong>{config.footer.badge}</strong> · {config.footer.message}</p>
+          <a href={backHref}>{config.footer.backLabel} ↑</a>
+        </footer>
+      </article>
+    </main>
+  );
+}
+
 const journalTemplates: Record<DayJournalTemplateId, (props: TemplateProps) => ReactNode> = {
   "hand-journal": HandJournalTemplate,
+  "compact-journal": CompactJournalTemplate,
 };
 
 export default function DayJournal({ config, backHref, assetPrefix = "" }: DayJournalProps) {

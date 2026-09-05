@@ -36,8 +36,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build static site
-        run: pnpm run build
+      - name: Check and build static site
+        run: pnpm run check
 
       - name: Prepare Pages artifact
         shell: bash
@@ -57,12 +57,15 @@ jobs:
             find dist/client -maxdepth 2 -type f -print
             exit 1
           fi
-          if ! grep -q 'href="./day-1.html"' dist/client/index.html; then
-            echo "Home page does not link to the exported Day 1 page"
+          repository_name="${GITHUB_REPOSITORY#*/}"
+          if ! grep -q "href=\"/${repository_name}/guides/kansai-2026/days/2026-09-29.html\"" dist/client/index.html; then
+            echo "Home page does not link to the configured Day 1 page"
             exit 1
           fi
-
-          repository_name="${GITHUB_REPOSITORY#*/}"
+          if [ ! -f "dist/client/guides/kansai-2026-plan-2.html" ] || [ ! -f "dist/client/guides/kansai-2026-plan-2/days/2026-10-06.html" ]; then
+            echo "Configuration 2 or its configured journals were not exported"
+            exit 1
+          fi
           nested_assets="dist/client/${repository_name}/_next"
           if [ -d "$nested_assets" ]; then
             cp -R "$nested_assets" dist/client/_next

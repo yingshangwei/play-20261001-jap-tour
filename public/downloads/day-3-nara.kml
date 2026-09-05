@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>历史草稿（已停用）· 10.01 奈良</name>
+    <description>2026-09-05 停用：当前 10.01 为大阪恢复日，奈良在 10.06 伏见之后。此文件仅保留备查，不作当前导航。</description>
+    <Style id="route"><LineStyle><color>ff48603e</color><width>4</width></LineStyle></Style>
+    <Placemark><name>01 近铁奈良站</name><Point><coordinates>135.826588,34.684474,0</coordinates></Point></Placemark>
+    <Placemark><name>02 东大寺大佛殿</name><Point><coordinates>135.839845,34.688994,0</coordinates></Point></Placemark>
+    <Placemark><name>03 二月堂</name><Point><coordinates>135.843180,34.689370,0</coordinates></Point></Placemark>
+    <Placemark><name>04 春日大社</name><Point><coordinates>135.846075,34.680506,0</coordinates></Point></Placemark>
+    <Placemark><name>05 水谷神社 · 林道入口</name><Point><coordinates>135.847051,34.683344,0</coordinates></Point></Placemark>
+    <Placemark><name>06 若草山顶</name><Point><coordinates>135.854444,34.691111,0</coordinates></Point></Placemark>
+    <Placemark><name>07 奈良町 · 元兴寺</name><Point><coordinates>135.831319,34.677632,0</coordinates></Point></Placemark>
+    <Placemark><name>10.01 步行顺序示意</name><styleUrl>#route</styleUrl><LineString><tessellate>1</tessellate><coordinates>
+      135.826588,34.684474,0 135.839845,34.688994,0 135.843180,34.689370,0 135.846075,34.680506,0
+      135.847051,34.683344,0 135.854444,34.691111,0 135.831319,34.677632,0 135.826588,34.684474,0
+    </coordinates></LineString></Placemark>
+  </Document>
+</kml>

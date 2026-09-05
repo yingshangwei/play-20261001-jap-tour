@@ -1,6 +1,11 @@
 import { defineTravelGuide } from "@/app/guide-core/defineGuide";
+import { kansaiDays } from "./days";
 import { kansaiDayOneJournal } from "./journals/day-1";
 import { kansaiDayTwoJournal } from "./journals/day-2";
+import { kansaiJourney } from "./journey";
+import { kansaiHome } from "./home";
+import { kansaiMap, kansaiPlaces } from "./places";
+import { kansaiTransitLegs } from "./transit";
 
 export const kansai2026Guide = defineTravelGuide({
   schemaVersion: 1,
@@ -10,5 +15,11 @@ export const kansai2026Guide = defineTravelGuide({
   timezone: "Asia/Tokyo",
   title: "九日关西｜2026 国庆旅行攻略",
   description: "9 月 29 日至 10 月 7 日大阪、神户、京都与奈良九日路线。",
+  map: kansaiMap,
+  places: kansaiPlaces,
+  days: kansaiDays,
+  transitLegs: kansaiTransitLegs,
+  journey: kansaiJourney,
+  home: kansaiHome,
   journalDays: [kansaiDayOneJournal, kansaiDayTwoJournal],
 });

@@ -1,7 +1,7 @@
 import { defineDayJournal } from "@/app/guide-core/defineGuide";
 import { googleMapsSearch } from "@/app/guide-core/links";
 import type { DayJournalSource, DayJournalTimelineItem } from "@/app/guide-core/types";
-import plan from "@/travel-plans/day-1-osaka.plan.geo.json";
+import plan from "./day-1.plan.geo.json";
 
 type LegacyTimelineItem = {
   t: string;
@@ -61,11 +61,6 @@ export const kansaiDayOneJournal = defineDayJournal({
   },
   presentation: {
     template: "hand-journal",
-    heroImage: {
-      src: "/day-1-journal-collage.png",
-      alt: "大阪抵达夜手账拼贴图片位",
-      caption: "图片位：public/day-1-journal-collage.png",
-    },
   },
   hero: {
     kicker: "KIX → NAMBA → DOTONBORI",

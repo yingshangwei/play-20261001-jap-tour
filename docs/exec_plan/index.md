@@ -1,5 +1,5 @@
 ---
-status: Active
+status: Complete
 owner: jap-tour
 last_verified: 2026-09-04
 sources:
@@ -18,4 +18,4 @@ sources:
 
 | 计划 | 文档 | 状态 | 进度 |
 | --- | --- | --- | --- |
-| 多攻略配置化重构 | [guide-config-refactor.md](guide-config-refactor.md) | Active | 完成 1/6 阶段 |
+| 多攻略配置化重构 | [guide-config-refactor.md](guide-config-refactor.md) | Complete | 完成 6/6 阶段 |
