@@ -1,4 +1,5 @@
 import { googleMapsDirections, withPublicAssetPrefix } from "./links";
+import { deriveJournalWeather } from "./weather";
 import type {
   DayJournalConfig,
   GuideRouteModel,
@@ -310,5 +311,5 @@ export function getJourneyModel(guide: TravelGuideManifest, assetPrefix = ""): J
 export function getJournalDay(guide: TravelGuideManifest, dayId: string) {
   const day = guide.journalDays.find((candidate) => candidate.id === dayId);
   invariant(day, `Unknown journal day ${dayId} in ${guide.id}`);
-  return day;
+  return { ...day, weather: deriveJournalWeather(guide, day) };
 }

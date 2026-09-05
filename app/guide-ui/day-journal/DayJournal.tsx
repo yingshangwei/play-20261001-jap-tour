@@ -8,6 +8,7 @@ import type {
 } from "@/app/guide-core/types";
 import styles from "./hand-journal.module.css";
 import compactStyles from "./compact-journal.module.css";
+import JournalWeather from "./JournalWeather";
 
 type DayJournalProps = {
   config: DayJournalConfig;
@@ -285,6 +286,8 @@ function HandJournalTemplate({ config, backHref, assetPrefix }: TemplateProps) {
           </div>
         </header>
 
+        {config.weather ? <JournalWeather key={`${config.guideId}-${config.date}`} config={config.weather} template="hand-journal" /> : null}
+
         {config.primaryRule ? (
           <section className={styles.firstRule} aria-label={config.primaryRule.ariaLabel}>
             <span className={styles.pin}>{config.primaryRule.eyebrow}</span>
@@ -331,6 +334,7 @@ function CompactJournalTemplate({ config, backHref, assetPrefix }: TemplateProps
             <strong>{config.route.summary}</strong>
           </div>
         </header>
+        {config.weather ? <JournalWeather key={`${config.guideId}-${config.date}`} config={config.weather} template="compact-journal" /> : null}
         {config.primaryRule ? (
           <section className={compactStyles.rule} aria-label={config.primaryRule.ariaLabel}>
             <strong>{config.primaryRule.title}</strong>

@@ -11,7 +11,8 @@
     "start": "node scripts/run-vinext.mjs start",
     "typecheck": "tsc --noEmit --incremental false",
     "test:render": "node --test tests/rendered-html.test.mjs",
-    "test": "pnpm run build && pnpm run test:render",
+    "test:weather": "node --test tests/weather.test.mjs",
+    "test": "pnpm run test:weather && pnpm run build && pnpm run test:render",
     "check": "pnpm run typecheck && pnpm run lint && pnpm run test",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
     "db:generate": "drizzle-kit generate"

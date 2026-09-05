@@ -19,3 +19,4 @@ sources:
 | 专题 | 文档 | 状态 |
 | --- | --- | --- |
 | 配置驱动设计、配置位置与继承关系 | [guide-platform-architecture.md](guide-platform-architecture.md) | Active |
+| 手账天气数据、日期与刷新策略 | [journal-weather.md](journal-weather.md) | Active |

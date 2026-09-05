@@ -19,3 +19,4 @@ sources:
 | 计划 | 文档 | 状态 | 进度 |
 | --- | --- | --- | --- |
 | 多攻略配置化重构 | [guide-config-refactor.md](guide-config-refactor.md) | Complete | 完成 6/6 阶段 |
+| 每日手账天气 | [journal-weather.md](journal-weather.md) | Active | 当前天气与当日预报完成；自动预警接入待后续 |

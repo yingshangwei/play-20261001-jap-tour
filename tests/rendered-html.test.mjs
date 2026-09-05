@@ -9,7 +9,7 @@ const { getJourneyModel, defineTravelGuide } = await import("../app/guide-core/d
 const { pointsForDay, splitRouteForMobile, dayRouteHref } = await import("../app/guide-core/dayRoutes.ts");
 const { kansai2026Guide } = await import("../guides/kansai-2026/guide.ts");
 const { kansaiPlanTwoGuide } = await import("../guides/kansai-2026/configurations/plan-2/guide.ts");
-const { loadGuide } = await import("../guides/registry.ts");
+const { guideCatalog, loadGuide } = await import("../guides/registry.ts");
 
 async function render(pathname = "/") {
   const workerUrl = new URL("../dist/server/index.js", import.meta.url);
@@ -29,6 +29,24 @@ async function configuredJourneyCounts() {
   const configuredSteps = guide.journey.beforeSteps.length + guide.journey.afterSteps.length;
   return { groundSteps, totalSteps: groundSteps + configuredSteps };
 }
+
+test("every registered journal renders its dated weather module without fetching weather on the server", async () => {
+  for (const entry of guideCatalog) {
+    const guide = await loadGuide(entry.id);
+    for (const day of guide.journalDays) {
+      const response = await render(`/guides/${guide.id}/days/${day.id}`);
+      assert.equal(response.status, 200);
+      const html = await response.text();
+      assert.ok(html.includes(`data-weather-date="${day.date}"`));
+      assert.ok(html.includes(`data-template="${day.presentation.template}"`));
+      assert.match(html, /当天当地天气/);
+      assert.doesNotMatch(html, /预报不代表官方预警；停运以场所公告为准/);
+      assert.match(html, /aria-expanded="false"/);
+      assert.ok(html.indexOf(day.route.summary) < html.indexOf("当天当地天气"));
+      assert.doesNotMatch(html, /模型估算<\/small>/);
+    }
+  }
+});
 
 test("server-renders the Kansai travel guide", async () => {
   const response = await render();

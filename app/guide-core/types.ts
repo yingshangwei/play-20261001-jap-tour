@@ -446,6 +446,20 @@ export type DayJournalSection =
       items: DayJournalSource[];
     };
 
+/** Derived from the selected guide's route, coordinates and transit plans. */
+export type DayJournalWeather = {
+  guideId: GuideId;
+  date: string;
+  timezone: string;
+  locations: Array<{ id: PlaceId; name: string; position: [number, number]; officialHref?: string }>;
+  stops: Array<{
+    locationId: PlaceId;
+    time: string | null;
+    timingLabel: string;
+    fallback?: string;
+  }>;
+};
+
 export type DayJournalConfig = {
   schemaVersion: 1;
   id: GuideDayId;
@@ -453,6 +467,7 @@ export type DayJournalConfig = {
   date: string;
   dayNumber: number;
   weekday: string;
+  weather?: DayJournalWeather;
   metadata: {
     title: string;
     description: string;
