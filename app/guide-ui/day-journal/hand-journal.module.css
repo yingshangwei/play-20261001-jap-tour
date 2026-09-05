@@ -350,12 +350,13 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 18px;
+  align-items: start;
   margin-top: 64px;
 }
 
 .transportCard {
   display: flex;
-  min-height: 560px;
+  min-height: 0;
   padding: 32px;
   flex-direction: column;
   border: 1px solid rgba(248, 239, 220, .22);
@@ -380,6 +381,11 @@
 .transportCard dt { color: rgba(248, 239, 220, .54); font-size: 10px; }
 .transportCard dd { margin: 0; font-size: 12px; }
 .transportCard > p { margin: 24px 0 0; color: rgba(248, 239, 220, .78); font-size: 13px; line-height: 1.85; }
+.transportCard .transportDetails { border-color: rgba(248, 239, 220, .25); }
+.transportCard .transportDetails summary { color: #f8efdc; }
+.transportCard .transportDetails summary:focus-visible { outline-color: #e8c37f; }
+.transportDetails p { margin: 10px 0; font-size: 13px; line-height: 1.85; color: #e3ddcf; }
+.transportCard .transportDetails small { display: block; color: #d4d3c7; }
 
 .transportMeta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
 .transportMeta span { padding: 5px 8px; color: #2b2a26; background: #e8c37f; font-size: 9px; font-weight: 800; }
@@ -481,7 +487,7 @@
   .foodHeading { grid-template-columns: 1fr; gap: 22px; }
   .foodGrid { grid-template-columns: 1fr; }
   .transportGrid { grid-template-columns: 1fr; }
-  .transportCard { min-height: 500px; }
+  .transportCard { min-height: 0; }
   .foodCard { min-height: 390px; }
   .mapNote { grid-column: 1; }
 }

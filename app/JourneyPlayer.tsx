@@ -1,310 +1,160 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
-import type { LayerGroup, Map as LeafletMap, Marker } from "leaflet";
-import type { GuideDayId, JourneyModel, JourneyStep } from "@/app/guide-core/types";
-
-type PlayerScope = "all" | GuideDayId;
-
-function statusClass(status: JourneyStep["timingStatus"]) {
-  return status === "已核班次" ? "verified" : status === "部分核实" ? "partial" : "estimated";
-}
+import { useEffect, useMemo, useReducer, useRef, useState } from "react";
+import type { GuideDayId, JourneyModel } from "@/app/guide-core/types";
+import { INITIAL_PLAYBACK, playbackReducer, stepDuration, travelProgress, TRANSPORT_LABELS } from "@/app/guide-core/journeyPlayback";
+import RouteRibbon from "@/app/guide-ui/journey/RouteRibbon";
+import JourneyLocator from "@/app/guide-ui/journey/JourneyLocator";
+import TransportIcon from "@/app/guide-ui/journey/TransportIcon";
+import styles from "@/app/guide-ui/journey/journey.module.css";
 
 export default function JourneyPlayer({ model }: { model: JourneyModel }) {
-  const journeySteps = model.steps;
-  const presentation = model.presentation;
-  const dayOrder = useMemo(() => model.days.map((day) => day.id), [model.days]);
-  const dayById = useMemo(() => new Map(model.days.map((day) => [day.id, day])), [model.days]);
-  const mapElement = useRef<HTMLDivElement | null>(null);
-  const mapInstance = useRef<LeafletMap | null>(null);
-  const leafletRef = useRef<typeof import("leaflet") | null>(null);
-  const routeLayer = useRef<LayerGroup | null>(null);
-  const travelerMarker = useRef<Marker | null>(null);
-  const animationFrame = useRef<number | null>(null);
-  const reducedMotion = useRef(false);
-  const [mapReady, setMapReady] = useState(false);
-  const [scope, setScope] = useState<PlayerScope>("all");
-  const [stepIndex, setStepIndex] = useState(0);
-  const [playing, setPlaying] = useState(false);
-  const [speed, setSpeed] = useState(1);
+  if (!model.steps.length) return <section id="journey" className={styles.empty}>暂无可播放的行程。</section>;
+  return <Player model={model} />;
+}
 
-  const visibleSteps = useMemo(
-    () => scope === "all" ? journeySteps : journeySteps.filter((step) => step.date === scope),
-    [journeySteps, scope],
-  );
-  const currentIndex = Math.min(stepIndex, visibleSteps.length - 1);
-  const currentStep = visibleSteps[currentIndex];
-  const progress = ((currentIndex + 1) / visibleSteps.length) * 100;
-  const currentDayStep = visibleSteps.slice(0, currentIndex + 1).filter((step) => step.date === currentStep.date).length;
-  const currentDayTotal = visibleSteps.filter((step) => step.date === currentStep.date).length;
-  const recentSteps = visibleSteps.slice(Math.max(0, currentIndex - 2), Math.min(visibleSteps.length, currentIndex + 3));
-  const currentMedia = currentStep.media;
+function Player({ model }: { model: JourneyModel }) {
+  const presentation = model.presentation;
+  const labels = presentation.labels;
+  const [scope, setScope] = useState<"all" | GuideDayId>("all");
+  const [state, dispatch] = useReducer(playbackReducer, INITIAL_PLAYBACK);
+  const [speed, setSpeed] = useState(1);
+  const [view, setView] = useState<"ribbon" | "map">("ribbon");
+  const [reducedMotion, setReducedMotion] = useState(false);
+  const section = useRef<HTMLElement>(null);
+  const dayStrip = useRef<HTMLDivElement>(null);
+  const visibleSteps = useMemo(() => scope === "all" ? model.steps : model.steps.filter((step) => step.date === scope), [model.steps, scope]);
+  const durations = useMemo(() => visibleSteps.map(stepDuration), [visibleSteps]);
+  const currentIndex = Math.min(state.index, visibleSteps.length - 1);
+  const current = visibleSteps[currentIndex];
+  const day = model.days.find((item) => item.id === current.date)!;
+  const daySteps = useMemo(() => visibleSteps.filter((step) => step.date === current.date), [visibleSteps, current.date]);
+  const dayIndex = daySteps.indexOf(current);
+  const movement = travelProgress(state.elapsed);
+  const arrived = movement >= 1;
+  const ended = currentIndex === visibleSteps.length - 1 && state.elapsed >= durations[currentIndex];
+  const phase = ended ? "播放完毕" : arrived ? "到达 · 停留" : state.elapsed > 0 ? (state.playing ? "行进中" : "行进已暂停") : "准备出发";
+  const currentMedia = current.media;
+  const next = visibleSteps[currentIndex + 1];
+  const progress = (currentIndex + state.elapsed / durations[currentIndex]) / visibleSteps.length * 100;
+  const arrivalTime = current.arrivalTime;
+  const departureLabel = current.departureTime;
+  const pause = () => dispatch({ type: "pause" });
+  const selectStep = (index: number) => dispatch({ type: "select", index });
+  const selectDayStep = (index: number) => selectStep(visibleSteps.indexOf(daySteps[index]));
 
   useEffect(() => {
-    reducedMotion.current = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const query = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => setReducedMotion(query.matches);
+    update();
+    query.addEventListener("change", update);
+    const visibility = () => { if (document.hidden) dispatch({ type: "pause" }); };
+    document.addEventListener("visibilitychange", visibility);
+    const observer = new IntersectionObserver(([entry]) => { if (!entry.isIntersecting) dispatch({ type: "pause" }); });
+    if (section.current) observer.observe(section.current);
+    return () => { query.removeEventListener("change", update); document.removeEventListener("visibilitychange", visibility); observer.disconnect(); };
   }, []);
 
   useEffect(() => {
-    const sources = new Set(visibleSteps.slice(currentIndex, currentIndex + 4).flatMap((step) => step.media ? [step.media.src] : []));
-    sources.forEach((src) => {
-      const image = new window.Image();
-      image.src = src;
-    });
-  }, [currentIndex, visibleSteps]);
-
-  useEffect(() => {
-    let disposed = false;
-    async function setupMap() {
-      if (!mapElement.current || mapInstance.current) return;
-      const L = await import("leaflet");
-      if (disposed || !mapElement.current) return;
-      leafletRef.current = L;
-      const map = L.map(mapElement.current, {
-        center: presentation.map.center,
-        zoom: presentation.map.zoom,
-        scrollWheelZoom: true,
-        touchZoom: true,
-        zoomControl: false,
-      });
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: "&copy; OpenStreetMap contributors",
-        maxZoom: 19,
-      }).addTo(map);
-      L.control.zoom({ position: "bottomright" }).addTo(map);
-      mapInstance.current = map;
-      setMapReady(true);
-    }
-    setupMap();
-    return () => {
-      disposed = true;
-      if (animationFrame.current) cancelAnimationFrame(animationFrame.current);
-      mapInstance.current?.remove();
-      mapInstance.current = null;
-      leafletRef.current = null;
-      routeLayer.current = null;
-      travelerMarker.current = null;
+    if (!state.playing) return;
+    let frame = 0;
+    let previous = performance.now();
+    const tick = (now: number) => {
+      dispatch({ type: "tick", delta: now - previous, speed, durations });
+      previous = now;
+      frame = requestAnimationFrame(tick);
     };
-  }, [presentation.map.center, presentation.map.zoom]);
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, [state.playing, speed, durations]);
 
   useEffect(() => {
-    if (!playing) return;
-    const delay = 3200 / speed;
-    const timer = window.setTimeout(() => {
-      if (currentIndex >= visibleSteps.length - 1) {
-        setPlaying(false);
-        return;
-      }
-      setStepIndex((index) => index + 1);
-    }, delay);
-    return () => window.clearTimeout(timer);
-  }, [currentIndex, playing, speed, visibleSteps.length]);
+    visibleSteps.slice(currentIndex, currentIndex + 3).forEach((step) => {
+      if (step.media) { const image = new window.Image(); image.src = step.media.src; }
+    });
+  }, [visibleSteps, currentIndex]);
 
   useEffect(() => {
-    const L = leafletRef.current;
-    const map = mapInstance.current;
-    if (!L || !map || !mapReady || !currentStep) return;
+    const strip = dayStrip.current;
+    const active = strip?.querySelector<HTMLElement>("[data-current-day=true]");
+    if (!strip || !active) return;
+    const relative = active.getBoundingClientRect().left - strip.getBoundingClientRect().left;
+    if (relative < 0 || relative + active.clientWidth > strip.clientWidth) strip.scrollTo({ left: strip.scrollLeft + relative - 12, behavior: reducedMotion ? "instant" : "smooth" });
+  }, [current.date, reducedMotion]);
 
-    if (animationFrame.current) cancelAnimationFrame(animationFrame.current);
-    routeLayer.current?.remove();
-    const layer = L.layerGroup().addTo(map);
-    routeLayer.current = layer;
-
-    visibleSteps.slice(0, currentIndex).forEach((step) => {
-      L.polyline([step.from.position, step.to.position], {
-        color: "#355c45",
-        weight: 3,
-        opacity: .28,
-        lineCap: "round",
-      }).addTo(layer);
-    });
-
-    L.polyline([currentStep.from.position, currentStep.to.position], {
-      color: "#ef6a39",
-      weight: 5,
-      opacity: .95,
-      dashArray: "9 10",
-      lineCap: "round",
-    }).addTo(layer);
-    L.circleMarker(currentStep.from.position, {
-      radius: 6,
-      color: "#fffdf8",
-      weight: 3,
-      fillColor: "#355c45",
-      fillOpacity: 1,
-    }).bindTooltip(currentStep.from.name).addTo(layer);
-    L.circleMarker(currentStep.to.position, {
-      radius: 8,
-      color: "#fffdf8",
-      weight: 3,
-      fillColor: "#f5b94c",
-      fillOpacity: 1,
-    }).bindTooltip(currentStep.to.name).addTo(layer);
-
-    const icon = L.divIcon({
-      className: "journey-traveler-icon",
-      html: `<span>${currentStep.icon}</span>`,
-      iconSize: [42, 42],
-      iconAnchor: [21, 21],
-    });
-    const tooltip = document.createElement("div");
-    for (const [tag, text] of [
-      ["span", presentation.labels.destination],
-      ["strong", currentStep.to.name],
-      ["small", currentStep.arrivalPlan],
-    ]) {
-      const line = document.createElement(tag);
-      line.textContent = text;
-      tooltip.appendChild(line);
-    }
-    const marker = L.marker(currentStep.from.position, { icon, interactive: false, keyboard: false })
-      .bindTooltip(
-        tooltip,
-        { permanent: true, direction: "top", offset: [0, -24], opacity: 1, className: "journey-moving-tooltip" },
-      )
-      .addTo(layer);
-    travelerMarker.current = marker;
-
-    const bounds = L.latLngBounds([currentStep.from.position, currentStep.to.position]);
-    map.fitBounds(bounds, { padding: [58, 58], maxZoom: 13, animate: !reducedMotion.current, duration: .65 });
-
-    if (reducedMotion.current) {
-      marker.setLatLng(currentStep.to.position);
-      return;
-    }
-
-    const startedAt = performance.now();
-    const animationDuration = Math.max(520, (playing ? 1500 : 900) / speed);
-    const animate = (now: number) => {
-      const raw = Math.min((now - startedAt) / animationDuration, 1);
-      const eased = 1 - Math.pow(1 - raw, 3);
-      marker.setLatLng([
-        currentStep.from.position[0] + (currentStep.to.position[0] - currentStep.from.position[0]) * eased,
-        currentStep.from.position[1] + (currentStep.to.position[1] - currentStep.from.position[1]) * eased,
-      ]);
-      if (raw < 1) animationFrame.current = requestAnimationFrame(animate);
-    };
-    animationFrame.current = requestAnimationFrame(animate);
-  }, [currentIndex, currentStep, mapReady, playing, presentation.labels.destination, speed, visibleSteps]);
-
-  function selectScope(nextScope: PlayerScope) {
-    setPlaying(false);
-    setScope(nextScope);
-    setStepIndex(0);
-  }
-
-  function togglePlaying() {
-    if (currentIndex >= visibleSteps.length - 1) setStepIndex(0);
-    setPlaying((value) => !value);
-  }
-
-  function moveStep(delta: number) {
-    setPlaying(false);
-    setStepIndex((index) => Math.max(0, Math.min(visibleSteps.length - 1, index + delta)));
-  }
-
-  return (
-    <section className="journey-player" id="journey" aria-labelledby="journey-title">
-      <div className="journey-player-heading shell">
-        <div>
-          <p className="eyebrow">{presentation.eyebrow}</p>
-          <span className="section-note">{model.phaseSummary}</span>
-        </div>
-        <div>
-          <h2 id="journey-title">{presentation.titleLines.map((line, index) => <span key={line}>{line}{index < presentation.titleLines.length - 1 && <br />}</span>)}</h2>
-          <p>{presentation.description}</p>
-        </div>
+  return <section ref={section} className={styles.player} id="journey" aria-labelledby="journey-title" data-player-step={current.id} data-player-phase={arrived ? "stay" : "travel"} data-player-elapsed={Math.round(state.elapsed)} data-player-playing={state.playing}>
+    <header className={`${styles.heading} shell`}>
+      <h2 id="journey-title">旅程播放</h2>
+      <p>{model.phaseSummary}</p>
+    </header>
+    <div className={`${styles.workspace} shell`}>
+      <div ref={dayStrip} className={styles.dayScroller} role="group" aria-label={labels.daySelectorAriaLabel}>
+        <button type="button" aria-pressed={scope === "all"} onClick={() => { setScope("all"); selectStep(0); }}><small>{labels.allDaysCode}</small><span>{labels.allDays}</span></button>
+        {model.days.map((item, i) => <button type="button" key={item.id} disabled={!model.steps.some((step) => step.date === item.id)} data-current-day={item.id === current.date} aria-pressed={scope === item.id} className={item.id === current.date ? styles.currentDay : undefined} onClick={() => { setScope(item.id); selectStep(0); }}>
+          <small>{item.id} <span>DAY {i + 1}</span></small><span>{item.areaLabel}</span>
+        </button>)}
       </div>
 
-      <div className="journey-player-frame shell">
-        <div className="journey-map-stage">
-          <div className="journey-map" ref={mapElement} aria-label={presentation.map.ariaLabel} />
-          <div className="journey-map-caption">
-            <span>{currentStep.date} · {dayById.get(currentStep.date)?.weekday}</span>
-            <strong>{presentation.labels.destination} · {currentStep.to.name}</strong>
-            <small>{dayById.get(currentStep.date)?.title} · {currentStep.arrivalPlan}</small>
-            <small>{presentation.map.note}</small>
+      <div className={styles.board}>
+        <div className={styles.scene}>
+          <div className={styles.sceneToolbar}>
+            <span className={styles.chapter}>DAY {model.days.indexOf(day) + 1} <b>{current.date}</b><small>{day.weekday}</small></span>
+            <div className={styles.viewTabs} role="group" aria-label="路线展示方式">
+              <button type="button" aria-pressed={view === "ribbon"} onClick={() => setView("ribbon")}>路线示意</button>
+              <button type="button" aria-pressed={view === "map"} onClick={() => setView("map")}>真实地图</button>
+            </div>
           </div>
+          <div className={styles.sceneTitle}><span>{day.areaLabel}</span><h3>{day.title}</h3><p>{view === "ribbon" ? "左侧到达 · 右侧出发 · 线上交通；横向滑动看完整一天。时间为行程参考，路线不按地理比例。" : "查看这段的起终点位置。准确道路、轨道和换乘请打开逐段导航。"}</p></div>
+          {view === "ribbon"
+            ? <RouteRibbon key={current.date} steps={daySteps} index={dayIndex} progress={movement} playing={state.playing} reducedMotion={reducedMotion} onSelect={selectDayStep} onInteract={pause} />
+            : <JourneyLocator step={current} onInteract={pause} />}
+          <div className={styles.controlsPanel}>
+            <div className={styles.controls} role="group" aria-label={labels.controlsAriaLabel}>
+              <button type="button" aria-label={labels.previousAriaLabel} disabled={currentIndex === 0} onClick={() => selectStep(currentIndex - 1)}>←</button>
+              <button type="button" className={styles.playButton} onClick={() => dispatch({ type: "toggle", durations })}><span aria-hidden="true">{state.playing ? "Ⅱ" : "▶"}</span>{state.playing ? labels.pause : ended ? labels.replay : state.elapsed > 0 ? "继续播放" : labels.play}</button>
+              <button type="button" aria-label={labels.nextAriaLabel} disabled={currentIndex === visibleSteps.length - 1} onClick={() => selectStep(currentIndex + 1)}>→</button>
+              <label className={styles.speed}>{labels.speedAriaLabel}<select value={speed} onChange={(event) => setSpeed(Number(event.target.value))} aria-label={labels.speedAriaLabel}>{[.75, 1, 1.5, 2].map((value) => <option key={value} value={value}>{value}×</option>)}</select></label>
+            </div>
+            <div className={styles.progressMeta}><span>{phase} · {dayIndex + 1}/{daySteps.length} 段</span><span>{labels.progress} {currentIndex + 1}/{visibleSteps.length}</span></div>
+            <div className={styles.progressTrack} role="progressbar" aria-label="播放进度" aria-valuenow={Math.round(progress)} aria-valuemin={0} aria-valuemax={100}><i style={{ width: `${progress}%` }} /></div>
+            <label className={styles.seek}><span>跳到指定阶段</span><input aria-label={labels.stepSelectorAriaLabel} type="range" min={0} max={visibleSteps.length - 1} value={currentIndex} onChange={(event) => selectStep(Number(event.target.value))} /></label>
+            <small className={styles.previewNote}>1× 每段约 11–14 秒，含到达后的阅读时间；并非真实车速。</small>
+          </div>
+          <div className={styles.mobileStay}><span>{current.transportModes.map((mode) => TRANSPORT_LABELS[mode]).join(" + ")} · {current.duration}</span><p>{labels.stay}：{current.stayPlan}</p></div>
+          <div className={styles.nextUp}><span>{ended ? "旅程收束" : "接下来"}</span><p>{next ? <>{next.date !== current.date && <b>{next.date} · </b>}{next.departureTime} · {next.from.name} → {next.to.name}</> : ended ? "已到本次播放的最后一站。可切换日期或重新播放。" : "这是本次播放的最后一段，抵达后会自动停止。"}</p></div>
         </div>
 
-        <div className="journey-console">
-          <div className="journey-day-scroller" aria-label={presentation.labels.daySelectorAriaLabel}>
-            <button type="button" className={scope === "all" ? "active" : ""} onClick={() => selectScope("all")}>
-              <small>{presentation.labels.allDaysCode}</small><span>{presentation.labels.allDays}</span>
-            </button>
-            {dayOrder.map((date) => (
-              <button type="button" className={scope === date ? "active" : ""} onClick={() => selectScope(date)} key={date}>
-                <small>{date}</small><span>{dayById.get(date)?.areaLabel}</span>
-              </button>
-            ))}
-          </div>
-
-          <div className="journey-progress-block">
-            <div><span>{presentation.labels.progress}</span><strong>{currentIndex + 1} / {visibleSteps.length}</strong></div>
-            <div className="journey-progress-track" aria-hidden="true"><i style={{ width: `${progress}%` }} /></div>
-            <input aria-label={presentation.labels.stepSelectorAriaLabel} type="range" min="0" max={visibleSteps.length - 1} value={currentIndex} onChange={(event) => {
-              setPlaying(false);
-              setStepIndex(Number(event.target.value));
-            }} />
-          </div>
-
-          <article className="journey-current-card" aria-live="polite">
-            <div className="journey-step-topline">
-              <span>{presentation.labels.day} {dayOrder.indexOf(currentStep.date) + 1} · {presentation.labels.step} {currentDayStep}/{currentDayTotal}</span>
-              <em className={`timing-status status-${statusClass(currentStep.timingStatus)}`}>{currentStep.timingStatus}</em>
-            </div>
-            {currentMedia && <figure className="journey-place-photo" key={currentStep.id}>
-              {/* Static-export photo URLs are prefixed by the model and preloaded by the player. */}
+        <article className={styles.detail}>
+          <figure className={styles.photo} data-journey-photo>
+            {currentMedia ? <>
+              {/* Keep source, licence and area-placeholder labels attached to real photos. */}
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={currentMedia.src} alt={currentMedia.alt} width={960} height={640} decoding="async" style={{ objectPosition: currentMedia.objectPosition }} />
-              <figcaption>
-                <span>{currentMedia.label}</span>
-                <strong>{currentStep.to.name}</strong>
-                <small>{currentMedia.caption}</small>
-                <a href={currentMedia.sourceHref} target="_blank" rel="noreferrer">{presentation.labels.photoCredit}：{currentMedia.credit} · {currentMedia.license} ↗</a>
-              </figcaption>
-            </figure>}
-            <div className="journey-clock">{currentStep.departureTime}</div>
-            <p className="journey-segment-label">{currentStep.segment}</p>
-            <div className="journey-place-line">
-              <strong>{currentStep.from.name}</strong>
-              <span><i>{currentStep.icon}</i>{currentStep.mode}<small>{currentStep.duration}</small></span>
-              <strong>{currentStep.to.name}</strong>
-            </div>
-            {currentStep.placeholderLabel && <span className="journey-placeholder">{currentStep.placeholderLabel}</span>}
-            <dl className="journey-step-facts">
-              <div><dt>{presentation.labels.departure}</dt><dd>{currentStep.departurePlan}</dd></div>
-              <div><dt>{presentation.labels.arrival}</dt><dd>{currentStep.arrivalPlan}</dd></div>
-              <div><dt>{presentation.labels.stay}</dt><dd>{currentStep.stayPlan}</dd></div>
-              <div><dt>{presentation.labels.route}</dt><dd>{currentStep.route}</dd></div>
-            </dl>
-            <p className="journey-step-note">{currentStep.segmentNote}</p>
-            {currentStep.navigationHref && <a className="journey-nav-link" href={currentStep.navigationHref} target="_blank" rel="noreferrer">{presentation.labels.navigation}</a>}
-          </article>
-
-          <div className="journey-controls" aria-label={presentation.labels.controlsAriaLabel}>
-            <button type="button" onClick={() => moveStep(-1)} disabled={currentIndex === 0} aria-label={presentation.labels.previousAriaLabel}>←</button>
-            <button type="button" className="journey-play" onClick={togglePlaying}>{playing ? presentation.labels.pause : currentIndex === visibleSteps.length - 1 ? presentation.labels.replay : presentation.labels.play}</button>
-            <button type="button" onClick={() => moveStep(1)} disabled={currentIndex === visibleSteps.length - 1} aria-label={presentation.labels.nextAriaLabel}>→</button>
-            <div className="journey-speed" aria-label={presentation.labels.speedAriaLabel}>
-              {[1, 2, 4].map((value) => <button type="button" className={speed === value ? "active" : ""} onClick={() => setSpeed(value)} key={value}>{value}×</button>)}
-            </div>
+              <img src={currentMedia.src} key={currentMedia.src} alt={currentMedia.alt} width={960} height={640} decoding="async" style={{ objectPosition: currentMedia.objectPosition }} />
+              <figcaption><span>{currentMedia.label}</span><strong>{current.to.name}</strong><small>{currentMedia.caption}</small><a href={currentMedia.sourceHref} target="_blank" rel="noreferrer">{labels.photoCredit}：{currentMedia.credit} · {currentMedia.license} ↗</a></figcaption>
+            </> : <figcaption className={styles.noPhoto}><TransportIcon mode={current.transportModes[0]} size={42} /><span>目的地照片待补</span><strong>{current.to.name}</strong><small>保留空位，不用其他地点照片代替。</small></figcaption>}
+          </figure>
+          <div className={styles.detailBody}>
+            <div className={styles.phaseLine}><span>{arrived ? "已抵达" : labels.destination}</span><small>{current.timingStatus}</small></div>
+            <h3>{current.to.name}</h3>
+            {current.placeholderLabel && <p className={styles.placeholder}>{current.placeholderLabel} · 待最终确认</p>}
+            <div className={styles.timePair}><div><small>计划出发</small><strong data-range={departureLabel.length > 8}>{departureLabel}</strong></div><span aria-hidden="true">→</span><div><small>抵达时间参考</small><strong data-range={arrivalTime.length > 8}>{arrivalTime}</strong></div></div>
+            <p className={styles.from}>从 {current.from.name}</p>
+            <div className={styles.transport}>{current.transportModes.map((mode) => <span key={mode}><TransportIcon mode={mode} />{TRANSPORT_LABELS[mode]}</span>)}<small>{current.duration}</small></div>
+            <div className={`${styles.stay} ${arrived ? styles.stayActive : ""}`}><span>{labels.stay}</span><p>{current.stayPlan}</p></div>
+            <details className={styles.details} key={current.id} onToggle={(event) => { if (event.currentTarget.open) pause(); }}>
+              <summary>班次、换乘与时间说明 <span>＋</span></summary>
+              <dl><dt>{labels.departure}</dt><dd>{current.departurePlan}</dd><dt>{labels.arrival}</dt><dd>{current.arrivalPlan}</dd><dt>{labels.route}</dt><dd>{current.route}</dd></dl>
+              <p>{current.segmentNote}</p>
+            </details>
+            {current.navigationHref && <a className={styles.navigation} href={current.navigationHref} target="_blank" rel="noreferrer" onClick={pause}>{labels.navigation}</a>}
           </div>
-
-          <ol className="journey-mini-log" aria-label={presentation.labels.nearbyStepsAriaLabel}>
-            {recentSteps.map((step) => {
-              const absoluteIndex = visibleSteps.indexOf(step);
-              const state = absoluteIndex < currentIndex ? "done" : absoluteIndex === currentIndex ? "current" : "upcoming";
-              return <li className={state} key={step.id}>
-                <button type="button" onClick={() => { setPlaying(false); setStepIndex(absoluteIndex); }}>
-                  <span>{step.departureTime}</span>
-                  <strong>{step.from.name} → {step.to.name}</strong>
-                  <small>{step.mode}</small>
-                </button>
-              </li>;
-            })}
-          </ol>
-        </div>
+        </article>
       </div>
-    </section>
-  );
+      <details className={styles.dayOverview} onToggle={(event) => { if (event.currentTarget.open) pause(); }}>
+        <summary>跳到某一段 · {current.date} · {daySteps.length} 段</summary>
+        <ol aria-label={labels.nearbyStepsAriaLabel}>{daySteps.map((step, i) => <li key={step.id}><button type="button" aria-current={i === dayIndex ? "step" : undefined} onClick={() => selectDayStep(i)}><small>{String(i + 1).padStart(2, "0")} <b>{step.departureTime}</b></small><strong>{step.from.name} → {step.to.name}</strong><span>{step.mode}</span></button></li>)}</ol>
+      </details>
+    </div>
+    <p className={styles.srOnly} aria-live="polite">{current.date}，{current.from.name} 前往 {current.to.name}，{arrived ? "已到达，" : ""}{current.arrivalPlan}</p>
+  </section>;
 }

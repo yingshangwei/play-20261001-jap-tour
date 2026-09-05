@@ -1,5 +1,6 @@
 import { googleMapsDirections, withPublicAssetPrefix } from "./links";
 import { deriveJournalWeather } from "./weather";
+import { planTimeLabel, resolveTransportModes } from "./journeyPlayback";
 import type {
   DayJournalConfig,
   GuideRouteModel,
@@ -143,6 +144,14 @@ export function defineTravelGuide<const T extends TravelGuideManifest>(guide: T)
         );
       }
     }
+    const stopIds = new Set(day.segments.flatMap((segment) => segment.pointIds));
+    for (const [placeId, visit] of Object.entries(day.visits ?? {})) {
+      invariant(stopIds.has(placeId), `Visit guide ${placeId} is not a stop on ${day.id} in ${guide.id}`);
+      invariant(visit.duration.length > 0 && visit.focus.length > 0, `Visit guide needs duration and focus: ${day.id}:${placeId}`);
+      for (const source of visit.sources ?? []) {
+        invariant(/^https:\/\//.test(source.href) && /^\d{4}-\d{2}-\d{2}$/.test(source.checkedAt), `Visit source needs an HTTPS URL and dated check: ${day.id}:${placeId}`);
+      }
+    }
   }
 
   invariant(
@@ -217,10 +226,6 @@ function journeyPoint(place: Place): JourneyPoint {
   };
 }
 
-function departureTime(plan: string, unknownTime: string) {
-  return plan.match(/\d{2}:\d{2}/)?.[0] ?? unknownTime;
-}
-
 function journeyPlaceholder(guide: TravelGuideManifest, place: Place) {
   return guide.journey.placeholderLabels.byPlaceId[place.id]
     ?? guide.journey.placeholderLabels.byCategory[place.category];
@@ -238,10 +243,13 @@ function configuredJourneyStep(
   invariant(to, `Unknown destination ${step.toPlaceId} for journey step ${step.id}`);
   return {
     ...step,
+    transportModes: resolveTransportModes(step.mode, step.route, step.transportModes),
     from: journeyPoint(from),
     to: journeyPoint(to),
-    departureTime: departureTime(step.departurePlan, guide.journey.presentation.labels.unknownTime),
+    departureTime: step.displayTimes?.departure ?? planTimeLabel(step.departurePlan, guide.journey.presentation.labels.unknownTime, "first"),
+    arrivalTime: step.displayTimes?.arrival ?? planTimeLabel(step.arrivalPlan, guide.journey.presentation.labels.unknownTime),
     placeholderLabel: journeyPlaceholder(guide, to),
+    fromMedia: journeyMedia(guide, from.id, assetPrefix),
     media: journeyMedia(guide, to.id, assetPrefix),
   };
 }
@@ -275,11 +283,13 @@ export function getJourneyModel(guide: TravelGuideManifest, assetPrefix = ""): J
           from: journeyPoint(from),
           to: journeyPoint(to),
           mode: transit.kind,
+          transportModes: resolveTransportModes(transit.kind, transit.route, transit.transportModes),
           icon: guide.journey.transitIcons[transit.kind],
           duration: transit.duration,
           departurePlan: transit.departurePlan,
-          departureTime: departureTime(transit.departurePlan, guide.journey.presentation.labels.unknownTime),
+          departureTime: transit.displayTimes?.departure ?? planTimeLabel(transit.departurePlan, guide.journey.presentation.labels.unknownTime, "first"),
           arrivalPlan: transit.arrivalPlan,
+          arrivalTime: transit.displayTimes?.arrival ?? planTimeLabel(transit.arrivalPlan, guide.journey.presentation.labels.unknownTime),
           stayPlan: transit.stayPlan,
           route: transit.route,
           timingStatus: transit.timingStatus,
@@ -289,6 +299,7 @@ export function getJourneyModel(guide: TravelGuideManifest, assetPrefix = ""): J
             travelMode,
           ),
           placeholderLabel: journeyPlaceholder(guide, to),
+          fromMedia: journeyMedia(guide, from.id, assetPrefix),
           media: journeyMedia(guide, to.id, assetPrefix),
         } satisfies JourneyStep;
       }),

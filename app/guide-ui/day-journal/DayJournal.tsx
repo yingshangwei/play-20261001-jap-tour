@@ -9,6 +9,7 @@ import type {
 import styles from "./hand-journal.module.css";
 import compactStyles from "./compact-journal.module.css";
 import JournalWeather from "./JournalWeather";
+import travelStyles from "../travel/travel.module.css";
 
 type DayJournalProps = {
   config: DayJournalConfig;
@@ -113,12 +114,15 @@ function TransportSection({ section, labels }: {
               <div><dt>耗时</dt><dd>{item.duration}</dd></div>
               <div><dt>方式</dt><dd>{item.mode}</dd></div>
             </dl>
-            <p>{item.route}</p>
             <div className={styles.transportMeta}>
               <span>{item.timingStatus === "verified" ? "已核时刻" : item.timingStatus === "partial" ? labels.partiallyVerifiedTiming : labels.estimatedTiming}</span>
-              <span>{item.serviceBoundary}</span>
             </div>
+            <details className={`${travelStyles.fold} ${styles.transportDetails}`}>
+            <summary>换乘细节、首末班与异常备选</summary>
+            <p>{item.route}</p>
+            <p>{item.serviceBoundary}</p>
             <small><strong>异常备选：</strong>{item.fallback}</small>
+            </details>
             <a href={item.href} target="_blank" rel="noreferrer">打开这一段导航 ↗</a>
           </article>
         ))}

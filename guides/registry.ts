@@ -14,7 +14,7 @@ export const guideCatalog: readonly GuideCatalogEntry[] = [
     id: "kansai-2026",
     slug: "kansai-2026",
     title: "九日关西｜2026 国庆旅行攻略",
-    configuration: { group: "kansai-2026", label: "配置 1 · 原行程", description: "大阪南区完整慢行，保留原有停留安排。" },
+    configuration: { group: "kansai-2026", label: "配置 1 · 原行程", description: "保留完整路线，补齐开放信息与交通核查。" },
   },
   {
     id: "kansai-2026-plan-2",

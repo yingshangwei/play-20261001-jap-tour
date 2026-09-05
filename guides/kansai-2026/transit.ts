@@ -16,6 +16,7 @@ type TransitLegBase = {
 type TransitTiming = {
   departurePlan: string;
   arrivalPlan: string;
+  displayTimes?: TransitLeg["displayTimes"];
   stayPlan: string;
   timingStatus: "已核班次" | "部分核实" | "预计时间";
 };
@@ -485,6 +486,7 @@ const transitTimings: Record<string, TransitTiming> = {
   [key("10.02", "osaka-stay", "nunobiki")]: {
     departurePlan: "大阪酒店｜09:30；大阪难波 09:52 快速急行",
     arrivalPlan: "神户三宫 10:42｜新神户约 10:56｜缆车下站约 11:05",
+    displayTimes: { arrival: "11:05 下站" },
     stayPlan: "约 11:15 上山；香草园游览至 12:45",
     timingStatus: "部分核实",
   },
@@ -608,6 +610,7 @@ const transitTimings: Record<string, TransitTiming> = {
   [key("10.05", "kyoto-stay", "kifune")]: {
     departurePlan: "京都酒店｜09:00；09:42 前到出町柳",
     arrivalPlan: "出町柳 09:52 → 贵船口 10:21；33 路 10:32 → 贵船约 10:37",
+    displayTimes: { arrival: "10:45" },
     stayPlan: "本宫 10:45–11:30，含参拜、御守与短休",
     timingStatus: "部分核实",
   },
@@ -625,6 +628,7 @@ const transitTimings: Record<string, TransitTiming> = {
   },
   [key("10.05", "kifune-yui", "kyoto-stay")]: {
     departurePlan: "结社周边｜13:05 午餐；15:20 去站，目标 15:37 巴士",
+    displayTimes: { departure: "15:20" },
     arrivalPlan: "贵船口约 15:42｜京都酒店约 17:00–17:30",
     stayPlan: "回店后不再排景点；33 路 17:35 末班仅作兜底",
     timingStatus: "部分核实",
@@ -669,6 +673,7 @@ const transitTimings: Record<string, TransitTiming> = {
 
   [key("10.07", "osaka-stay", "kix")]: {
     departurePlan: "难波酒店 07:40｜心斋桥酒店 07:25；目标南海难波 08:00",
+    displayTimes: { departure: "难波 07:40\n心斋桥 07:25" },
     arrivalPlan: "Rapi:t 08:00 → 关西机场 08:39｜航站楼约 08:50",
     stayPlan: "预留约 3 小时 10 分钟办理值机、安检与出境；12:00 起飞",
     timingStatus: "部分核实",

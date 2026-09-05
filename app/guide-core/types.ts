@@ -53,7 +53,38 @@ export type GuideDay = {
   areaLabel: string;
   title: string;
   segments: RouteSegment[];
+  /** Optional research belongs to this day's visit, not every visit to a place. */
+  visits?: Record<PlaceId, VisitGuide>;
+  practical?: {
+    walking: string;
+    effort: string;
+    priority: string;
+    cutIfLate: string;
+  };
 };
+
+export type VisitGuide = {
+  priority: "必保留" | "核心" | "可跳过" | "用餐候选";
+  duration: string;
+  focus: string;
+  hours?: string;
+  price?: string;
+  booking?: string;
+  caution?: string;
+  sources?: Array<{ label: string; href: string; checkedAt: string }>;
+};
+
+export type TravelVerification = {
+  checkedAt: string;
+  basis: "官方核实" | "聚合查询" | "规划估算" | "待确认";
+  note: string;
+  pending?: string;
+};
+
+export type TransportMode = "walk" | "metro" | "train" | "bus" | "taxi" | "high-speed-train" | "cable-car" | "flight";
+
+/** Compact endpoint labels for prose containing intermediate stops or alternative hotels. */
+export type JourneyDisplayTimes = { departure?: string; arrival?: string };
 
 export type TransitLeg = {
   id: string;
@@ -61,6 +92,8 @@ export type TransitLeg = {
   fromPlaceId: PlaceId;
   toPlaceId: PlaceId;
   kind: "步行" | "铁路" | "铁路＋巴士" | "缆车＋步行";
+  /** Optional explicit main modes; never infer a taxi from the disruption fallback. */
+  transportModes?: TransportMode[];
   suggestedTime: string;
   duration: string;
   route: string;
@@ -72,8 +105,10 @@ export type TransitLeg = {
   sources?: Array<{ label: string; href: string }>;
   departurePlan: string;
   arrivalPlan: string;
+  displayTimes?: JourneyDisplayTimes;
   stayPlan: string;
   timingStatus: "已核班次" | "部分核实" | "预计时间";
+  verification?: TravelVerification;
 };
 
 export type GuideRouteModel = {
@@ -91,10 +126,12 @@ export type JourneyConfiguredStep = {
   fromPlaceId: PlaceId;
   toPlaceId: PlaceId;
   mode: string;
+  transportModes?: TransportMode[];
   icon: string;
   duration: string;
   departurePlan: string;
   arrivalPlan: string;
+  displayTimes?: JourneyDisplayTimes;
   stayPlan: string;
   route: string;
   timingStatus: TransitLeg["timingStatus"];
@@ -174,16 +211,19 @@ export type JourneyStep = {
   from: JourneyPoint;
   to: JourneyPoint;
   mode: string;
+  transportModes: TransportMode[];
   icon: string;
   duration: string;
   departurePlan: string;
   departureTime: string;
   arrivalPlan: string;
+  arrivalTime: string;
   stayPlan: string;
   route: string;
   timingStatus: TransitLeg["timingStatus"];
   navigationHref?: string;
   placeholderLabel?: string;
+  fromMedia?: JourneyMedia;
   media?: JourneyMedia;
 };
 

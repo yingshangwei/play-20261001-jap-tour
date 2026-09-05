@@ -1,7 +1,7 @@
 ---
 status: Active
 owner: jap-tour
-last_verified: 2026-09-04
+last_verified: 2026-09-06
 sources:
   - MAP.md
   - docs/index.md
@@ -17,6 +17,12 @@ sources:
 本分区保存外部资料、方案比较和诊断证据。研究结论在被确认后，应链接到对应需求或开发文档，不直接替代当前架构决策。
 
 ## 当前专题
+
+- [配置 1 · 景点与交通复盘](plan-1-review-2026-09-06.md)：贵船支线纠正、哲学之道接驳、餐食前移、开放信息及未核边界。
+
+- [旅行信息工具调研与安装](travel-tooling-2026-09.md)：米其林、Google、小红书、酒店筛选的本机安装状态，以及携程/去哪儿官方开放边界。
+- [日本交通工具安装与验证](japan-transit-tooling-2026-09.md)：免费 Yahoo 换乘 MCP/CLI 的固定版本、只读加固、调用方式与核时限制。
+- [旅程动画路线方案](journey-route-options.md)：Google 路线限制、示意路线与真实地图的分工。
 
 - [配置 2 · 九日复盘与取舍](plan-2-review.md)：完整逐日审视、恢复与用餐优化、官方来源及旧草稿处置。
 - [Day 2 · USJ 调研记录](usj-day-2.md)：营业时间、票券、任天堂园区入场、万圣夜、餐厅与首末班边界。

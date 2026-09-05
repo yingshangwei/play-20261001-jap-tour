@@ -4,7 +4,9 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { LayerGroup, Map as LeafletMap, Marker } from "leaflet";
 import { getTransitLeg } from "@/app/guide-core/defineGuide";
 import { dayRouteHref, pointsForDay, splitRouteForMobile } from "@/app/guide-core/dayRoutes";
-import type { GuideAreaId, GuideDay, GuideDayId, GuideRouteModel, Place } from "@/app/guide-core/types";
+import type { GuideAreaId, GuideDay, GuideDayId, GuideRouteModel, Place, VisitGuide } from "@/app/guide-core/types";
+import DayOverview from "@/app/guide-ui/travel/DayOverview";
+import TransitCard from "@/app/guide-ui/travel/TransitCard";
 
 type Category = "all" | "spot" | "restaurant" | "stay";
 type DateFilter = "all" | GuideDayId;
@@ -19,10 +21,12 @@ function googleDirections(origin: string, destination: string, waypoints: string
   const base = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}${travelMode}`;
   return waypoints.length ? `${base}&waypoints=${encodeURIComponent(waypoints.join("|"))}` : base;
 }
-function popupHtml(point: Place) {
+function popupHtml(point: Place, visit?: VisitGuide) {
+  const escape = (value: string) => value.replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]!);
   const detail = point.guide ? `<span class="leaflet-popup-guide">${point.guide}</span>` : "";
   const fit = point.fit ? `<p>${point.fit}</p>` : "";
-  return `<div class="trip-popup"><strong>${point.name}</strong><small>${point.meta}</small><span class="leaflet-popup-date">日期 ${point.dates.join(" / ")}</span>${detail}${fit}<a href="${googleSearch(point.googleQuery)}" target="_blank" rel="noreferrer">在 Google Maps 查看 ↗</a></div>`;
+  const visitSummary = visit ? `<p class="leaflet-popup-visit"><b>${escape(visit.priority)} · ${escape(visit.duration)}</b><br/>${escape(visit.focus)}</p>` : "";
+  return `<div class="trip-popup"><strong>${point.name}</strong><small>${point.meta}</small><span class="leaflet-popup-date">日期 ${point.dates.join(" / ")}</span>${detail}${visitSummary || fit}<a href="${googleSearch(point.googleQuery)}" target="_blank" rel="noreferrer">在 Google Maps 查看 ↗</a></div>`;
 }
 function orderForPoint(date: DateFilter, pointId: string, dayById: Map<GuideDayId, GuideDay>, pointById: Map<string, Place>) {
   if (date === "all") return null;
@@ -70,11 +74,13 @@ export default function TripMap({ model }: { model: GuideRouteModel }) {
   const [area, setArea] = useState<GuideAreaId>(mapConfig.defaultAreaId);
   const [selectedDate, setSelectedDate] = useState<DateFilter>("all");
   const [arrowState, setArrowState] = useState<"idle" | "zoom" | "visible">("idle");
+  const [mapRevision, setMapRevision] = useState(0);
   const selectedDay = selectedDate === "all" ? undefined : dayById.get(selectedDate);
 
 
   useEffect(() => {
     let disposed = false;
+    let resizeTimer: number | undefined;
     async function setupMap() {
       if (!mapElement.current || mapInstance.current) return;
       const L = await import("leaflet");
@@ -93,10 +99,11 @@ export default function TripMap({ model }: { model: GuideRouteModel }) {
       });
       map.fitBounds(defaultArea.bounds, { padding: [24, 24] });
       mapInstance.current = map;
-      window.setTimeout(() => map.invalidateSize(), 80);
+      setMapRevision((revision) => revision + 1);
+      resizeTimer = window.setTimeout(() => { if (!disposed) map.invalidateSize(); }, 80);
     }
     setupMap();
-    return () => { disposed = true; mapInstance.current?.remove(); mapInstance.current = null; leafletRef.current = null; markerEntries.current = []; arrowLayer.current = null; };
+    return () => { disposed = true; window.clearTimeout(resizeTimer); mapInstance.current?.remove(); mapInstance.current = null; leafletRef.current = null; markerEntries.current = []; arrowLayer.current = null; };
   }, [dayById, defaultArea.bounds, places, pointById]);
 
   useEffect(() => {
@@ -106,13 +113,14 @@ export default function TripMap({ model }: { model: GuideRouteModel }) {
     const visiblePositions: [number, number][] = [];
     markerEntries.current.forEach(({ marker, point }) => {
       marker.setIcon(buildIcon(L, point, selectedDate, dayById, pointById));
+      marker.setPopupContent(popupHtml(point, selectedDay?.visits?.[point.id]));
       const visible = (category === "all" || point.category === category) && (selectedDate === "all" || point.dates.includes(selectedDate));
       if (visible && !map.hasLayer(marker)) marker.addTo(map);
       if (!visible && map.hasLayer(marker)) marker.removeFrom(map);
       if (visible) visiblePositions.push(point.position);
     });
     if (selectedDate !== "all" && visiblePositions.length > 0) map.fitBounds(visiblePositions, { padding: [58, 58], maxZoom: 14 });
-  }, [category, dayById, pointById, selectedDate]);
+  }, [category, dayById, pointById, selectedDate, selectedDay, mapRevision]);
 
   useEffect(() => {
     if (!mapInstance.current || !leafletRef.current || !arrowLayer.current) return;
@@ -166,7 +174,7 @@ export default function TripMap({ model }: { model: GuideRouteModel }) {
     redrawRouteArrows();
     activeMap.on("zoomend moveend resize", redrawRouteArrows);
     return () => { activeMap.off("zoomend moveend resize", redrawRouteArrows); activeLayer.clearLayers(); };
-  }, [category, pointById, selectedDate, selectedDay]);
+  }, [category, pointById, selectedDate, selectedDay, mapRevision]);
 
   function focusArea(nextArea: GuideAreaId) { const target = areaById.get(nextArea); if (!target) return; setArea(nextArea); mapInstance.current?.fitBounds(target.bounds, { padding: [24, 24] }); }
   const visiblePointCount = places.filter((point) => (category === "all" || point.category === category) && (selectedDate === "all" || point.dates.includes(selectedDate))).length;
@@ -194,6 +202,7 @@ export default function TripMap({ model }: { model: GuideRouteModel }) {
         {selectedDate === "all" ? <div className="day-route-empty"><strong>选择上方某一天</strong><p>即可查看从哪里几点出发、建议班次、预计几点到、到达后游览 / 停留多久，以及每一段的 Google Maps 导航、首末班约束与无法乘坐时的备用方案。</p></div> : (
           <>
             <div className="day-route-header"><div><span>{selectedDate}</span><h3>{selectedDay?.title}</h3></div><small>每一段都可打开 Google Maps；公共交通卡另附运营方时刻入口</small></div>
+            {selectedDay && <DayOverview day={selectedDay} model={model} />}
             {dayPoints.length > 1 && <article className="day-full-route">
               <div className="day-full-route-intro">
                 <div>
@@ -214,10 +223,10 @@ export default function TripMap({ model }: { model: GuideRouteModel }) {
                 })}</div>
               </div>}
             </article>}
-            <div className="transit-audit-note">
-              <strong>班次核对说明</strong>
+            <details className="transit-audit-note">
+              <summary>班次核对说明 · 如何理解“预计”与“已核”</summary>
               <p>{mapConfig.transitAuditNote}</p>
-            </div>
+            </details>
             {selectedSegments.map((segment) => {
               const segmentPoints = segment.pointIds.map((id) => pointById.get(id)).filter((point): point is Place => Boolean(point));
               const segmentLegs = segmentPoints.slice(0, -1).map((from, index) => ({
@@ -229,35 +238,13 @@ export default function TripMap({ model }: { model: GuideRouteModel }) {
               const wholeRoute = segmentPoints.length > 1 && !isClosedTransitLoop ? googleDirections(segmentPoints[0].googleQuery, segmentPoints.at(-1)!.googleQuery, segmentPoints.slice(1, -1).map((point) => point.googleQuery), segment.mode) : null;
               return <article className="day-segment" key={segment.label}>
                 <div className="day-segment-title"><div><strong>{segment.label}</strong><p>{segment.note}</p></div><div className="day-segment-actions"><span>{segmentLegs.length} 段交通</span>{wholeRoute && <a href={wholeRoute} target="_blank" rel="noreferrer">整段路线 ↗</a>}</div></div>
-                <div className="day-flow">{segmentPoints.map((point, index) => <div className="day-flow-step" key={`${point.id}-${index}`}>
-                  <a className={`day-stop stop-${point.category}`} href={googleSearch(point.googleQuery)} target="_blank" rel="noreferrer"><b>{point.category === "stay" ? "住" : orderForPoint(selectedDate, point.id, dayById, pointById) ?? index + 1}</b><span>{point.name}</span><small>{point.meta}</small></a>
-                  {index < segmentPoints.length - 1 && <a className={`day-arrow mode-${segment.mode}`} href={googleDirections(point.googleQuery, segmentPoints[index + 1].googleQuery, [], segment.mode)} target="_blank" rel="noreferrer" aria-label={`从${point.name}前往${segmentPoints[index + 1].name}`}>→<small>{segment.mode === "walking" ? "步行导航" : "公共交通"} ↗</small></a>}
-                </div>)}</div>
                 <div className="day-leg-grid">
                   {segmentLegs.map(({ from, to, detail }, index) => {
                     const directionsMode = detail?.kind === "步行" ? "walking" : "transit";
-                    return <div className={`day-leg-card ${detail?.kind === "步行" ? "leg-walk" : "leg-transit"}`} key={`${from.id}-${to.id}`}>
-                      <div className="day-leg-heading">
-                        <span>{String(index + 1).padStart(2, "0")}</span>
-                        <strong>{from.name} <i>→</i> {to.name}</strong>
-                        <em>{detail?.kind ?? "待补"}</em>
-                      </div>
-                      {detail ? <>
-                        <div className="day-leg-facts">
-                          <span><b>从哪里 / 何时出发</b>{detail.departurePlan}</span>
-                          <span><b>预计几点到</b>{detail.arrivalPlan}</span>
-                          <span className="stay-fact"><b>到达后游览 / 停留</b>{detail.stayPlan}</span>
-                          <span className="duration-fact"><b>这一段交通耗时</b>{detail.duration}<i className={`timing-status status-${detail.timingStatus === "已核班次" ? "verified" : detail.timingStatus === "部分核实" ? "partial" : "estimated"}`}>{detail.timingStatus}</i></span>
-                        </div>
-                        <p className="day-leg-route"><b>怎么走</b>{detail.route}</p>
-                        {detail.serviceBoundary && <p className={`day-leg-boundary boundary-${detail.serviceBoundary.label === "最晚班次" ? "last" : detail.serviceBoundary.label === "最早班次" ? "first" : "reference"}`}><b>{detail.serviceBoundary.label}</b>{detail.serviceBoundary.detail}</p>}
-                        <p className="day-leg-fallback"><b>无法乘坐 / 行走</b>{detail.fallback}</p>
-                        <div className="day-leg-links">
-                          <a href={googleDirections(from.googleQuery, to.googleQuery, [], directionsMode)} target="_blank" rel="noreferrer">Google Maps 导航 ↗</a>
-                          {detail.sources?.map((source) => <a href={source.href} target="_blank" rel="noreferrer" key={source.href}>{source.label} ↗</a>)}
-                        </div>
-                      </> : <p className="day-leg-missing">这段交通资料缺失，请暂时使用 Google Maps 导航并在出发前核对。</p>}
-                    </div>;
+                    return detail ? <TransitCard key={`${from.id}-${to.id}`} from={from} to={to} leg={detail}
+                      visit={selectedDay?.visits?.[to.id]} index={index + 1}
+                      href={googleDirections(from.googleQuery, to.googleQuery, [], directionsMode)} />
+                      : <p className="day-leg-missing" key={`${from.id}-${to.id}`}>这段交通资料缺失，请暂时使用 Google Maps 导航并在出发前核对。</p>;
                   })}
                 </div>
               </article>;
@@ -266,7 +253,9 @@ export default function TripMap({ model }: { model: GuideRouteModel }) {
         )}
       </section>
 
-      <div className="restaurant-map-heading"><div><p className="eyebrow dark">DINING PINS</p><h3>餐厅候选与顺路备选</h3></div><p>{mapConfig.diningNote}</p></div>
+      <details className="map-dining-fold" key={selectedDate}>
+      <summary>{selectedDate === "all" ? "全程" : selectedDate} 餐厅候选与顺路备选 · {visibleRestaurants.length} 家</summary>
+      <p className="map-dining-note">{mapConfig.diningNote}</p>
       <div className="restaurant-pin-grid">
         {visibleRestaurants.length === 0 && <p className="restaurant-pin-empty">这一天不安排园外或正式餐厅，优先保留机动时间。</p>}
         {visibleRestaurants.map((restaurant) => {
@@ -274,6 +263,7 @@ export default function TripMap({ model }: { model: GuideRouteModel }) {
           return <article className="restaurant-pin-card" key={restaurant.id}><div className="restaurant-pin-top"><div className="restaurant-pin-meta"><span>{restaurant.meta}</span><b>建议 {restaurant.dates.join(" / ")}</b></div><em className={`fit-${fitClass}`}>{restaurant.fitLevel}</em></div><h4>{restaurant.name}</h4><strong>{restaurant.guide}</strong><p>{restaurant.fit}</p><div className="restaurant-pin-links"><a href={googleSearch(restaurant.googleQuery)} target="_blank" rel="noreferrer">Google Maps ↗</a>{restaurant.official && <a href={restaurant.official} target="_blank" rel="noreferrer">官方 / 预约 ↗</a>}</div></article>;
         })}
       </div>
+      </details>
     </div>
   );
 }

@@ -185,9 +185,13 @@ async function ensurePage() {
     // Default headless. Override via PRICEWIN_HEADED=1 for local debugging
     // (helps when Google Hotels triggers bot detection in headless mode).
     const headless = process.env.PRICEWIN_HEADED !== '1';
+    const args = browserArgs();
     browser = await chromium.launch({
       headless,
-      args: browserArgs(),
+      // Playwright/Patchright defaults this to false, even without a custom
+      // --no-sandbox flag. Preserve the sandbox promised by this skill.
+      chromiumSandbox: !args.includes('--no-sandbox'),
+      args,
     });
     process.stderr.write(`[daemon] browser launched (headless=${headless})\n`);
   }

@@ -1,7 +1,7 @@
 ---
 status: Active
 owner: jap-tour
-last_verified: 2026-09-05
+last_verified: 2026-09-06
 sources:
   - app/guide-core/types.ts
   - app/guide-core/defineGuide.ts
@@ -54,6 +54,10 @@ sources:
 | 目的地照片、说明与署名 | [journey-media.ts](../../guides/kansai-2026/journey-media.ts) | 共用配置 1 |
 
 ### 配置 2 是差量覆盖，不是完全独立的副本
+
+2026-09-06 起，配置 1 的新复盘单独放在 [plan-1/refinements.ts](../../guides/kansai-2026/configurations/plan-1/refinements.ts)，由其 `guide.ts` 组装。上表根目录 `days/home/places/transit` 仍是两套读取的历史基础；不要为了改配置 1 再直接修改它们。配置 2 不导入新的配置 1 覆盖层，因此此次新事实、时刻和访问说明不会自动串改另一版本。
+
+通用 `GuideDay.visits` 存每日到访的重点、停留、开放、价格与带日期来源；`practical` 存日内体力和取舍。`TransitLeg.verification` 区分来源类别、核查范围与待确认内容；整段 `timingStatus` 不能被“部分官方来源”覆盖成全程已核。共享 [travel 组件](../../app/guide-ui/travel/) 渲染摘要、交通和可展开访问指南，缺字段时自然降级。`dayPresentation.ts` 从路线顺序取首末交通的显式显示时间，终点抵达不等于全部活动结束。
 
 配置 2 的每日路线、点位、交通和首页从配置 1 导入，再替换有差异的字段；地图沿用区域配置并覆盖核查说明。第 1、2 天手账复用原版并调整归属与返回文案，第 3–9 天从自己的路线、交通和首页摘要生成。
 

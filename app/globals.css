@@ -85,90 +85,6 @@ a:focus-visible { outline: 3px solid var(--gold); outline-offset: 5px; border-ra
 .configuration-state { font-size: 12px; font-weight: 700; }
 .guide-configurations + .hero-content { padding-top: 48px; padding-bottom: 92px; }
 
-.journey-player { margin-top: 112px; padding: 122px 0 132px; color: #fffaf0; background: #172a25; scroll-margin-top: 20px; }
-.journey-player-heading { display: grid; grid-template-columns: .42fr 1fr; gap: 50px; align-items: start; margin-bottom: 58px; }
-.journey-player-heading .section-note { color: rgba(255,250,240,.5); }
-.journey-player-heading h2 { margin: 0; font: 500 clamp(44px, 5.4vw, 74px)/1.06 Georgia, "Noto Serif SC", serif; letter-spacing: -.04em; }
-.journey-player-heading > div:last-child > p { max-width: 740px; margin: 26px 0 0; color: rgba(255,250,240,.68); font-size: 14px; line-height: 1.85; }
-.journey-player-frame { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(390px, .85fr); min-height: 800px; color: var(--ink); background: var(--cream); border: 1px solid rgba(255,255,255,.18); box-shadow: 0 30px 90px rgba(0,0,0,.24); }
-.journey-map-stage { position: relative; min-width: 0; min-height: 800px; overflow: hidden; background: #dfe9e5; border-right: 1px solid var(--line); }
-.journey-map { position: absolute; inset: 0; z-index: 0; background: #dfe9e5; touch-action: none; }
-.journey-map .leaflet-control-attribution { font-size: 8px; }
-.journey-map-caption { position: absolute; z-index: 500; left: 24px; right: 24px; bottom: 24px; padding: 18px 20px; color: #fffaf0; background: rgba(23,42,37,.91); border: 1px solid rgba(255,255,255,.22); backdrop-filter: blur(12px); pointer-events: none; }
-.journey-map-caption span, .journey-map-caption strong, .journey-map-caption small { display: block; }
-.journey-map-caption span { margin-bottom: 5px; color: var(--gold); font-size: 10px; font-weight: 900; letter-spacing: .11em; }
-.journey-map-caption strong { font: 500 22px/1.35 Georgia, "Noto Serif SC", serif; }
-.journey-map-caption small { margin-top: 8px; color: rgba(255,250,240,.58); font-size: 9px; line-height: 1.55; }
-.journey-moving-tooltip.leaflet-tooltip { min-width: 145px; padding: 9px 12px; color: #fffdf8; background: rgba(23,42,37,.95); border: 1px solid rgba(255,255,255,.38); border-radius: 0; box-shadow: 0 10px 26px rgba(22,35,30,.24); text-align: center; }
-.journey-moving-tooltip.leaflet-tooltip::before { border-top-color: rgba(23,42,37,.95); }
-.journey-moving-tooltip span, .journey-moving-tooltip strong, .journey-moving-tooltip small { display: block; }
-.journey-moving-tooltip span { color: var(--gold); font-size: 11px; font-weight: 900; letter-spacing: .08em; }
-.journey-moving-tooltip strong { margin-top: 3px; font: 600 14px/1.3 Georgia, "Noto Serif SC", serif; }
-.journey-moving-tooltip small { max-width: 230px; margin-top: 3px; color: rgba(255,253,248,.85); font-size: 11px; white-space: normal; }
-.journey-traveler-icon { display: grid; place-items: center; border: 0; background: transparent; }
-.journey-traveler-icon span { display: grid; place-items: center; width: 42px; height: 42px; color: var(--ink); background: var(--gold); border: 4px solid #fffdf8; border-radius: 50%; box-shadow: 0 8px 24px rgba(22,35,30,.3); font-size: 17px; font-weight: 900; }
-.journey-console { min-width: 0; max-height: 800px; padding: 22px; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; }
-.journey-day-scroller { display: flex; gap: 7px; padding-bottom: 12px; overflow-x: auto; scrollbar-width: thin; }
-.journey-day-scroller button { flex: 0 0 auto; min-width: 96px; padding: 10px 11px; color: var(--muted); background: #f4efe4; border: 1px solid transparent; font: inherit; text-align: left; cursor: pointer; }
-.journey-day-scroller button:hover, .journey-day-scroller button.active { color: #fff; background: var(--moss); border-color: var(--moss); }
-.journey-day-scroller small, .journey-day-scroller span { display: block; }
-.journey-day-scroller small { margin-bottom: 4px; color: var(--orange); font: 700 10px Georgia, serif; letter-spacing: .08em; }
-.journey-day-scroller button.active small { color: var(--gold); }
-.journey-day-scroller span { font-size: 9px; font-weight: 800; }
-.journey-progress-block { padding: 17px 0 18px; border-block: 1px solid var(--line); }
-.journey-progress-block > div:first-child { display: flex; align-items: center; justify-content: space-between; color: var(--muted); font-size: 9px; font-weight: 800; letter-spacing: .08em; }
-.journey-progress-block > div:first-child strong { color: var(--ink); font: 16px Georgia, serif; }
-.journey-progress-track { height: 5px; margin-top: 11px; overflow: hidden; background: #e8e0d3; }
-.journey-progress-track i { display: block; height: 100%; background: var(--orange); transition: width .45s ease; }
-.journey-progress-block input { width: 100%; height: 18px; margin: 6px 0 -6px; accent-color: var(--orange); cursor: pointer; }
-.journey-current-card { padding: 23px 0 21px; border-bottom: 1px solid var(--line); }
-.journey-step-topline { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.journey-step-topline > span { color: var(--orange); font-size: 9px; font-weight: 900; letter-spacing: .12em; }
-.journey-place-photo { position: relative; height: 235px; margin: 16px 0 22px; overflow: hidden; color: #fffdf8; background: var(--deep-moss); animation: journey-photo-in .48s ease both; }
-.journey-place-photo::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(10,22,17,.04) 26%, rgba(10,22,17,.9) 100%); pointer-events: none; }
-.journey-place-photo img { width: 100%; height: 100%; display: block; object-fit: cover; transform: scale(1.015); }
-.journey-place-photo figcaption { position: absolute; z-index: 2; left: 16px; right: 16px; bottom: 14px; }
-.journey-place-photo figcaption > span, .journey-place-photo figcaption > strong, .journey-place-photo figcaption > small { display: block; }
-.journey-place-photo figcaption > span { color: var(--gold); font-size: 11px; font-weight: 900; letter-spacing: .05em; }
-.journey-place-photo figcaption > strong { margin-top: 4px; font: 600 18px/1.25 Georgia, "Noto Serif SC", serif; }
-.journey-place-photo figcaption > small { margin-top: 5px; color: rgba(255,253,248,.9); font-size: 12px; line-height: 1.45; }
-.journey-place-photo figcaption > a { display: inline-block; max-width: 100%; margin-top: 6px; color: rgba(255,253,248,.9); border-bottom: 1px solid rgba(255,255,255,.4); font-size: 11px; overflow-wrap: anywhere; }
-@keyframes journey-photo-in { from { opacity: .3; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-.journey-clock { margin: 22px 0 3px; color: var(--moss); font: 500 clamp(50px, 5vw, 72px)/.9 Georgia, serif; letter-spacing: -.05em; }
-.journey-segment-label { margin: 11px 0 18px; color: var(--muted); font-size: 11px; font-weight: 800; }
-.journey-place-line { display: grid; grid-template-columns: minmax(0,1fr) 110px minmax(0,1fr); gap: 12px; align-items: center; padding: 17px 0; border-block: 1px solid var(--line); }
-.journey-place-line > strong { font: 600 16px/1.35 Georgia, "Noto Serif SC", serif; }
-.journey-place-line > strong:last-child { text-align: right; }
-.journey-place-line > span { display: flex; flex-direction: column; align-items: center; color: var(--orange); font-size: 9px; font-weight: 900; text-align: center; }
-.journey-place-line > span i { display: grid; place-items: center; width: 32px; height: 32px; margin-bottom: 5px; color: #fff; background: var(--orange); border-radius: 50%; font-size: 14px; font-style: normal; }
-.journey-place-line > span small { margin-top: 4px; color: var(--muted); font-size: 8px; font-weight: 500; line-height: 1.35; }
-.journey-placeholder { display: inline-flex; margin-top: 12px; padding: 5px 8px; color: #7a4a39; background: #f1dfd6; font-size: 8px; font-weight: 900; letter-spacing: .08em; }
-.journey-step-facts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 18px 0 0; }
-.journey-step-facts div { padding: 11px 12px; background: #f4efe4; }
-.journey-step-facts div:last-child { grid-column: 1 / -1; }
-.journey-step-facts dt { margin-bottom: 5px; color: var(--moss); font-size: 8px; font-weight: 900; letter-spacing: .08em; }
-.journey-step-facts dd { margin: 0; color: #4f5b54; font-size: 9px; line-height: 1.65; }
-.journey-step-note { margin: 14px 0 0; padding-left: 11px; color: var(--muted); border-left: 2px solid var(--gold); font-size: 9px; line-height: 1.65; }
-.journey-nav-link { display: inline-flex; margin-top: 15px; padding-bottom: 4px; color: var(--moss); border-bottom: 1px solid var(--moss); font-size: 9px; font-weight: 900; }
-.journey-controls { display: grid; grid-template-columns: 42px minmax(110px,1fr) 42px auto; gap: 7px; align-items: center; padding: 18px 0; border-bottom: 1px solid var(--line); }
-.journey-controls > button, .journey-speed button { height: 38px; color: var(--ink); background: transparent; border: 1px solid var(--line); font: inherit; font-size: 11px; font-weight: 900; cursor: pointer; }
-.journey-controls > button:hover:not(:disabled), .journey-speed button:hover { border-color: var(--moss); }
-.journey-controls > button:disabled { opacity: .3; cursor: not-allowed; }
-.journey-controls .journey-play { color: #fff; background: var(--moss); border-color: var(--moss); }
-.journey-speed { display: flex; gap: 4px; }
-.journey-speed button { width: 34px; height: 30px; color: var(--muted); font-size: 8px; }
-.journey-speed button.active { color: var(--ink); background: var(--gold); border-color: var(--gold); }
-.journey-mini-log { margin: 0; padding: 11px 0 0; list-style: none; }
-.journey-mini-log li { position: relative; padding-left: 16px; opacity: .46; }
-.journey-mini-log li::before { content: ""; position: absolute; left: 0; top: 18px; width: 6px; height: 6px; background: #b7b1a7; border-radius: 50%; }
-.journey-mini-log li.done { opacity: .7; }
-.journey-mini-log li.done::before { background: var(--moss); }
-.journey-mini-log li.current { opacity: 1; }
-.journey-mini-log li.current::before { width: 8px; height: 8px; left: -1px; top: 17px; background: var(--orange); box-shadow: 0 0 0 4px rgba(239,106,57,.14); }
-.journey-mini-log button { width: 100%; display: grid; grid-template-columns: 45px 1fr auto; gap: 8px; align-items: center; padding: 10px 0; color: inherit; background: transparent; border: 0; border-bottom: 1px solid rgba(22,35,30,.1); font: inherit; text-align: left; cursor: pointer; }
-.journey-mini-log span { color: var(--orange); font: 12px Georgia, serif; }
-.journey-mini-log strong { overflow: hidden; font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }
-.journey-mini-log small { color: var(--muted); font-size: 8px; }
 
 .luggage-plan { padding: 108px 0 25px; }
 .luggage-plan-heading { display: grid; grid-template-columns: .42fr 1fr; gap: 50px; align-items: start; margin-bottom: 52px; }
@@ -266,7 +182,10 @@ a:focus-visible { outline: 3px solid var(--gold); outline-offset: 5px; border-ra
 .day-mobile-routes > div { display: flex; flex-wrap: wrap; gap: 7px; }
 .day-mobile-routes a { padding: 8px 10px; color: #fff8ec; border: 1px solid rgba(245,185,76,.48); border-radius: 5px; font-size: 9px; font-weight: 800; }
 .day-mobile-routes a:hover { color: var(--ink); background: var(--gold); }
-.transit-audit-note { margin: 18px 24px 0; padding: 14px 16px; display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: start; color: #625c52; background: #f0e9db; border-left: 3px solid var(--orange); }
+.transit-audit-note { margin: 18px 24px 0; padding: 14px 16px; color: #625c52; background: #f0e9db; border-left: 3px solid var(--orange); }
+.transit-audit-note summary { cursor: pointer; font-size: 13px; }
+.transit-audit-note[open] summary { margin-bottom: 10px; }
+.transit-audit-note summary:focus-visible { outline: 3px solid #577851; outline-offset: 4px; }
 .transit-audit-note strong { color: var(--ink); font-size: 10px; letter-spacing: .08em; white-space: nowrap; }
 .transit-audit-note p { margin: 0; font-size: 10px; line-height: 1.65; }
 .day-route-none { margin: 0; padding: 28px 24px; }
@@ -278,19 +197,7 @@ a:focus-visible { outline: 3px solid var(--gold); outline-offset: 5px; border-ra
 .day-segment-actions { flex: 0 0 auto; display: flex; align-items: center; gap: 8px; }
 .day-segment-actions > span { padding: 5px 8px; border-radius: 999px; color: var(--muted); background: #eee8dc; font-size: 9px; font-weight: 900; }
 .day-segment-actions > a { padding: 8px 10px; border: 1px solid var(--line); border-radius: 6px; color: var(--moss); background: var(--cream); font-size: 10px; font-weight: 900; }
-.day-flow { display: flex; align-items: stretch; gap: 0; overflow-x: auto; overscroll-behavior-inline: contain; padding-bottom: 6px; scrollbar-width: thin; }
-.day-flow-step { flex: 0 0 auto; display: flex; align-items: center; }
-.day-stop { position: relative; width: 164px; min-height: 102px; padding: 15px 13px 12px 43px; display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: 8px; background: var(--cream); transition: transform .2s ease, border-color .2s ease; }
-.day-stop:hover { transform: translateY(-2px); border-color: var(--moss); }
-.day-stop b { position: absolute; left: 12px; top: 13px; display: grid; place-items: center; width: 23px; height: 23px; border-radius: 50%; color: #fff; background: var(--moss); font: 700 11px Georgia, serif; }
-.day-stop.stop-restaurant b { background: var(--orange); }
-.day-stop span { font: 600 13px/1.35 Georgia, "Noto Serif SC", serif; }
-.day-stop small { margin-top: 8px; color: var(--muted); font-size: 9px; line-height: 1.45; }
-.day-arrow { width: 78px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--orange); font: 28px Georgia, serif; }
-.day-arrow small { margin-top: 3px; color: var(--muted); font: 800 8px "Noto Sans SC", sans-serif; white-space: nowrap; }
-.day-arrow:hover small { color: var(--orange); }
-.day-arrow.mode-transit { color: var(--moss); }
-.day-leg-grid { margin-top: 20px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.day-leg-grid { margin-top: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); gap: 16px; align-items: start; }
 .day-leg-card { min-width: 0; padding: 16px; display: flex; flex-direction: column; gap: 12px; border: 1px solid var(--line); border-radius: 8px; background: rgba(255,255,255,.48); }
 .day-leg-card.leg-transit { border-top: 3px solid var(--moss); }
 .day-leg-card.leg-walk { border-top: 3px solid var(--orange); }
@@ -324,6 +231,10 @@ a:focus-visible { outline: 3px solid var(--gold); outline-offset: 5px; border-ra
 .google-route-strip span { color: var(--orange); }
 .restaurant-map-heading { display: grid; grid-template-columns: 1fr .75fr; gap: 50px; align-items: end; padding: 58px 24px 30px; border-top: 1px solid var(--line); }
 .restaurant-map-heading .eyebrow { margin-bottom: 14px; }
+.map-dining-fold { border-top: 1px solid var(--line); }
+.map-dining-fold > summary { padding: 22px 24px; color: var(--moss); font-size: 1rem; font-weight: 600; cursor: pointer; }
+.map-dining-fold > summary:focus-visible { outline: 3px solid var(--gold); outline-offset: -4px; }
+.map-dining-note { padding: 0 24px 20px; margin: 0; color: var(--muted); font-size: .875rem; line-height: 1.75; }
 .restaurant-map-heading h3 { margin: 0; font: 500 34px/1.1 Georgia, "Noto Serif SC", serif; letter-spacing: -.025em; }
 .restaurant-map-heading > p { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.75; }
 .restaurant-pin-grid { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
@@ -547,10 +458,6 @@ footer { padding: 75px 0; color: #fffaf0; background: var(--ink); }
 .footer-inner > a { color: rgba(255,250,240,.72); font-size: 12px; border-bottom: 1px solid rgba(255,255,255,.35); padding-bottom: 5px; }
 
 @media (max-width: 900px) {
-  .journey-player-heading { grid-template-columns: 1fr; gap: 28px; }
-  .journey-player-frame { grid-template-columns: 1fr; }
-  .journey-map-stage { min-height: 540px; border-right: 0; border-bottom: 1px solid var(--line); }
-  .journey-console { max-height: none; }
   .map-heading { grid-template-columns: 1fr; gap: 30px; }
   .map-heading h2 { font-size: 52px; }
   .route-map-canvas { margin: 0; }
@@ -590,22 +497,6 @@ footer { padding: 75px 0; color: #fffaf0; background: var(--ink); }
   .guide-configuration-options { grid-template-columns: 1fr; gap: 8px; }
   .guide-configuration-options a { padding: 14px 16px; }
   .guide-configurations + .hero-content { padding-top: 36px; }
-  .journey-player { margin-top: 78px; padding: 88px 0 98px; }
-  .journey-player-heading { margin-bottom: 38px; }
-  .journey-player-heading h2 { font-size: 43px; }
-  .journey-map-stage { min-height: 440px; }
-  .journey-map-caption { left: 14px; right: 14px; bottom: 14px; padding: 14px; }
-  .journey-map-caption strong { font-size: 18px; }
-  .journey-moving-tooltip.leaflet-tooltip { min-width: 124px; padding: 7px 9px; }
-  .journey-console { padding: 14px; }
-  .journey-place-photo { height: 218px; }
-  .journey-place-line { grid-template-columns: minmax(0,1fr) 76px minmax(0,1fr); gap: 7px; }
-  .journey-place-line > strong { font-size: 13px; }
-  .journey-place-line > span small { display: none; }
-  .journey-step-facts { grid-template-columns: 1fr; }
-  .journey-step-facts div:last-child { grid-column: 1; }
-  .journey-controls { grid-template-columns: 38px minmax(100px,1fr) 38px; }
-  .journey-speed { grid-column: 1 / -1; justify-content: center; padding-top: 5px; }
   .luggage-plan { padding: 82px 0 5px; }
   .luggage-plan-heading { gap: 34px; }
   .luggage-plan-heading h2 { font-size: 43px; }
@@ -638,9 +529,6 @@ footer { padding: 75px 0; color: #fffaf0; background: var(--ink); }
   .day-segment { padding: 20px 14px; }
   .day-segment-title { align-items: flex-start; flex-direction: column; gap: 12px; }
   .day-segment-actions { width: 100%; justify-content: space-between; }
-  .day-flow { width: calc(100vw - 28px); }
-  .day-stop { width: 152px; min-height: 98px; }
-  .day-arrow { width: 64px; }
   .day-leg-grid { grid-template-columns: 1fr; }
   .day-leg-card { padding: 14px; }
   .day-leg-facts { grid-template-columns: 1fr; }

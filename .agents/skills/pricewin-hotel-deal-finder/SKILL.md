@@ -15,6 +15,29 @@ metadata:
 
 # PriceWin Hotel Deal Finder
 
+## Local readiness warning — verified 2026-09-06
+
+Dependencies are now installed from the existing package lock: Patchright 1.59.4
+and its Chromium 1217 / Chrome for Testing 147.0.7727.15. The local daemon now
+explicitly sets `chromiumSandbox`, because omitting a custom `--no-sandbox` flag
+does not enable the library's sandbox. A live run confirmed no such flag on the
+test browser processes, and the test process was closed afterwards.
+
+**Do not use this installed version's price rankings as hotel recommendations.**
+A test for Osaka, 2026-09-29 to 2026-10-03, 3 adults returned Agoda and Google
+candidates, but the formatter produced erroneous USD amounts (including $1/night).
+Google's query does not transmit the adult count; its currency detector defaults
+non-USD matches to VND, while the shared converter treats non-VND currencies as
+USD. The extractor also strips all punctuation from prices, and the report does
+not establish the same room, taxes or per-night versus whole-stay basis.
+
+Until those issues are fixed and verified against source rate pages, treat this
+as **installed, but pricing validation failed**, not a working cheapest-rate
+comparison. Do not rerun it for a recommendation or reproduce known-invalid
+price cards merely to satisfy the generic output instructions below. Prefer the
+connected Dida read-only tool for dated, occupancy-specific rates, or inspect
+official hotel/OTA pages. No reservation was made during the test.
+
 > **Compare live hotel prices across Booking.com, Agoda, Google Hotels & OpenTravel in one command** — and get back ranked best-value, cheapest, and quality picks with direct booking links.
 
 ## Repository safety policy

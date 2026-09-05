@@ -9,7 +9,7 @@ const media = {
     src: "/journey-photos/shanghai.jpg",
     alt: "上海黄浦江沿岸实景",
     label: "城市实景 · 机场待确认",
-    caption: "上海机场尚未确定，暂以城市实景表示返程终点。",
+    caption: "上海具体机场尚未确定，暂以城市实景表示出发与返回城市。",
     credit: "Xiquinho Silva",
     license: "CC BY 2.0",
     sourceHref: commonsSource("Huangpu Park 20124-Shanghai (32208802494).jpg"),

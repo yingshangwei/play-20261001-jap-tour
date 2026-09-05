@@ -5,7 +5,7 @@ import { register } from "node:module";
 
 register("./config-loader.mjs", import.meta.url);
 
-const { getJourneyModel, defineTravelGuide } = await import("../app/guide-core/defineGuide.ts");
+const { getJourneyModel, defineTravelGuide, getTransitLeg } = await import("../app/guide-core/defineGuide.ts");
 const { pointsForDay, splitRouteForMobile, dayRouteHref } = await import("../app/guide-core/dayRoutes.ts");
 const { kansai2026Guide } = await import("../guides/kansai-2026/guide.ts");
 const { kansaiPlanTwoGuide } = await import("../guides/kansai-2026/configurations/plan-2/guide.ts");
@@ -64,7 +64,7 @@ test("server-renders the Kansai travel guide", async () => {
   assert.match(html, /OpenStreetMap/);
   assert.match(html, /Google Maps/);
   assert.match(html, /餐厅候选与顺路备选/);
-  assert.match(html, /让整段旅程/);
+  assert.match(html, /id="journey-title">旅程播放/);
   assert.match(html, /个阶段 · 可按天播放/);
   assert.match(html, /上海出发机场 · 待确认/);
   assert.match(html, /选择动画阶段/);
@@ -87,7 +87,7 @@ test("server-renders the Kansai travel guide", async () => {
   assert.match(html, /作息/);
   assert.match(html, /常规作息 · 09:30 离店/);
   assert.match(html, /正常作息 · 09:00 离店/);
-  assert.match(html, /08:26–08:32 JR/);
+  assert.match(html, /08:35–10:00 伏见/);
   assert.match(html, /料理屋まえかわ/);
   assert.match(html, /Mouriya Honten/);
   assert.match(html, /Google Maps 4\.8 · 16,590 条评价/);
@@ -103,9 +103,7 @@ test("server-renders the Kansai travel guide", async () => {
   assert.match(html, /不使用伏见或奈良寄存柜/);
   assert.match(html, /哲学之道、宇治川与秋日烟火/);
   assert.match(html, /贵船神社是硬约束/);
-  assert.match(html, /永观堂/);
-  assert.match(html, /参考旧行程/);
-  assert.match(html, /伏见稻荷顺移到奈良当天/);
+  assert.doesNotMatch(html, /class="reference-review|href="#reference"/);
   assert.match(html, /USJ 后睡到自然醒，再慢走大阪南区/);
   assert.match(html, /伏见稻荷之后，沿 JR 奈良线继续南下/);
   assert.doesNotMatch(html, /任天堂博物馆|Nintendo Museum/);
@@ -114,22 +112,47 @@ test("server-renders the Kansai travel guide", async () => {
   assert.doesNotMatch(html, /codex-preview|SkeletonPreview/);
 });
 
+test("shared home removes redundant panels without losing practical decisions or candidates", async () => {
+  for (const entry of guideCatalog) {
+    const guide = await loadGuide(entry.id);
+    const response = await render(`/guides/${entry.id}`);
+    const html = await response.text();
+    assert.equal(response.status, 200);
+    assert.doesNotMatch(html, /class="(?:reference-review|hero-orbit|sun-disc|feature-visual|day-flow)\b/);
+    assert.doesNotMatch(html, new RegExp(`href="#${guide.home.reference.id}"`));
+    for (const restaurant of guide.home.dining.items) {
+      assert.ok(html.includes(restaurant.name), `${entry.id}: formal restaurant ${restaurant.name}`);
+      assert.ok(html.includes(restaurant.party), `${entry.id}: party requirements`);
+    }
+    for (const restaurant of guide.places.filter((point) => point.category === "restaurant")) {
+      assert.ok(html.includes(restaurant.name), `${entry.id}: map-only restaurant ${restaurant.name}`);
+    }
+    assert.ok(html.includes(guide.home.feature.link.href.replaceAll("&", "&amp;")));
+    for (const card of guide.home.booking.items) assert.ok(html.includes(card.body));
+    for (const card of guide.home.luggage.items) assert.ok(html.includes(card.body));
+    const folds = [...html.matchAll(/<details\b([^>]*)>\s*<summary[^>]*>([\s\S]*?)<\/summary>/g)];
+    const optionalFolds = [["有余力再选的地点", guide.home.detours.items.length], ["行前提醒", guide.home.practical.items.length], ["官方来源与出发前复核", guide.home.sources.links.length]];
+    const expectedFolds = ["餐厅候选与顺路备选", "跳到某一段", ...optionalFolds.filter(([, count]) => count > 0).map(([label]) => label)];
+    for (const [label, count] of optionalFolds) if (!count) assert.ok(!folds.some((match) => match[2].includes(label)), `${entry.id}: no empty ${label} panel`);
+    for (const label of expectedFolds) {
+      const fold = folds.find((match) => match[2].includes(label));
+      assert.ok(fold, `${entry.id}: ${label} still accessible`);
+      assert.doesNotMatch(fold[1], /\bopen(?:\s|=|$)/, `${entry.id}: ${label} collapsed by default`);
+    }
+  }
+});
+
 test("covers every configured itinerary leg with transit guidance", async () => {
-  const source = await readFile(new URL("../guides/kansai-2026/transit.ts", import.meta.url), "utf8");
-  const { groundSteps } = await configuredJourneyCounts();
-  assert.equal(source.match(/^ {4}kind: "/gm)?.length, groundSteps);
-  assert.equal(source.match(/suggestedTime: "/g)?.length, groundSteps);
-  assert.equal(source.match(/duration: "/g)?.length, groundSteps);
-  assert.equal(source.match(/route: "/g)?.length, groundSteps);
-  assert.equal(source.match(/fallback: "/g)?.length, groundSteps);
-  assert.equal(source.match(/departurePlan: "/g)?.length, groundSteps);
-  assert.equal(source.match(/arrivalPlan: "/g)?.length, groundSteps);
-  assert.equal(source.match(/stayPlan: "/g)?.length, groundSteps);
-  assert.equal(source.match(/^ {4}timingStatus: "/gm)?.length, groundSteps);
-  assert.match(source, /最早班次/);
-  assert.match(source, /最晚班次/);
-  assert.match(source, /JR 长池/);
-  assert.match(source, /京都巴士 33 路/);
+  for (const entry of guideCatalog) {
+    const guide = await loadGuide(entry.id);
+    for (const day of guide.days) for (const segment of day.segments) {
+      segment.pointIds.slice(0, -1).forEach((from, index) => {
+        const leg = getTransitLeg(guide, day.id, from, segment.pointIds[index + 1]);
+        assert.ok(leg, `${guide.id}: ${day.id} ${from}`);
+        for (const field of ["kind", "suggestedTime", "duration", "route", "fallback", "departurePlan", "arrivalPlan", "stayPlan", "timingStatus"]) assert.ok(leg[field]?.length, `${leg.id}: ${field}`);
+      });
+    }
+  }
 });
 
 test("derives the journey player stage count from the selected guide", async () => {
@@ -212,7 +235,7 @@ test("keeps destination media guide-owned, credited and prefixed for both config
       if (step.to.id === "joyo") assert.match(step.media.label, /非城阳现场/);
     }
     const html = await (await render(`/guides/${guide.id}`)).text();
-    const photo = html.match(/<figure class="journey-place-photo"[\s\S]*?<\/figure>/)?.[0];
+    const photo = html.match(/<figure[^>]*data-journey-photo[^>]*>[\s\S]*?<\/figure>/)?.[0];
     assert.ok(photo, "initial destination photograph is server rendered");
     const prefix = process.env.GITHUB_ACTIONS === "true" ? `/${process.env.GITHUB_REPOSITORY?.split("/")[1] ?? "play-20261001-jap-tour"}` : "";
     assert.ok(photo.includes(`src="${prefix}/journey-photos/kix.jpg"`));
@@ -222,6 +245,29 @@ test("keeps destination media guide-owned, credited and prefixed for both config
   const missing = { ...kansai2026Guide, journey: { ...kansai2026Guide.journey, mediaByPlaceId: {} } };
   assert.ok(getJourneyModel(missing).steps.every((step) => step.media === undefined), "no cross-guide or area fallback");
   assert.throws(() => defineTravelGuide({ ...missing, journey: { ...missing.journey, mediaByPlaceId: { kix: { ...kansai2026Guide.journey.mediaByPlaceId.kix, credit: "" } } } }), /Journey media must include/);
+});
+
+test("static journey route renders paired times, every vehicle label and credited node thumbnails before playback", async () => {
+  for (const guide of [kansai2026Guide, kansaiPlanTwoGuide]) {
+    const html = await (await render(`/guides/${guide.id}`)).text();
+    const journey = html.match(/<section[^>]*id="journey"[\s\S]*?<\/section>/)?.[0];
+    assert.ok(journey);
+    const steps = getJourneyModel(guide).steps.filter((step) => step.date === guide.days[0].id);
+    assert.equal((journey.match(/data-route-transport=/g) ?? []).length, steps.length);
+    assert.equal((journey.match(/data-node-arrival=/g) ?? []).length, steps.length + 1);
+    assert.equal((journey.match(/data-node-departure=/g) ?? []).length, steps.length + 1);
+    const photos = [...journey.matchAll(/<figure[^>]*data-node-photo[^>]*>([\s\S]*?)<\/figure>/g)];
+    assert.equal(photos.length, steps.length + 1);
+    for (const photo of photos) {
+      assert.match(photo[1], /<img[^>]*loading="lazy"/);
+      assert.match(photo[1], /commons\.wikimedia\.org/);
+      assert.doesNotMatch(photo[1], /<button[^>]*>(?:(?!<\/button>)[\s\S])*<a\b/);
+    }
+    assert.match(journey, /当日起点/);
+    assert.match(journey, /当日结束/);
+    assert.match(journey, /住宿区域实景 · 非酒店照片/);
+    assert.doesNotMatch(journey, /data-traveler-progress=/, "static nodes are not covered by a stopped vehicle");
+  }
 });
 
 test("builds complete day routes and continuous mobile parts from each selected configuration", () => {
@@ -276,8 +322,8 @@ test("switches between real Kansai configurations and keeps their routes separat
   const originalHtml = await original.text();
   const optimizedHtml = await optimized.text();
   for (const html of [originalHtml, optimizedHtml]) {
-    const switcher = html.match(/<nav class="guide-configurations[\s\S]*?<\/nav>/)?.[0];
-    assert.ok(switcher, "configuration switcher is visible in the hero");
+    const switcher = html.match(/<nav\b[^>]*aria-label="行程配置切换"[^>]*>[\s\S]*?<\/nav>/)?.[0];
+    assert.ok(switcher, "configuration switcher remains visible in the compact header");
     assert.match(switcher, /配置 1 · 原行程/);
     assert.match(switcher, /配置 2 · 从容版/);
     assert.doesNotMatch(switcher, /sample-weekend/);

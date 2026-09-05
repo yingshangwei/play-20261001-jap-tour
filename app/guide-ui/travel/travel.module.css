@@ -1,0 +1,55 @@
+.overview { border: 1px solid #deded4; background: #f6f6ef; border-radius: 16px; overflow: hidden; margin: 18px 0; }
+.dayFacts { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 18px; margin: 0; padding: 20px 24px; }
+.dayFacts dt { color: #62685f; font-size: 12px; margin-bottom: 8px; }
+.dayFacts dd { color: #25372f; font-size: 22px; line-height: 1.35; font-weight: 650; font-variant-numeric: tabular-nums; margin: 0; white-space: pre-line; }
+.dayFacts .destination { font-size: 15px; line-height: 1.7; }
+.dayAdvice { padding: 14px 24px; border-top: 1px solid #deded4; }
+.dayAdvice p { margin: 0; color: #515c53; font-size: 13px; line-height: 1.85; }
+.dayAdvice p + p { margin-top: 8px; }
+.dayAdvice b { display: inline-block; margin-right: 10px; color: #263c32; }
+.card { min-width: 0; border: 1px solid #d8dfd9; border-radius: 16px; background: #fffefb; padding: 22px; color: #26382f; }
+.cardTop { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; font-size: 12px; color: #596b5f; }
+.status { border: 1px solid #dbe0d9; border-radius: 20px; padding: 2px 8px; background: #f3f5ee; }
+.clocks { display: grid; grid-template-columns: minmax(0, 1fr) minmax(80px, .65fr) minmax(0, 1fr); gap: 14px; align-items: center; margin: 22px 0 16px; }
+.clocks > div:not(.connector) { display: flex; flex-direction: column; gap: 6px; }
+.clocks small { color: #737a71; font-size: 11px; }
+.clocks strong { font-size: clamp(19px, 2vw, 26px); line-height: 1.3; font-weight: 600; font-variant-numeric: tabular-nums; white-space: pre-line; }
+.clocks span { font-size: 13px; line-height: 1.6; }
+.connector { text-align: center; color: #68796d; }
+.connector span { display: block; font-size: 11px; }
+.connector i { display: block; font-style: normal; font-size: 30px; }
+.route { font-size: 13px; line-height: 1.9; margin: 0 0 16px; }
+.visit { border-left: 3px solid #708b6c; background: #f3f5ed; padding: 12px 15px; border-radius: 0 10px 10px 0; }
+.visitHeading { display: flex; gap: 8px 14px; justify-content: space-between; flex-wrap: wrap; }
+.visitHeading b { font-size: 12px; }
+.visitHeading span { color: #53694f; font-size: 11px; }
+.visit p { font-size: 13px; line-height: 1.8; margin: 7px 0 0; }
+.visit .focus { color: #596b58; }
+.pending { color: #815927; font-size: 12px; margin: 12px 0 0; }
+.cardActions { display: flex; margin-top: 14px; }
+.cardActions a { padding: 9px 0; color: #315e44; font-size: 13px; font-weight: 600; }
+.details { border-top: 1px solid #e3e6df; margin-top: 8px; }
+.details summary { cursor: pointer; padding: 15px 4px; font-size: 13px; font-weight: 550; color: #465e4f; }
+.details summary:focus-visible, .cardActions a:focus-visible, .sources a:focus-visible { outline: 3px solid #577851; outline-offset: 3px; }
+.details[open] summary { padding-bottom: 8px; }
+.detailFacts { margin: 4px 0 12px; font-size: 12px; line-height: 1.85; }
+.detailFacts > div { display: grid; grid-template-columns: 64px 1fr; gap: 10px; margin-top: 8px; }
+.detailFacts dt { color: #68736b; }
+.detailFacts dd { margin: 0; }
+.evidence { font-size: 12px; line-height: 1.8; color: #687264; }
+.sources { display: flex; gap: 8px 14px; flex-wrap: wrap; padding-bottom: 12px; }
+.sources a { color: #366549; font-size: 12px; text-decoration: underline; text-underline-offset: 3px; }
+.fold { margin-top: 12px; border-top: 1px solid #deded4; }
+.fold summary { cursor: pointer; padding: 14px 0; font-size: 13px; font-weight: 600; color: #425b48; }
+.fold summary:focus-visible { outline: 3px solid #577851; outline-offset: 3px; }
+@media (max-width: 600px) {
+  .dayFacts { grid-template-columns: 1fr 1fr; padding: 16px; gap: 16px 12px; }
+  .dayFacts dd { font-size: 19px; }
+  .dayFacts .destination { font-size: 13px; }
+  .dayAdvice { padding: 14px 16px; }
+  .card { padding: 16px; border-radius: 12px; }
+  .clocks { gap: 8px; grid-template-columns: minmax(0, 1fr) 76px minmax(0, 1fr); }
+  .clocks strong { font-size: 19px; overflow-wrap: anywhere; }
+  .clocks span { font-size: 12px; }
+  .connector span { font-size: 10px; }
+}

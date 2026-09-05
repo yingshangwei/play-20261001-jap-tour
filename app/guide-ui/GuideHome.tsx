@@ -2,6 +2,9 @@ import TripMap from "@/app/TripMap";
 import JourneyPlayer from "@/app/JourneyPlayer";
 import { getGuideRouteModel, getJourneyModel } from "@/app/guide-core/defineGuide";
 import { guideCatalog, loadGuide } from "@/guides/registry";
+import DayOverview from "./travel/DayOverview";
+import travelStyles from "./travel/travel.module.css";
+import styles from "./guide-home.module.css";
 
 function TitleLines({ lines }: { lines: string[] }) {
   return lines.map((line, index) => <span key={line}>{line}{index < lines.length - 1 && <br />}</span>);
@@ -34,53 +37,36 @@ export default async function GuideHome({ guideId }: { guideId: string }) {
 
   return (
     <main id="top">
-      <header className="hero">
+      <header className={styles.header}>
         <nav className="nav shell" aria-label={home.navigation.ariaLabel}>
           <a className="brand" href="#top" aria-label={home.navigation.homeAriaLabel}>
             <span className="brand-mark">{home.navigation.brandMark}</span>
             <span>{home.navigation.brand}</span>
           </a>
           <div className="nav-menu">
-            {home.navigation.links.map((link) => <a href={link.href} key={link.href}>{link.label}</a>)}
+            {home.navigation.links.filter((link) => link.href !== `#${home.reference.id}`).map((link) => <a href={link.href} key={link.href}>{link.label}</a>)}
           </div>
         </nav>
 
         {configurations.length > 1 && (
-          <nav className="guide-configurations shell" aria-label="行程配置切换">
-            <span>行程配置</span>
-            <div className="guide-configuration-options">
+          <nav className={`${styles.configurations} shell`} aria-label="行程配置切换">
               {configurations.map((entry) => (
                 <a href={guideHref(entry.id)} key={entry.id} aria-current={entry.id === guide.id ? "page" : undefined}>
                   <strong>{entry.configuration?.label}</strong>
                   <small>{entry.configuration?.description}</small>
-                  <span className="configuration-state">{entry.id === guide.id ? "当前配置" : "切换查看 ↗"}</span>
                 </a>
               ))}
-            </div>
           </nav>
         )}
 
-        <div className="hero-content shell">
-          <p className="eyebrow">{home.hero.eyebrow}</p>
-          <h1><TitleLines lines={home.hero.titleLines} /></h1>
-          <p className="hero-copy">{home.hero.description}</p>
-          <div className="hero-actions">
-            <a className="primary-button" href={home.hero.cta.href}>{home.hero.cta.label}</a>
-            <span className="trip-date">{home.hero.dateRange}</span>
-          </div>
+        <div className={`${styles.intro} shell`}>
+          <h1>{home.hero.titleLines.join("")}</h1>
+          <span className={styles.dates}>{home.hero.dateRange}</span>
         </div>
-
-        <div className="hero-orbit orbit-one" />
-        <div className="hero-orbit orbit-two" />
-        <div className="sun-disc" aria-hidden="true">{home.hero.sunLabel}</div>
+        <dl className={`${styles.facts} shell`} aria-label={home.overview.ariaLabel}>
+          {home.overview.items.map((item) => <div key={item.label}><dt>{item.label}</dt><dd>{item.value}</dd></div>)}
+        </dl>
       </header>
-
-      <section className="overview shell" aria-label={home.overview.ariaLabel}>
-        {home.overview.items.map((item) => <article key={item.label}>
-          <span>{item.label}</span>
-          <strong>{item.value}</strong>
-        </article>)}
-      </section>
 
       <JourneyPlayer key={guide.id} model={journeyModel} />
 
@@ -142,11 +128,15 @@ export default async function GuideHome({ guideId }: { guideId: string }) {
               <div className="timeline-copy">
                 <h3>{item.title}</h3>
                 <p className="route-line">{item.route}</p>
+                <DayOverview day={guide.days[index]} model={routeModel} compact />
                 {item.luggage && <p className="transit-line"><span>{home.itinerary.labels.luggage}</span>{item.luggage}</p>}
                 <p className="transit-line"><span>{home.itinerary.labels.rhythm}</span>{item.rhythm}</p>
+                <details className={travelStyles.fold}>
+                <summary>时间安排、交通与取舍</summary>
                 <p className="transit-line"><span>{home.itinerary.labels.schedule}</span>{item.schedule}</p>
                 <p className="transit-line"><span>{home.itinerary.labels.transit}</span>{item.transit}</p>
                 <p>{item.note}</p>
+                </details>
                 {journalPath && (
                   <a className="day-detail-link" href={localPageHref(journalPath)}>
                     {home.itinerary.labels.journal.replace("{dayNumber}", String(index + 1))} <span>↗</span>
@@ -156,49 +146,6 @@ export default async function GuideHome({ guideId }: { guideId: string }) {
             </article>
             );
           })}
-        </div>
-      </section>
-
-      <section className="reference-review shell" id={home.reference.id} aria-labelledby="reference-title">
-        <div className="reference-intro">
-          <div>
-            <p className="eyebrow dark">{home.reference.eyebrow}</p>
-            <span className="section-note">{home.reference.note}</span>
-          </div>
-          <div>
-            <h2 id="reference-title"><TitleLines lines={home.reference.titleLines} /></h2>
-            <p>{home.reference.description}</p>
-          </div>
-        </div>
-        <div className="reference-grid">
-          {home.reference.items.map((item) => (
-            <article className={`reference-card status-${item.tone}`} key={item.title}>
-              <span>{item.status}</span>
-              <h3>{item.title}</h3>
-              <p>{item.body}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="feature" id={home.feature.id} aria-labelledby="fireworks-title">
-        <div className="feature-grid shell">
-          <div className="feature-visual" aria-hidden="true">
-            <div className="firework firework-a" />
-            <div className="firework firework-b" />
-            <div className="feature-date">{home.feature.date}</div>
-          </div>
-          <div className="feature-copy">
-            <p className="eyebrow">{home.feature.eyebrow}</p>
-            <h2 id="fireworks-title"><TitleLines lines={home.feature.titleLines} /></h2>
-            <p>{home.feature.description}</p>
-            <div className="feature-stats">
-              {home.feature.stats.map((stat) => <span key={stat.label}><strong>{stat.value}</strong>{stat.label}</span>)}
-            </div>
-            <a className="text-link light" href={home.feature.link.href} target="_blank" rel="noreferrer">
-              {home.feature.link.label} <span>↗</span>
-            </a>
-          </div>
         </div>
       </section>
 
@@ -226,6 +173,14 @@ export default async function GuideHome({ guideId }: { guideId: string }) {
             </article>
           ))}
         </div>
+        <details className={styles.supplement} id={home.feature.id}>
+          <summary>{home.feature.date} · {home.feature.titleLines.join("")}</summary>
+          <div className={styles.supplementBody}>
+            <p>{home.feature.description}</p>
+            <dl className={styles.featureFacts}>{home.feature.stats.map((stat) => <div key={stat.label}><dt>{stat.label}</dt><dd>{stat.value}</dd></div>)}</dl>
+            <a href={home.feature.link.href} target="_blank" rel="noreferrer">{home.feature.link.label} ↗</a>
+          </div>
+        </details>
       </section>
 
       <section className="dining" id={home.dining.id}>
@@ -271,12 +226,12 @@ export default async function GuideHome({ guideId }: { guideId: string }) {
         </div>
       </section>
 
-      <section className="detours shell" aria-labelledby="detours-title">
-        <div className="detours-copy">
-          <p className="eyebrow dark">{home.detours.eyebrow}</p>
-          <h2 id="detours-title"><TitleLines lines={home.detours.titleLines} /></h2>
+      {(home.detours.items.length > 0 || home.practical.items.length > 0 || home.sources.links.length > 0) && <div className={`${styles.supplements} shell`}>
+      {home.detours.items.length > 0 && <details className={styles.supplement}>
+        <summary>有余力再选的地点</summary>
+        <div className={styles.supplementBody}>
+          <p className={styles.candidateNote}>仅供替换或顺路选择，不代表已加入当天行程；不挤占回酒店与休息时间。</p>
           <p>{home.detours.description}</p>
-        </div>
         <div className="detour-list">
           {home.detours.items.map((item) => <article key={item.title}>
             <span>{item.area}</span>
@@ -284,13 +239,12 @@ export default async function GuideHome({ guideId }: { guideId: string }) {
             <p>{item.body}</p>
           </article>)}
         </div>
-      </section>
-
-      <section className="practical shell" aria-labelledby="practical-title">
-        <div className="practical-title">
-          <p className="eyebrow dark">{home.practical.eyebrow}</p>
-          <h2 id="practical-title"><TitleLines lines={home.practical.titleLines} /></h2>
         </div>
+      </details>}
+
+      {home.practical.items.length > 0 && <details className={styles.supplement}>
+        <summary>行前提醒 · 住宿、行李、交通与天气</summary>
+        <div className={styles.supplementBody}>
         <div className="practical-list">
           {home.practical.items.map((item, index) => (
             <article key={item.title}>
@@ -300,15 +254,16 @@ export default async function GuideHome({ guideId }: { guideId: string }) {
             </article>
           ))}
         </div>
-      </section>
+        </div>
+      </details>}
 
-      <section className="sources shell" aria-labelledby="source-title">
-        <p className="eyebrow dark">{home.sources.eyebrow}</p>
-        <h2 id="source-title"><TitleLines lines={home.sources.titleLines} /></h2>
+      {home.sources.links.length > 0 && <details className={styles.supplement}>
+        <summary>官方来源与出发前复核</summary>
         <div className="source-links">
           {home.sources.links.map((link) => <a href={link.href} target="_blank" rel="noreferrer" key={link.href}>{link.label} ↗</a>)}
         </div>
-      </section>
+      </details>}
+      </div>}
 
       <footer>
         <div className="shell footer-inner">

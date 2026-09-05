@@ -12,7 +12,9 @@
     "typecheck": "tsc --noEmit --incremental false",
     "test:render": "node --test tests/rendered-html.test.mjs",
     "test:weather": "node --test tests/weather.test.mjs",
-    "test": "pnpm run test:weather && pnpm run build && pnpm run test:render",
+    "test:journey": "node --test tests/journey-playback.test.mjs",
+    "test:day": "node --test tests/day-presentation.test.mjs",
+    "test": "pnpm run test:weather && pnpm run test:journey && pnpm run test:day && pnpm run build && pnpm run test:render",
     "check": "pnpm run typecheck && pnpm run lint && pnpm run test",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
     "db:generate": "drizzle-kit generate"
