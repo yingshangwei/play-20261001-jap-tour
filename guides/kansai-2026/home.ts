@@ -446,7 +446,7 @@ export const kansaiHome: HomePageConfig = {
   },
   mapSection: {
     eyebrow: "ROUTE MAP",
-    note: "按日期筛选 · 相邻两点 Google Maps 导航",
+    note: "按日期筛选 · Google Maps 全天路线 + 逐段导航",
     titleLines: ["真实地图，", "一眼看清是否顺路。"],
   },
   itinerary: {

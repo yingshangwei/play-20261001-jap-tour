@@ -1,6 +1,15 @@
 import assert from "node:assert/strict";
 import { access, readFile, readdir } from "node:fs/promises";
 import test from "node:test";
+import { register } from "node:module";
+
+register("./config-loader.mjs", import.meta.url);
+
+const { getJourneyModel, defineTravelGuide } = await import("../app/guide-core/defineGuide.ts");
+const { pointsForDay, splitRouteForMobile, dayRouteHref } = await import("../app/guide-core/dayRoutes.ts");
+const { kansai2026Guide } = await import("../guides/kansai-2026/guide.ts");
+const { kansaiPlanTwoGuide } = await import("../guides/kansai-2026/configurations/plan-2/guide.ts");
+const { loadGuide } = await import("../guides/registry.ts");
 
 async function render(pathname = "/") {
   const workerUrl = new URL("../dist/server/index.js", import.meta.url);
@@ -15,22 +24,9 @@ async function render(pathname = "/") {
 }
 
 async function configuredJourneyCounts() {
-  const [daysSource, journeySource] = await Promise.all([
-    readFile(new URL("../guides/kansai-2026/days.ts", import.meta.url), "utf8"),
-    readFile(new URL("../guides/kansai-2026/journey.ts", import.meta.url), "utf8"),
-  ]);
-  const groundSteps = [...daysSource.matchAll(/pointIds: \[([^\]]+)\]/g)]
-    .reduce((count, match) => count + Math.max(0, (match[1].match(/"/g)?.length ?? 0) / 2 - 1), 0);
-  const beforeSource = journeySource.slice(
-    journeySource.indexOf("beforeSteps:"),
-    journeySource.indexOf("afterSteps:"),
-  );
-  const afterSource = journeySource.slice(
-    journeySource.indexOf("afterSteps:"),
-    journeySource.indexOf("placeholderLabels:"),
-  );
-  const configuredSteps = (beforeSource.match(/^ {6}id: "/gm)?.length ?? 0)
-    + (afterSource.match(/^ {6}id: "/gm)?.length ?? 0);
+  const guide = kansai2026Guide;
+  const groundSteps = guide.days.reduce((total, day) => total + day.segments.reduce((count, segment) => count + segment.pointIds.length - 1, 0), 0);
+  const configuredSteps = guide.journey.beforeSteps.length + guide.journey.afterSteps.length;
   return { groundSteps, totalSteps: groundSteps + configuredSteps };
 }
 
@@ -55,10 +51,14 @@ test("server-renders the Kansai travel guide", async () => {
   assert.match(html, /上海出发机场 · 待确认/);
   assert.match(html, /选择动画阶段/);
   assert.match(html, /播放速度/);
+  assert.match(html, /目的地实景/);
+  assert.match(html, /\/journey-photos\/kix\.jpg/);
+  assert.match(html, /Wikimedia Commons|commons\.wikimedia\.org/);
+  assert.match(html, /正在前往/);
   assert.match(html, /地图日期筛选/);
   assert.match(html, /全部日期/);
   assert.match(html, /10月4日/);
-  assert.match(html, /相邻两点 Google Maps 导航/);
+  assert.match(html, /Google Maps 全天路线 \+ 逐段导航/);
   assert.match(html, /首末班约束/);
   assert.match(html, /无法乘坐时的备用方案/);
   assert.match(html, /从哪里几点出发/);
@@ -172,9 +172,78 @@ test("server-renders every registered guide and the second journal template", as
   assert.match(sampleHtml, /一日城市周末/);
   assert.match(sampleHtml, /1 个阶段 · 按日播放/);
   assert.match(sampleHtml, /城市中央站/);
+  assert.doesNotMatch(sampleHtml, /journey-place-photo|journey-photos|commons\.wikimedia\.org/);
   assert.match(sampleDayHtml, /COMPACT TEMPLATE/);
   assert.match(sampleDayHtml, /紧凑手账/);
   assert.match(sampleDayHtml, /模板验证说明/);
+});
+
+test("keeps destination media guide-owned, credited and prefixed for both configurations", async () => {
+  for (const guide of [kansai2026Guide, kansaiPlanTwoGuide]) {
+    const model = getJourneyModel(guide, "/test-prefix");
+    const expectedGroundSteps = guide.days.reduce((total, day) => total + day.segments.reduce((count, segment) => count + segment.pointIds.length - 1, 0), 0);
+    assert.equal(model.steps.length, expectedGroundSteps + guide.journey.beforeSteps.length + guide.journey.afterSteps.length);
+    for (const step of model.steps) {
+      const configured = guide.journey.mediaByPlaceId[step.to.id];
+      assert.ok(configured, `${guide.id}: ${step.to.id} has destination media`);
+      assert.equal(step.media.src, `/test-prefix${configured.src}`);
+      assert.ok(step.media.credit && step.media.license && step.media.sourceHref);
+      assert.match(step.media.sourceHref, /^https:\/\/commons\.wikimedia\.org\/wiki\/File:/);
+      if (step.to.category === "stay") assert.match(step.media.label, /非酒店照片/);
+      if (step.to.category === "restaurant") assert.match(step.media.label, /餐厅候选/);
+      if (step.to.id === "joyo") assert.match(step.media.label, /非城阳现场/);
+    }
+    const html = await (await render(`/guides/${guide.id}`)).text();
+    const photo = html.match(/<figure class="journey-place-photo"[\s\S]*?<\/figure>/)?.[0];
+    assert.ok(photo, "initial destination photograph is server rendered");
+    const prefix = process.env.GITHUB_ACTIONS === "true" ? `/${process.env.GITHUB_REPOSITORY?.split("/")[1] ?? "play-20261001-jap-tour"}` : "";
+    assert.ok(photo.includes(`src="${prefix}/journey-photos/kix.jpg"`));
+  }
+  const sample = await loadGuide("sample-weekend");
+  assert.ok(getJourneyModel(sample).steps.every((step) => step.media === undefined));
+  const missing = { ...kansai2026Guide, journey: { ...kansai2026Guide.journey, mediaByPlaceId: {} } };
+  assert.ok(getJourneyModel(missing).steps.every((step) => step.media === undefined), "no cross-guide or area fallback");
+  assert.throws(() => defineTravelGuide({ ...missing, journey: { ...missing.journey, mediaByPlaceId: { kix: { ...kansai2026Guide.journey.mediaByPlaceId.kix, credit: "" } } } }), /Journey media must include/);
+});
+
+test("builds complete day routes and continuous mobile parts from each selected configuration", () => {
+  for (const guide of [kansai2026Guide, kansaiPlanTwoGuide]) {
+    const pointById = new Map(guide.places.map((point) => [point.id, point]));
+    const transitIds = new Set(guide.transitLegs.map((leg) => leg.id));
+    for (const day of guide.days) {
+      const points = pointsForDay(day, pointById);
+      assert.equal(points[0].id, day.segments[0].pointIds[0]);
+      assert.equal(points.at(-1).id, day.segments.at(-1).pointIds.at(-1));
+      assert.equal(points.length - 1, day.segments.reduce((sum, segment) => sum + segment.pointIds.length - 1, 0));
+      points.slice(1).forEach((point, index) => assert.ok(transitIds.has(`${day.id}:${points[index].id}>${point.id}`), "every consecutive stop retains its transport card"));
+      const href = dayRouteHref(points);
+      assert.ok(href, `${guide.id} ${day.id}: complete URL fits`);
+      const url = new URL(href);
+      assert.equal(url.searchParams.get("api"), "1");
+      assert.equal(url.searchParams.get("origin"), points[0].googleQuery);
+      assert.equal(url.searchParams.get("destination"), points.at(-1).googleQuery);
+      assert.deepEqual((url.searchParams.get("waypoints") ?? "").split("|").filter(Boolean), points.slice(1, -1).map((point) => point.googleQuery));
+      assert.equal(url.searchParams.has("travelmode"), false, "overview must not force a false all-transit itinerary");
+      const parts = splitRouteForMobile(points);
+      assert.deepEqual(parts.flatMap((part, index) => index ? part.slice(1) : part), points);
+      for (const part of parts) {
+        assert.ok(part.length >= 2 && part.length <= 5);
+        assert.ok(dayRouteHref(part).length <= 2048);
+      }
+    }
+  }
+  const placeMap = new Map(kansai2026Guide.places.map((point) => [point.id, point]));
+  const revisits = pointsForDay({ segments: [{ pointIds: ["osaka-stay", "shinsaibashi", "osaka-stay"] }, { pointIds: ["osaka-stay", "dotonbori", "osaka-stay"] }] }, placeMap);
+  assert.deepEqual(revisits.map((point) => point.id), ["osaka-stay", "shinsaibashi", "osaka-stay", "dotonbori", "osaka-stay"]);
+  assert.throws(() => pointsForDay({ segments: [{ pointIds: ["unknown"] }] }, placeMap), /Unknown route place/);
+  assert.equal(dayRouteHref([]), null);
+  assert.equal(dayRouteHref(revisits.slice(0, 1)), null);
+  assert.equal(dayRouteHref(Array(12).fill(revisits[0])), null, "never silently truncate a long day");
+  assert.throws(() => splitRouteForMobile(revisits, 1), /between two and five/);
+  assert.throws(() => splitRouteForMobile(revisits, 6), /between two and five/);
+  const longNames = revisits.map((point) => ({ ...point, googleQuery: "长地点名".repeat(300) }));
+  assert.ok(dayRouteHref(longNames).length <= 2048);
+  assert.equal(new URL(dayRouteHref(longNames)).searchParams.get("origin"), revisits[0].position.join(","));
 });
 
 test("keeps the reusable guide home independent from registered guide packages", async () => {

@@ -38,10 +38,19 @@ export default function JourneyPlayer({ model }: { model: JourneyModel }) {
   const currentDayStep = visibleSteps.slice(0, currentIndex + 1).filter((step) => step.date === currentStep.date).length;
   const currentDayTotal = visibleSteps.filter((step) => step.date === currentStep.date).length;
   const recentSteps = visibleSteps.slice(Math.max(0, currentIndex - 2), Math.min(visibleSteps.length, currentIndex + 3));
+  const currentMedia = currentStep.media;
 
   useEffect(() => {
     reducedMotion.current = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   }, []);
+
+  useEffect(() => {
+    const sources = new Set(visibleSteps.slice(currentIndex, currentIndex + 4).flatMap((step) => step.media ? [step.media.src] : []));
+    sources.forEach((src) => {
+      const image = new window.Image();
+      image.src = src;
+    });
+  }, [currentIndex, visibleSteps]);
 
   useEffect(() => {
     let disposed = false;
@@ -137,7 +146,22 @@ export default function JourneyPlayer({ model }: { model: JourneyModel }) {
       iconSize: [42, 42],
       iconAnchor: [21, 21],
     });
-    const marker = L.marker(currentStep.from.position, { icon, interactive: false, keyboard: false }).addTo(layer);
+    const tooltip = document.createElement("div");
+    for (const [tag, text] of [
+      ["span", presentation.labels.destination],
+      ["strong", currentStep.to.name],
+      ["small", currentStep.arrivalPlan],
+    ]) {
+      const line = document.createElement(tag);
+      line.textContent = text;
+      tooltip.appendChild(line);
+    }
+    const marker = L.marker(currentStep.from.position, { icon, interactive: false, keyboard: false })
+      .bindTooltip(
+        tooltip,
+        { permanent: true, direction: "top", offset: [0, -24], opacity: 1, className: "journey-moving-tooltip" },
+      )
+      .addTo(layer);
     travelerMarker.current = marker;
 
     const bounds = L.latLngBounds([currentStep.from.position, currentStep.to.position]);
@@ -160,7 +184,7 @@ export default function JourneyPlayer({ model }: { model: JourneyModel }) {
       if (raw < 1) animationFrame.current = requestAnimationFrame(animate);
     };
     animationFrame.current = requestAnimationFrame(animate);
-  }, [currentIndex, currentStep, mapReady, playing, speed, visibleSteps]);
+  }, [currentIndex, currentStep, mapReady, playing, presentation.labels.destination, speed, visibleSteps]);
 
   function selectScope(nextScope: PlayerScope) {
     setPlaying(false);
@@ -196,7 +220,8 @@ export default function JourneyPlayer({ model }: { model: JourneyModel }) {
           <div className="journey-map" ref={mapElement} aria-label={presentation.map.ariaLabel} />
           <div className="journey-map-caption">
             <span>{currentStep.date} · {dayById.get(currentStep.date)?.weekday}</span>
-            <strong>{dayById.get(currentStep.date)?.title}</strong>
+            <strong>{presentation.labels.destination} · {currentStep.to.name}</strong>
+            <small>{dayById.get(currentStep.date)?.title} · {currentStep.arrivalPlan}</small>
             <small>{presentation.map.note}</small>
           </div>
         </div>
@@ -227,6 +252,17 @@ export default function JourneyPlayer({ model }: { model: JourneyModel }) {
               <span>{presentation.labels.day} {dayOrder.indexOf(currentStep.date) + 1} · {presentation.labels.step} {currentDayStep}/{currentDayTotal}</span>
               <em className={`timing-status status-${statusClass(currentStep.timingStatus)}`}>{currentStep.timingStatus}</em>
             </div>
+            {currentMedia && <figure className="journey-place-photo" key={currentStep.id}>
+              {/* Static-export photo URLs are prefixed by the model and preloaded by the player. */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={currentMedia.src} alt={currentMedia.alt} width={960} height={640} decoding="async" style={{ objectPosition: currentMedia.objectPosition }} />
+              <figcaption>
+                <span>{currentMedia.label}</span>
+                <strong>{currentStep.to.name}</strong>
+                <small>{currentMedia.caption}</small>
+                <a href={currentMedia.sourceHref} target="_blank" rel="noreferrer">{presentation.labels.photoCredit}：{currentMedia.credit} · {currentMedia.license} ↗</a>
+              </figcaption>
+            </figure>}
             <div className="journey-clock">{currentStep.departureTime}</div>
             <p className="journey-segment-label">{currentStep.segment}</p>
             <div className="journey-place-line">

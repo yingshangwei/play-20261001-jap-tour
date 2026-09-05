@@ -135,11 +135,25 @@ export type JourneyPresentation = {
     speedAriaLabel: string;
     nearbyStepsAriaLabel: string;
     unknownTime: string;
+    destination: string;
+    photoCredit: string;
   };
+};
+
+export type JourneyMedia = {
+  src: string;
+  alt: string;
+  label: string;
+  caption: string;
+  credit: string;
+  license: string;
+  sourceHref: string;
+  objectPosition?: string;
 };
 
 export type JourneyConfig = {
   presentation: JourneyPresentation;
+  mediaByPlaceId?: Partial<Record<PlaceId, JourneyMedia>>;
   supplementalPlaces: Place[];
   beforeSteps: JourneyConfiguredStep[];
   afterSteps: JourneyConfiguredStep[];
@@ -170,6 +184,7 @@ export type JourneyStep = {
   timingStatus: TransitLeg["timingStatus"];
   navigationHref?: string;
   placeholderLabel?: string;
+  media?: JourneyMedia;
 };
 
 export type JourneyDaySummary = Pick<GuideDay, "id" | "weekday" | "areaLabel" | "title">;

@@ -1,7 +1,7 @@
 ---
 status: Complete
 owner: jap-tour
-last_verified: 2026-09-04
+last_verified: 2026-09-05
 sources:
   - MAP.md
   - docs/requirements/guide-platform/requirements.md
@@ -89,6 +89,8 @@ guides/<guide-id> 配置
 8. 手账模板通过 `DayJournalTemplateId` 注册；`hand-journal` 与 `compact-journal` 共用同一章节领域模型。
 9. 同一旅行的版本用注册表 `configuration.group` 分组，页首只显示同组版本；每个版本有独立 URL 和动态加载器，开发示例不混入旅行配置切换。
 10. 关西配置 2 位于 `guides/kansai-2026/configurations/plan-2/`，以不可变差量覆盖共享配置。Day 3–9 紧凑手账由同一 `GuideDay`、`TransitLeg` 和首页摘要派生；地图和动画以 guide ID 为 key，切换后重置播放和筛选状态。
+11. `JourneyConfig.mediaByPlaceId` 提供可选的目的地照片、说明、作者、许可和来源；关西两套配置共用 `journey-media.ts`，服务端生成带静态部署前缀的 `JourneyStep.media`。播放器不导入具体图库，缺图时不回退到另一地点照片；酒店、餐厅区域图和烟火氛围图必须明确标注。
+12. 全天路线由 `dayRoutes.ts` 从当前 `GuideDay.segments` 派生，只合并相邻接点，保留中途回酒店和最终返回。超过手机容量时分成首尾相接的小段，不静默删点；全天链接仅展示停靠顺序，交通方式仍以逐段卡片为准。[Google Maps URLs 文档](https://developers.google.com/maps/documentation/urls/get-started)规定手机浏览器最多 3 个途经点、其他受支持平台最多 9 个，URL 不超过 2048 字符。
 
 ## 迁移边界
 

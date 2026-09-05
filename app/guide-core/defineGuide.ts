@@ -1,4 +1,4 @@
-import { googleMapsDirections } from "./links";
+import { googleMapsDirections, withPublicAssetPrefix } from "./links";
 import type {
   DayJournalConfig,
   GuideRouteModel,
@@ -91,6 +91,13 @@ export function defineTravelGuide<const T extends TravelGuideManifest>(guide: T)
   }
 
   invariant(guide.journey.presentation.titleLines.length > 0, `Journey title is required for ${guide.id}`);
+  for (const [placeId, media] of Object.entries(guide.journey.mediaByPlaceId ?? {})) {
+    if (!media) continue;
+    invariant(
+      [media.src, media.alt, media.label, media.caption, media.credit, media.license, media.sourceHref].every((value) => value.trim().length > 0),
+      `Journey media must include a source, credit, license and description for ${placeId} in ${guide.id}`,
+    );
+  }
   const configuredStepIds = new Set<string>();
   for (const step of [...guide.journey.beforeSteps, ...guide.journey.afterSteps]) {
     invariant(!configuredStepIds.has(step.id), `Duplicate configured journey step ${step.id} in ${guide.id}`);
@@ -222,6 +229,7 @@ function configuredJourneyStep(
   guide: TravelGuideManifest,
   step: JourneyConfiguredStep,
   placeById: Map<string, Place>,
+  assetPrefix: string,
 ): JourneyStep {
   const from = placeById.get(step.fromPlaceId);
   const to = placeById.get(step.toPlaceId);
@@ -233,10 +241,16 @@ function configuredJourneyStep(
     to: journeyPoint(to),
     departureTime: departureTime(step.departurePlan, guide.journey.presentation.labels.unknownTime),
     placeholderLabel: journeyPlaceholder(guide, to),
+    media: journeyMedia(guide, to.id, assetPrefix),
   };
 }
 
-export function getJourneyModel(guide: TravelGuideManifest): JourneyModel {
+function journeyMedia(guide: TravelGuideManifest, placeId: string, assetPrefix: string) {
+  const media = guide.journey.mediaByPlaceId?.[placeId];
+  return media ? { ...media, src: withPublicAssetPrefix(media.src, assetPrefix) } : undefined;
+}
+
+export function getJourneyModel(guide: TravelGuideManifest, assetPrefix = ""): JourneyModel {
   const placeById = new Map(
     [...guide.places, ...guide.journey.supplementalPlaces].map((place) => [place.id, place]),
   );
@@ -274,14 +288,15 @@ export function getJourneyModel(guide: TravelGuideManifest): JourneyModel {
             travelMode,
           ),
           placeholderLabel: journeyPlaceholder(guide, to),
+          media: journeyMedia(guide, to.id, assetPrefix),
         } satisfies JourneyStep;
       }),
     ),
   );
   const steps = [
-    ...guide.journey.beforeSteps.map((step) => configuredJourneyStep(guide, step, placeById)),
+    ...guide.journey.beforeSteps.map((step) => configuredJourneyStep(guide, step, placeById, assetPrefix)),
     ...scheduledSteps,
-    ...guide.journey.afterSteps.map((step) => configuredJourneyStep(guide, step, placeById)),
+    ...guide.journey.afterSteps.map((step) => configuredJourneyStep(guide, step, placeById, assetPrefix)),
   ];
 
   return {

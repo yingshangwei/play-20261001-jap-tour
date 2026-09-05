@@ -1,6 +1,8 @@
 import type { JourneyConfig } from "@/app/guide-core/types";
+import { kansaiJourneyMedia } from "./journey-media";
 
 export const kansaiJourney: JourneyConfig = {
+  mediaByPlaceId: kansaiJourneyMedia,
   presentation: {
     eyebrow: "PLAY THE JOURNEY",
     titleLines: ["让整段旅程，", "沿着时间自己走起来。"],
@@ -35,6 +37,8 @@ export const kansaiJourney: JourneyConfig = {
       speedAriaLabel: "播放速度",
       nearbyStepsAriaLabel: "当前阶段前后步骤",
       unknownTime: "待定",
+      destination: "正在前往",
+      photoCredit: "照片来源",
     },
   },
   supplementalPlaces: [

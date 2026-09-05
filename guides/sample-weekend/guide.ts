@@ -31,6 +31,7 @@ const sampleJourney: JourneyConfig = {
       arrival: "预计几点到", stay: "到达后停留", route: "怎么走", navigation: "打开地图导航 ↗",
       controlsAriaLabel: "动画播放控制", previousAriaLabel: "上一步", nextAriaLabel: "下一步", play: "播放",
       pause: "暂停", replay: "重新播放", speedAriaLabel: "播放速度", nearbyStepsAriaLabel: "当前阶段前后步骤", unknownTime: "待定",
+      destination: "正在前往", photoCredit: "照片来源",
     },
   },
   supplementalPlaces: [],

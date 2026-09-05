@@ -22,7 +22,10 @@ function guideHref(guideId: string) {
 export default async function GuideHome({ guideId }: { guideId: string }) {
   const guide = await loadGuide(guideId);
   const routeModel = getGuideRouteModel(guide);
-  const journeyModel = getJourneyModel(guide);
+  const assetPrefix = process.env.GITHUB_ACTIONS === "true"
+    ? `/${process.env.GITHUB_REPOSITORY?.split("/")[1] ?? "play-20261001-jap-tour"}`
+    : "";
+  const journeyModel = getJourneyModel(guide, assetPrefix);
   const home = guide.home;
   const configurationGroup = guideCatalog.find((entry) => entry.id === guide.id)?.configuration?.group;
   const configurations = configurationGroup

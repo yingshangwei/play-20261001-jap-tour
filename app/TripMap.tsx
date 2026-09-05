@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { LayerGroup, Map as LeafletMap, Marker } from "leaflet";
 import { getTransitLeg } from "@/app/guide-core/defineGuide";
+import { dayRouteHref, pointsForDay, splitRouteForMobile } from "@/app/guide-core/dayRoutes";
 import type { GuideAreaId, GuideDay, GuideDayId, GuideRouteModel, Place } from "@/app/guide-core/types";
 
 type Category = "all" | "spot" | "restaurant" | "stay";
@@ -13,8 +14,9 @@ const ROUTE_ARROW_MIN_ZOOM = 12;
 const categoryLabels: Record<Category, string> = { all: "全部", spot: "景点", restaurant: "餐厅", stay: "住宿" };
 
 function googleSearch(query: string) { return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`; }
-function googleDirections(origin: string, destination: string, waypoints: string[] = [], mode: TransportMode = "walking") {
-  const base = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}&travelmode=${mode}`;
+function googleDirections(origin: string, destination: string, waypoints: string[] = [], mode?: TransportMode) {
+  const travelMode = mode ? `&travelmode=${mode}` : "";
+  const base = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}${travelMode}`;
   return waypoints.length ? `${base}&waypoints=${encodeURIComponent(waypoints.join("|"))}` : base;
 }
 function popupHtml(point: Place) {
@@ -170,6 +172,9 @@ export default function TripMap({ model }: { model: GuideRouteModel }) {
   const visiblePointCount = places.filter((point) => (category === "all" || point.category === category) && (selectedDate === "all" || point.dates.includes(selectedDate))).length;
   const visibleRestaurants = selectedDate === "all" ? restaurants : restaurants.filter((restaurant) => restaurant.dates.includes(selectedDate));
   const selectedSegments = selectedDay?.segments ?? [];
+  const dayPoints = selectedDay ? pointsForDay(selectedDay, pointById) : [];
+  const fullDayHref = dayRouteHref(dayPoints);
+  const mobileParts = dayPoints.length > 5 || !fullDayHref ? splitRouteForMobile(dayPoints) : [];
 
   return (
     <div className="real-map-panel">
@@ -189,6 +194,26 @@ export default function TripMap({ model }: { model: GuideRouteModel }) {
         {selectedDate === "all" ? <div className="day-route-empty"><strong>选择上方某一天</strong><p>即可查看从哪里几点出发、建议班次、预计几点到、到达后游览 / 停留多久，以及每一段的 Google Maps 导航、首末班约束与无法乘坐时的备用方案。</p></div> : (
           <>
             <div className="day-route-header"><div><span>{selectedDate}</span><h3>{selectedDay?.title}</h3></div><small>每一段都可打开 Google Maps；公共交通卡另附运营方时刻入口</small></div>
+            {dayPoints.length > 1 && <article className="day-full-route">
+              <div className="day-full-route-intro">
+                <div>
+                  <span>GOOGLE MAPS · 全天总览</span>
+                  <strong>{dayPoints[0].name} → {dayPoints.at(-1)?.name}</strong>
+                  <p>全天链接用于查看停靠顺序，Google Maps 可能选择单一交通方式；铁路和步行请以下方逐段卡片为准。{dayPoints.some((point) => point.category === "stay") && "住宿地址请按最终确认信息核对。"}</p>
+                </div>
+                {fullDayHref && <a className="day-full-route-button" href={fullDayHref} target="_blank" rel="noreferrer">在 Google Maps 打开全天路线图 <span>↗</span></a>}
+              </div>
+              <ol className="day-full-route-stops" aria-label={`${selectedDate} 全天路线顺序`}>
+                {dayPoints.map((point, index) => <li key={`${point.id}-${index}`}><b>{String(index + 1).padStart(2, "0")}</b><span>{point.name}</span></li>)}
+              </ol>
+              {mobileParts.length > 0 && <div className="day-full-route-mobile">
+                <p>{!fullDayHref && "当天点位超出单链接容量，已保留完整顺序并拆成连续路线。"}手机浏览器最多支持 3 个途经点；若全天链接丢点，请依次打开以下分段，或使用下方逐段导航。</p>
+                <div>{mobileParts.map((points, index) => {
+                  const href = dayRouteHref(points);
+                  return href && <a href={href} target="_blank" rel="noreferrer" key={index}>第 {index + 1} 段：{points[0].name} → {points.at(-1)?.name} ↗</a>;
+                })}</div>
+              </div>}
+            </article>}
             <div className="transit-audit-note">
               <strong>班次核对说明</strong>
               <p>{mapConfig.transitAuditNote}</p>
@@ -204,7 +229,7 @@ export default function TripMap({ model }: { model: GuideRouteModel }) {
               const wholeRoute = segmentPoints.length > 1 && !isClosedTransitLoop ? googleDirections(segmentPoints[0].googleQuery, segmentPoints.at(-1)!.googleQuery, segmentPoints.slice(1, -1).map((point) => point.googleQuery), segment.mode) : null;
               return <article className="day-segment" key={segment.label}>
                 <div className="day-segment-title"><div><strong>{segment.label}</strong><p>{segment.note}</p></div><div className="day-segment-actions"><span>{segmentLegs.length} 段交通</span>{wholeRoute && <a href={wholeRoute} target="_blank" rel="noreferrer">整段路线 ↗</a>}</div></div>
-                <div className="day-flow">{segmentPoints.map((point, index) => <div className="day-flow-step" key={point.id}>
+                <div className="day-flow">{segmentPoints.map((point, index) => <div className="day-flow-step" key={`${point.id}-${index}`}>
                   <a className={`day-stop stop-${point.category}`} href={googleSearch(point.googleQuery)} target="_blank" rel="noreferrer"><b>{point.category === "stay" ? "住" : orderForPoint(selectedDate, point.id, dayById, pointById) ?? index + 1}</b><span>{point.name}</span><small>{point.meta}</small></a>
                   {index < segmentPoints.length - 1 && <a className={`day-arrow mode-${segment.mode}`} href={googleDirections(point.googleQuery, segmentPoints[index + 1].googleQuery, [], segment.mode)} target="_blank" rel="noreferrer" aria-label={`从${point.name}前往${segmentPoints[index + 1].name}`}>→<small>{segment.mode === "walking" ? "步行导航" : "公共交通"} ↗</small></a>}
                 </div>)}</div>
